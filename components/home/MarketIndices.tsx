@@ -22,31 +22,33 @@ export default function MarketIndices() {
 
   if (isLoading) {
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         {[1, 2, 3].map((i) => (
-          <div key={i} className="h-20 animate-pulse rounded-xl bg-zinc-800" />
+          <div key={i} className="h-24 animate-pulse rounded-2xl bg-surface" />
         ))}
       </div>
     );
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
       {(data ?? []).map((index) => {
         const positive = index.changePercent >= 0;
         return (
           <div
             key={index.symbol}
-            className="rounded-xl border border-zinc-800 bg-zinc-900 p-4"
+            className="rounded-2xl border border-border bg-gradient-to-br from-surface2 to-surface3 p-4"
           >
-            <div className="text-sm text-zinc-400 mb-1">{index.label}</div>
-            <div className="text-2xl font-bold text-zinc-100">
+            <div className="text-xs font-semibold tracking-widest uppercase text-muted mb-2">
+              {index.label}
+            </div>
+            <div className="text-2xl font-bold text-foreground tabular-nums mb-2">
               {formatCurrency(index.price)}
             </div>
-            <div className={`flex items-center gap-1 text-sm mt-1 ${positive ? "text-emerald-400" : "text-red-400"}`}>
-              {positive ? <TrendingUp className="h-4 w-4" /> : <TrendingDown className="h-4 w-4" />}
+            <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold ${positive ? "bg-positive-dim text-positive" : "bg-negative-dim text-negative"}`}>
+              {positive ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
               {formatPercent(index.changePercent)}
-            </div>
+            </span>
           </div>
         );
       })}

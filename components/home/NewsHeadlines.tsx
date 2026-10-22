@@ -26,9 +26,9 @@ export default function NewsHeadlines() {
 
   if (isLoading) {
     return (
-      <div className="space-y-3">
-        {[1, 2, 3, 4].map((i) => (
-          <div key={i} className="h-20 animate-pulse rounded-xl bg-zinc-800" />
+      <div className="flex flex-col gap-3">
+        {[1, 2, 3].map((i) => (
+          <div key={i} className="h-20 animate-pulse rounded-2xl bg-surface" />
         ))}
       </div>
     );
@@ -38,10 +38,13 @@ export default function NewsHeadlines() {
 
   return (
     <section>
-      <h2 className="text-lg font-semibold text-zinc-100 mb-4">Market News</h2>
-      <div className="space-y-3">
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-base font-semibold text-foreground">Market News</h2>
+        <span className="text-xs text-soft">Live</span>
+      </div>
+      <div className="flex flex-col gap-3">
         {articles.length === 0 && (
-          <p className="text-zinc-500 text-sm">No news available. Check your API key.</p>
+          <p className="text-muted text-sm">No news available. Check your API key.</p>
         )}
         {articles.map((article, i) => (
           <a
@@ -49,40 +52,29 @@ export default function NewsHeadlines() {
             href={article.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex gap-4 rounded-xl border border-zinc-800 bg-zinc-900 p-4 hover:border-zinc-600 transition-colors group"
+            className="rounded-2xl border border-border bg-surface p-4 hover:border-accent/30 transition-colors group block"
           >
-            {article.image && (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={article.image}
-                alt=""
-                className="h-16 w-24 shrink-0 rounded-lg object-cover hidden sm:block"
-              />
-            )}
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 mb-1">
-                <span className="text-xs text-zinc-500">{article.source}</span>
-                <Badge
-                  variant={
-                    article.sentiment === "positive"
-                      ? "positive"
-                      : article.sentiment === "negative"
-                      ? "negative"
-                      : "neutral"
-                  }
-                >
-                  {article.sentiment}
-                </Badge>
-                <span className="ml-auto text-xs text-zinc-600">
-                  {formatDistanceToNow(parseDate(article.publishedAt), { addSuffix: true })}
-                </span>
-              </div>
-              <h3 className="text-sm font-medium text-zinc-100 line-clamp-2 group-hover:text-blue-400 transition-colors">
-                {article.title}
-              </h3>
-              <p className="text-xs text-zinc-500 mt-1 line-clamp-2">{article.summary}</p>
+            <div className="flex items-center gap-2 mb-2">
+              <span className="text-[10px] font-semibold tracking-widest uppercase text-muted">{article.source}</span>
+              <Badge
+                variant={
+                  article.sentiment === "positive"
+                    ? "positive"
+                    : article.sentiment === "negative"
+                    ? "negative"
+                    : "neutral"
+                }
+              >
+                {article.sentiment}
+              </Badge>
+              <span className="ml-auto text-[10px] text-muted">
+                {formatDistanceToNow(parseDate(article.publishedAt), { addSuffix: true })}
+              </span>
+              <ExternalLink className="h-3 w-3 shrink-0 text-muted group-hover:text-accent-lt transition-colors" />
             </div>
-            <ExternalLink className="h-4 w-4 shrink-0 text-zinc-600 group-hover:text-blue-400 mt-1 transition-colors" />
+            <h3 className="text-sm font-medium text-foreground line-clamp-2 group-hover:text-accent-lt transition-colors">
+              {article.title}
+            </h3>
           </a>
         ))}
       </div>

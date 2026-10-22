@@ -10,12 +10,14 @@ export default function Navbar() {
   const { data: session } = useSession();
 
   return (
-    <nav className="sticky top-0 z-50 border-b border-zinc-800 bg-zinc-950/90 backdrop-blur-sm">
-      <div className="mx-auto flex h-14 max-w-7xl items-center gap-4 px-4">
+    <nav className="sticky top-0 z-50 border-b border-border bg-background/90 backdrop-blur-sm">
+      <div className="mx-auto flex h-14 max-w-7xl items-center gap-3 px-4">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 text-white font-bold text-lg shrink-0">
-          <TrendingUp className="h-5 w-5 text-blue-400" />
-          <span className="hidden sm:block">Stock Docs</span>
+          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-accent">
+            <TrendingUp className="h-4 w-4 text-white" />
+          </div>
+          <span className="hidden sm:block tracking-tight">Stock Docs</span>
         </Link>
 
         {/* Search - grows to fill space */}
@@ -47,10 +49,12 @@ export default function Navbar() {
               <img
                 src={session.user.image}
                 alt={session.user.name ?? "User"}
-                className="h-7 w-7 rounded-full"
+                className="h-8 w-8 rounded-full ring-1 ring-border"
               />
             ) : (
-              <User className="h-5 w-5 text-zinc-400" />
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-surface2">
+                <User className="h-4 w-4 text-soft" />
+              </div>
             )}
             <Button
               variant="ghost"
@@ -63,7 +67,7 @@ export default function Navbar() {
             </Button>
           </div>
         ) : (
-          <Button variant="outline" size="sm" asChild>
+          <Button variant="default" size="sm" asChild>
             <Link href="/login" className="gap-1.5">
               <LogIn className="h-4 w-4" />
               Sign in

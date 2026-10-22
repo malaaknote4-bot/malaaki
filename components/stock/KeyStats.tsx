@@ -22,14 +22,21 @@ export default function KeyStats({ quote, overview }: Props) {
     { label: "Dividend Yield", value: overview.dividendYield !== "None" && overview.dividendYield !== "0" ? `${(parseFloat(overview.dividendYield) * 100).toFixed(2)}%` : "—" },
   ];
 
+  const HIGH_LABELS = new Set(["52W High", "Day High"]);
+  const LOW_LABELS  = new Set(["52W Low", "Day Low"]);
+
   return (
-    <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-4">
-      <h2 className="font-semibold text-zinc-100 mb-4">Key Statistics</h2>
-      <dl className="grid grid-cols-2 sm:grid-cols-3 gap-y-3 gap-x-4">
+    <div className="rounded-2xl border border-border bg-surface p-5">
+      <h2 className="text-xs font-semibold tracking-widest uppercase text-muted mb-4">Statistics</h2>
+      <dl className="grid grid-cols-2 sm:grid-cols-3 gap-y-4 gap-x-6">
         {stats.map(({ label, value }) => (
           <div key={label}>
-            <dt className="text-xs text-zinc-500">{label}</dt>
-            <dd className="text-sm font-medium text-zinc-200 mt-0.5">{value}</dd>
+            <dt className="text-xs text-muted mb-0.5 uppercase tracking-wider">{label}</dt>
+            <dd className={`text-sm font-semibold tabular-nums ${
+              HIGH_LABELS.has(label) ? "text-accent-lt" :
+              LOW_LABELS.has(label)  ? "text-negative"  :
+              "text-foreground"
+            }`}>{value}</dd>
           </div>
         ))}
       </dl>
