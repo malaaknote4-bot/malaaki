@@ -20,7 +20,9 @@ export async function GET(req: NextRequest) {
 
   try {
     const data = await getHistory(symbol.toUpperCase(), range);
-    return NextResponse.json(data);
+    return NextResponse.json(data, {
+      headers: { "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=7200" },
+    });
   } catch (err) {
     const message = err instanceof Error ? err.message : "Unknown error";
     return NextResponse.json({ error: message }, { status: 500 });

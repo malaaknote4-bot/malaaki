@@ -8,7 +8,9 @@ export async function GET(req: NextRequest) {
   }
   try {
     const quote = await getQuote(symbol.toUpperCase());
-    return NextResponse.json(quote);
+    return NextResponse.json(quote, {
+      headers: { "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600" },
+    });
   } catch (err) {
     const message = err instanceof Error ? err.message : "Unknown error";
     return NextResponse.json({ error: message }, { status: 500 });

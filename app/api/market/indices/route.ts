@@ -14,7 +14,13 @@ export async function GET() {
       .filter((r) => r.status === "fulfilled")
       .map((r) => (r as PromiseFulfilledResult<unknown>).value);
 
-    return NextResponse.json(results);
+    // An empty list means every quote failed; don't let the CDN hold on to it.
+    return NextResponse.json(results, {
+      headers:
+        results.length > 0
+          ? { "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600" }
+          : { "Cache-Control": "no-store" },
+    });
   } catch (err) {
     const message = err instanceof Error ? err.message : "Unknown error";
     return NextResponse.json({ error: message }, { status: 500 });

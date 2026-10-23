@@ -267,20 +267,8 @@ export async function searchSymbols(query: string): Promise<SearchResult[]> {
   return results;
 }
 
-export const POPULAR_SYMBOLS = [
-  "AAPL",
-  "MSFT",
-  "GOOGL",
-  "AMZN",
-  "META",
-  "TSLA",
-  "NVDA",
-  "JPM",
-  "BRK.B",
-  "V",
-  "JNJ",
-  "WMT",
-];
+// Kept short: each symbol costs one call against the free tier's 25/day.
+export const POPULAR_SYMBOLS = ["AAPL", "MSFT", "NVDA", "TSLA"];
 
 export const INDEX_SYMBOLS = [
   { symbol: "SPY", label: "S&P 500" },

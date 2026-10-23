@@ -8,7 +8,9 @@ export async function GET(req: NextRequest) {
   }
   try {
     const results = await searchSymbols(q.trim());
-    return NextResponse.json(results);
+    return NextResponse.json(results, {
+      headers: { "Cache-Control": "public, s-maxage=86400, stale-while-revalidate=86400" },
+    });
   } catch (err) {
     const message = err instanceof Error ? err.message : "Unknown error";
     return NextResponse.json({ error: message }, { status: 500 });
