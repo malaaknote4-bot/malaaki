@@ -201,13 +201,15 @@ export const alternatives: { breakfast: Meal[]; lunch: Meal[]; dinner: Meal[] } 
   ],
 };
 
+// `seed` (the day index) spreads swaps across the pool so a week doesn't repeat one substitute.
 export function getEffectiveMeal(
   meal: Meal,
   pool: Meal[],
-  dislikes: string[]
+  dislikes: string[],
+  seed = 0
 ): Meal {
   if (dislikes.length === 0) return meal;
   if (!meal.tags.some((t) => dislikes.includes(t))) return meal;
-  const alt = pool.find((m) => !m.tags.some((t) => dislikes.includes(t)));
-  return alt ?? meal;
+  const clean = pool.filter((m) => !m.tags.some((t) => dislikes.includes(t)));
+  return clean.length > 0 ? clean[seed % clean.length] : meal;
 }

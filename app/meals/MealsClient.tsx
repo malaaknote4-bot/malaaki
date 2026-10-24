@@ -54,7 +54,7 @@ export default function MealsClient({
       {/* Meal cards */}
       <div className="grid gap-4 md:grid-cols-3">
         {mealLabels.map(({ key, label, time, panel }) => {
-          const meal = getEffectiveMeal(meals[key], alternatives[key], dislikedFoods);
+          const meal = getEffectiveMeal(meals[key], alternatives[key], dislikedFoods, selectedDay);
           return (
             <article key={key} className="min-w-0 flex flex-col overflow-hidden rounded-[22px] border border-border bg-card">
               <div className={`${panel} relative flex aspect-[16/10] items-center justify-center`}>
@@ -82,9 +82,9 @@ export default function MealsClient({
         <SectionTitle>Week at a Glance</SectionTitle>
         <div className="overflow-hidden rounded-[22px] border border-border bg-card">
           {DAYS.map((d, i) => {
-            const b = getEffectiveMeal(weekMeals[d].breakfast, alternatives.breakfast, dislikedFoods);
-            const l = getEffectiveMeal(weekMeals[d].lunch, alternatives.lunch, dislikedFoods);
-            const n = getEffectiveMeal(weekMeals[d].dinner, alternatives.dinner, dislikedFoods);
+            const b = getEffectiveMeal(weekMeals[d].breakfast, alternatives.breakfast, dislikedFoods, i);
+            const l = getEffectiveMeal(weekMeals[d].lunch, alternatives.lunch, dislikedFoods, i);
+            const n = getEffectiveMeal(weekMeals[d].dinner, alternatives.dinner, dislikedFoods, i);
             return (
               <button
                 key={d}

@@ -28,7 +28,7 @@ export default async function HomePage() {
 
   const todayMeals = (["breakfast", "lunch", "dinner"] as const).map((k) => ({
     slot: k,
-    meal: getEffectiveMeal(weekMeals[today][k], alternatives[k], dislikes),
+    meal: getEffectiveMeal(weekMeals[today][k], alternatives[k], dislikes, dayIdx),
   }));
   const tonight = stories[now.getDay()];
   const activityCount =
