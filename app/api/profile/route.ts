@@ -15,7 +15,7 @@ export async function POST(req: Request) {
       onboardingDone: true,
       childAgeRange: body.childAgeRange ?? null,
       childAllergies: body.childAllergies ?? [],
-      childFoodDislikes: body.childFoodDislikes ?? "",
+      childFoodDislikes: body.childFoodDislikes ?? [],
       numChildren: body.numChildren ?? null,
       dietaryPreferences: body.dietaryPreferences ?? [],
     },

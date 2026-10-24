@@ -9,7 +9,13 @@ const mealLabels = [
   { key: "dinner"    as const, label: "Dinner",    emoji: "🌙", time: "Evening" },
 ];
 
-export default function MealsClient({ todayIndex }: { todayIndex: number }) {
+export default function MealsClient({
+  todayIndex,
+  dislikedFoods,
+}: {
+  todayIndex: number;
+  dislikedFoods: string[];
+}) {
   const [selectedDay, setSelectedDay] = useState(todayIndex);
 
   const day = DAYS[selectedDay];
@@ -47,6 +53,9 @@ export default function MealsClient({ todayIndex }: { todayIndex: number }) {
       <div className="flex flex-col gap-4">
         {mealLabels.map(({ key, label, emoji, time }) => {
           const meal = meals[key];
+          const dislikedMatches = dislikedFoods.length > 0
+            ? meal.tags.filter((t) => dislikedFoods.includes(t))
+            : [];
           return (
             <div key={key} className="rounded-3xl bg-card border border-border shadow-sm p-5">
               <div className="flex items-start gap-4">
@@ -59,6 +68,11 @@ export default function MealsClient({ todayIndex }: { todayIndex: number }) {
                 <div className="flex-1 min-w-0">
                   <span className="text-xs font-bold text-meals uppercase tracking-wide">{emoji} {label}</span>
                   <h3 className="font-black text-lg text-foreground leading-tight">{meal.name}</h3>
+                  {dislikedMatches.length > 0 && (
+                    <p className="mt-1 inline-flex items-center gap-1 rounded-full bg-amber-100 dark:bg-amber-900/30 border border-amber-300/50 px-2.5 py-0.5 text-xs font-bold text-amber-700 dark:text-amber-400">
+                      ⚠️ Contains {dislikedMatches.join(", ")}
+                    </p>
+                  )}
                   <p className="mt-0.5 text-sm text-soft font-medium">{meal.note}</p>
                   <p className="mt-2 flex items-start gap-1 text-xs font-semibold text-meals leading-snug">
                     <span>📋</span>

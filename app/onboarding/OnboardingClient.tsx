@@ -3,6 +3,35 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
+const FOOD_OPTIONS = [
+  { value: "banana",    label: "🍌 Banana" },
+  { value: "oats",      label: "🌾 Oats" },
+  { value: "eggs",      label: "🥚 Eggs" },
+  { value: "pasta",     label: "🍝 Pasta" },
+  { value: "beef",      label: "🥩 Beef" },
+  { value: "chicken",   label: "🍗 Chicken" },
+  { value: "fish",      label: "🐟 Fish" },
+  { value: "tuna",      label: "🐟 Tuna" },
+  { value: "tomato",    label: "🍅 Tomato" },
+  { value: "cheese",    label: "🧀 Cheese" },
+  { value: "potato",    label: "🥔 Potato" },
+  { value: "beans",     label: "🫘 Beans" },
+  { value: "lentils",   label: "🌱 Lentils" },
+  { value: "sweetcorn", label: "🌽 Sweetcorn" },
+  { value: "mushrooms", label: "🍄 Mushrooms" },
+  { value: "onion",     label: "🧅 Onion" },
+  { value: "carrot",    label: "🥕 Carrot" },
+  { value: "pepper",    label: "🫑 Pepper" },
+  { value: "bread",     label: "🍞 Bread" },
+  { value: "yogurt",    label: "🥛 Yogurt" },
+  { value: "ham",       label: "🍖 Ham" },
+  { value: "peas",      label: "🟢 Peas" },
+  { value: "rice",      label: "🍚 Rice" },
+  { value: "broccoli",  label: "🥦 Broccoli" },
+  { value: "avocado",   label: "🥑 Avocado" },
+  { value: "spinach",   label: "🥬 Spinach" },
+];
+
 const STEPS = [
   {
     emoji: "🎂",
@@ -25,22 +54,21 @@ const STEPS = [
     type: "multi" as const,
     field: "childAllergies",
     options: [
-      { value: "nuts", label: "🥜 Nuts" },
-      { value: "dairy", label: "🥛 Dairy" },
-      { value: "eggs", label: "🥚 Eggs" },
-      { value: "gluten", label: "🌾 Gluten" },
+      { value: "nuts",      label: "🥜 Nuts" },
+      { value: "dairy",     label: "🥛 Dairy" },
+      { value: "eggs",      label: "🥚 Eggs" },
+      { value: "gluten",    label: "🌾 Gluten" },
       { value: "shellfish", label: "🦐 Shellfish" },
-      { value: "soy", label: "🫘 Soy" },
-      { value: "none", label: "✅ None" },
+      { value: "soy",       label: "🫘 Soy" },
+      { value: "none",      label: "✅ None" },
     ],
   },
   {
     emoji: "🙅",
     question: "Any foods they really don't like?",
-    subtitle: "Free text — e.g. mushrooms, onions, broccoli",
-    type: "text" as const,
+    subtitle: "Search and pick — we'll flag these on the meal plan",
+    type: "search-multi" as const,
     field: "childFoodDislikes",
-    placeholder: "e.g. mushrooms, onions…",
   },
   {
     emoji: "👨‍👩‍👧‍👦",
@@ -62,11 +90,11 @@ const STEPS = [
     type: "multi" as const,
     field: "dietaryPreferences",
     options: [
-      { value: "none", label: "🍽️ No preference" },
-      { value: "vegetarian", label: "🥕 Vegetarian" },
-      { value: "vegan", label: "🌱 Vegan" },
-      { value: "halal", label: "☪️ Halal" },
-      { value: "kosher", label: "✡️ Kosher" },
+      { value: "none",        label: "🍽️ No preference" },
+      { value: "vegetarian",  label: "🥕 Vegetarian" },
+      { value: "vegan",       label: "🌱 Vegan" },
+      { value: "halal",       label: "☪️ Halal" },
+      { value: "kosher",      label: "✡️ Kosher" },
     ],
   },
 ];
@@ -74,7 +102,7 @@ const STEPS = [
 type Answers = {
   childAgeRange: string;
   childAllergies: string[];
-  childFoodDislikes: string;
+  childFoodDislikes: string[];
   numChildren: number | null;
   dietaryPreferences: string[];
 };
@@ -83,10 +111,11 @@ export default function OnboardingClient() {
   const router = useRouter();
   const [step, setStep] = useState(0);
   const [saving, setSaving] = useState(false);
+  const [foodSearch, setFoodSearch] = useState("");
   const [answers, setAnswers] = useState<Answers>({
     childAgeRange: "",
     childAllergies: [],
-    childFoodDislikes: "",
+    childFoodDislikes: [],
     numChildren: null,
     dietaryPreferences: [],
   });
@@ -129,15 +158,33 @@ export default function OnboardingClient() {
     });
   }
 
+  function toggleFoodDislike(value: string) {
+    setAnswers((a) => ({
+      ...a,
+      childFoodDislikes: a.childFoodDislikes.includes(value)
+        ? a.childFoodDislikes.filter((v) => v !== value)
+        : [...a.childFoodDislikes, value],
+    }));
+  }
+
   function canAdvance(): boolean {
-    if (current.type === "text") return true;
+    if (current.type === "search-multi") return true;
     if (current.type === "single") return getSingleValue() !== "";
     if (current.type === "multi") return getMultiValues().length > 0;
     return true;
   }
 
+  const filteredFoods = foodSearch.trim()
+    ? FOOD_OPTIONS.filter(
+        (f) =>
+          f.label.toLowerCase().includes(foodSearch.toLowerCase()) ||
+          f.value.toLowerCase().includes(foodSearch.toLowerCase())
+      )
+    : FOOD_OPTIONS;
+
   async function handleNext() {
     if (step < STEPS.length - 1) {
+      setFoodSearch("");
       setStep((s) => s + 1);
     } else {
       setSaving(true);
@@ -152,7 +199,6 @@ export default function OnboardingClient() {
 
   return (
     <div className="relative overflow-hidden min-h-screen flex items-center justify-center">
-      {/* Background blobs */}
       <div className="blob h-72 w-72 bg-amber-200 -top-10 -right-10" />
       <div className="blob h-56 w-56 bg-pink-100 bottom-20 -left-10" />
       <div className="blob h-40 w-40 bg-violet-100 top-1/3 left-0" />
@@ -219,15 +265,63 @@ export default function OnboardingClient() {
             </div>
           )}
 
-          {/* Text input */}
-          {current.type === "text" && (
-            <input
-              type="text"
-              placeholder={"placeholder" in current ? current.placeholder : ""}
-              value={answers.childFoodDislikes}
-              onChange={(e) => setAnswers((a) => ({ ...a, childFoodDislikes: e.target.value }))}
-              className="w-full rounded-2xl border border-border bg-muted px-4 py-3 text-foreground font-semibold text-sm placeholder:text-soft focus:outline-none focus:border-primary"
-            />
+          {/* Search multi — food dislikes */}
+          {current.type === "search-multi" && (
+            <div>
+              {/* Selected tags */}
+              {answers.childFoodDislikes.length > 0 && (
+                <div className="flex flex-wrap gap-1.5 mb-3">
+                  {answers.childFoodDislikes.map((val) => {
+                    const food = FOOD_OPTIONS.find((f) => f.value === val);
+                    return (
+                      <button
+                        key={val}
+                        onClick={() => toggleFoodDislike(val)}
+                        className="flex items-center gap-1 rounded-2xl bg-primary/15 border border-primary/30 px-3 py-1 text-xs font-bold text-foreground"
+                      >
+                        {food?.label}
+                        <span className="ml-0.5 opacity-60">×</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+
+              {/* Search input */}
+              <input
+                type="text"
+                placeholder="Search foods (e.g. chicken, pasta…)"
+                value={foodSearch}
+                onChange={(e) => setFoodSearch(e.target.value)}
+                className="w-full rounded-2xl border border-border bg-muted px-4 py-3 text-foreground font-semibold text-sm placeholder:text-soft focus:outline-none focus:border-primary mb-3"
+              />
+
+              {/* Filtered chip list */}
+              <div className="flex flex-wrap gap-2 max-h-40 overflow-y-auto">
+                {filteredFoods.map((opt) => (
+                  <button
+                    key={opt.value}
+                    onClick={() => toggleFoodDislike(opt.value)}
+                    className={`rounded-2xl border-2 px-3 py-1.5 text-sm font-bold transition-all ${
+                      answers.childFoodDislikes.includes(opt.value)
+                        ? "border-primary bg-primary/10 text-foreground"
+                        : "border-border bg-muted text-soft hover:border-primary/40"
+                    }`}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+                {filteredFoods.length === 0 && (
+                  <p className="text-sm text-soft font-medium py-2">No matching foods found.</p>
+                )}
+              </div>
+
+              {answers.childFoodDislikes.length === 0 && (
+                <p className="text-xs text-soft font-medium mt-3 text-center">
+                  Skip if no dislikes — tap Next to continue
+                </p>
+              )}
+            </div>
           )}
         </div>
 

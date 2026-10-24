@@ -22,7 +22,7 @@ model User {
   onboardingDone     Boolean  @default(false)
   childAgeRange      String?
   childAllergies     String[] @default([])
-  childFoodDislikes  String?
+  childFoodDislikes  String[] @default([])
   numChildren        Int?
   dietaryPreferences String[] @default([])
 }
