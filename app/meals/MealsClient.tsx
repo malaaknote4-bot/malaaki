@@ -60,6 +60,10 @@ export default function MealsClient({ todayIndex }: { todayIndex: number }) {
                   <span className="text-xs font-bold text-meals uppercase tracking-wide">{emoji} {label}</span>
                   <h3 className="font-black text-lg text-foreground leading-tight">{meal.name}</h3>
                   <p className="mt-0.5 text-sm text-soft font-medium">{meal.note}</p>
+                  <p className="mt-2 flex items-start gap-1 text-xs font-semibold text-meals leading-snug">
+                    <span>📋</span>
+                    <span>{meal.prep}</span>
+                  </p>
                 </div>
               </div>
             </div>

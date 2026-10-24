@@ -1,42 +1,147 @@
-export type Meal = { emoji: string; name: string; note: string };
+export type Meal = { emoji: string; name: string; note: string; prep: string };
 export type DayMeals = { breakfast: Meal; lunch: Meal; dinner: Meal };
 export type WeekPlan = Record<string, DayMeals>;
 
 export const weekMeals: WeekPlan = {
   Monday: {
-    breakfast: { emoji: "🥣", name: "Porridge with Berries", note: "Topped with honey & fresh blueberries" },
-    lunch:     { emoji: "🥪", name: "Chicken & Avocado Wrap", note: "Served with a small side salad" },
-    dinner:    { emoji: "🍝", name: "Spaghetti Bolognese", note: "Hidden veg sauce the kids will love" },
+    breakfast: {
+      emoji: "🥞",
+      name: "Mini Banana Oat Pancakes",
+      note: "Naturally sweet — no added sugar needed",
+      prep: "Mash 1 ripe banana into 2 eggs + 4 tbsp oats. Cook small rounds for 2 min each side.",
+    },
+    lunch: {
+      emoji: "🍝",
+      name: "Rainbow Pasta with Hidden Veg",
+      note: "Sneaky spinach & carrot blended into the tomato sauce",
+      prep: "Blend cooked carrot, spinach & tinned tomatoes smooth. Toss with penne and grated cheese.",
+    },
+    dinner: {
+      emoji: "🍖",
+      name: "Mild Beef Meatballs & Spaghetti",
+      note: "Soft, juicy meatballs kids love to twirl",
+      prep: "Mix mince with breadcrumbs, egg & mild herbs. Bake at 200°C for 15 min, simmer in passata.",
+    },
   },
   Tuesday: {
-    breakfast: { emoji: "🥞", name: "Banana Pancakes", note: "2-ingredient pancakes with maple syrup" },
-    lunch:     { emoji: "🍲", name: "Vegetable Minestrone Soup", note: "With crusty bread for dipping" },
-    dinner:    { emoji: "🍗", name: "Lemon Herb Roast Chicken", note: "Served with roasted potatoes & veg" },
+    breakfast: {
+      emoji: "🥣",
+      name: "Overnight Oats with Strawberries",
+      note: "Ready when you wake up — zero morning effort",
+      prep: "Mix oats, milk & a spoon of honey in a jar the night before. Top with chopped strawberries.",
+    },
+    lunch: {
+      emoji: "🍕",
+      name: "Pitta Bread Mini Pizzas",
+      note: "Kids pick their own toppings — always a hit",
+      prep: "Spread pitta with passata, add cheese & toppings. Grill for 5–6 min until bubbly.",
+    },
+    dinner: {
+      emoji: "🐟",
+      name: "Baked Fish Fingers & Sweet Potato Wedges",
+      note: "Healthier than the freezer version — still crispy!",
+      prep: "Coat white fish strips in beaten egg then breadcrumbs. Bake with wedges at 220°C for 20 min.",
+    },
   },
   Wednesday: {
-    breakfast: { emoji: "🍳", name: "Scrambled Eggs on Toast", note: "With smashed avo & cherry tomatoes" },
-    lunch:     { emoji: "🥗", name: "Greek Salad with Feta", note: "Olives, cucumber & a light vinaigrette" },
-    dinner:    { emoji: "🐟", name: "Baked Salmon with Rice", note: "With steamed broccoli & lemon butter" },
+    breakfast: {
+      emoji: "🥚",
+      name: "Eggy Soldiers",
+      note: "Soft-boiled egg with buttery toast dippers",
+      prep: "Boil egg for exactly 6 min for a runny yolk. Slice toast into 4 soldiers for dipping.",
+    },
+    lunch: {
+      emoji: "🍲",
+      name: "Chicken & Sweetcorn Soup",
+      note: "Warm, filling and ready in 20 minutes",
+      prep: "Simmer shredded chicken, sweetcorn & stock for 15 min. Thicken with a little cornflour.",
+    },
+    dinner: {
+      emoji: "🧀",
+      name: "Mac & Cheese with Butternut Squash",
+      note: "Creamy, cheesy comfort food with hidden veg",
+      prep: "Roast squash, blend into béchamel with cheddar. Stir in cooked macaroni and bake 15 min.",
+    },
   },
   Thursday: {
-    breakfast: { emoji: "🍓", name: "Yogurt & Granola Bowl", note: "With strawberries, kiwi & chia seeds" },
-    lunch:     { emoji: "🌮", name: "Black Bean Tacos", note: "With salsa, cheese & sour cream" },
-    dinner:    { emoji: "🍛", name: "Coconut Chicken Curry", note: "Mild and fragrant over fluffy rice" },
+    breakfast: {
+      emoji: "🍓",
+      name: "Fruit & Yogurt Parfait",
+      note: "Layered with granola, berries & a drizzle of honey",
+      prep: "Layer Greek yogurt, granola and any chopped fruit in a cup. Drizzle honey on top.",
+    },
+    lunch: {
+      emoji: "🌮",
+      name: "Ham & Cheese Quesadillas",
+      note: "Golden and melty — ready in 10 minutes",
+      prep: "Layer ham & grated cheese between two tortillas. Cook in a dry pan 2–3 min each side.",
+    },
+    dinner: {
+      emoji: "🍜",
+      name: "Chicken Noodle Stir-Fry",
+      note: "Colourful veg, tender chicken, mild soy sauce",
+      prep: "Stir-fry chicken strips 5 min, add veg, then cooked noodles + soy sauce & sesame oil.",
+    },
   },
   Friday: {
-    breakfast: { emoji: "🥤", name: "Mango Smoothie Bowl", note: "Topped with coconut flakes & banana" },
-    lunch:     { emoji: "🍕", name: "Homemade Mini Pizzas", note: "Let the kids pick their own toppings" },
-    dinner:    { emoji: "🌯", name: "Beef & Veggie Stir-Fry", note: "With noodles & sweet soy sauce" },
+    breakfast: {
+      emoji: "🍞",
+      name: "French Toast Sticks",
+      note: "Golden, dippable and perfect with berries",
+      prep: "Dip thick-cut bread in egg, milk & cinnamon. Fry in butter 2 min each side. Cut into sticks.",
+    },
+    lunch: {
+      emoji: "🥔",
+      name: "Tuna Sweetcorn Jacket Potato",
+      note: "Classic Friday lunch — filling and easy",
+      prep: "Microwave potato 8 min, finish in oven 10 min for crispy skin. Top with tuna-mayo & sweetcorn.",
+    },
+    dinner: {
+      emoji: "🍟",
+      name: "Homemade Fish & Chips (Baked)",
+      note: "Crispy without the fryer — served with mushy peas",
+      prep: "Coat cod in flour, egg & panko. Bake with thick-cut chips at 220°C for 25 min.",
+    },
   },
   Saturday: {
-    breakfast: { emoji: "🧇", name: "French Toast with Berries", note: "Dusted with icing sugar & maple syrup" },
-    lunch:     { emoji: "🥙", name: "Grilled Halloumi Wrap", note: "With roasted peppers & tzatziki" },
-    dinner:    { emoji: "🍔", name: "Homemade Burgers", note: "Build your own — the whole family joins in" },
+    breakfast: {
+      emoji: "🥞",
+      name: "Fluffy American Pancakes",
+      note: "Stack them high with maple syrup & fresh fruit",
+      prep: "Whisk flour, baking powder, egg, milk & butter. Cook on medium heat, flip when bubbles form.",
+    },
+    lunch: {
+      emoji: "🌯",
+      name: "Build-Your-Own Wraps",
+      note: "Everyone picks their own fillings — fun for the whole family",
+      prep: "Warm tortillas, lay out chicken, salad, cheese & sauces. Let the kids assemble their own.",
+    },
+    dinner: {
+      emoji: "🍔",
+      name: "Homemade Burgers & Sweet Potato Fries",
+      note: "Shape the patties together — it's half the fun",
+      prep: "Mix mince with onion & seasoning, form patties. Grill 4 min each side. Bake fries 25 min.",
+    },
   },
   Sunday: {
-    breakfast: { emoji: "🥐", name: "Croissants & Fresh Fruit", note: "A relaxed weekend morning treat" },
-    lunch:     { emoji: "🥘", name: "Sunday Roast", note: "Roast beef, Yorkshire puddings & all the trimmings" },
-    dinner:    { emoji: "🍜", name: "Leftover Soup", note: "Clear out the fridge — warm & cosy" },
+    breakfast: {
+      emoji: "🍳",
+      name: "Scrambled Eggs & Beans on Toast",
+      note: "A cosy, protein-packed weekend breakfast",
+      prep: "Low and slow for creamy eggs — stir constantly off the heat. Warm beans in a small pan.",
+    },
+    lunch: {
+      emoji: "🍗",
+      name: "Sunday Roast Chicken",
+      note: "Roast potatoes, veg, gravy & Yorkshire puddings",
+      prep: "Rub chicken with butter & herbs. Roast at 190°C for 90 min. Rest 15 min before carving.",
+    },
+    dinner: {
+      emoji: "🍅",
+      name: "Tomato & Lentil Soup with Cheesy Toast",
+      note: "Cosy end to the weekend — uses up the leftover veg",
+      prep: "Simmer tinned tomatoes, red lentils & stock 20 min. Blend smooth. Serve with toasted cheese.",
+    },
   },
 };
 
