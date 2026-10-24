@@ -1,6 +1,7 @@
 export const dynamic = "force-dynamic";
 
 import { auth } from "@/lib/auth";
+import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { DAYS } from "@/lib/data/meals";
@@ -8,6 +9,12 @@ import { DAYS } from "@/lib/data/meals";
 export default async function HomePage() {
   const session = await auth();
   if (!session) redirect("/login");
+
+  const user = await db.user.findUnique({
+    where: { id: session.user!.id },
+    select: { onboardingDone: true },
+  });
+  if (!user?.onboardingDone) redirect("/onboarding");
 
   const day = new Date().getDay();
   const today = DAYS[day === 0 ? 6 : day - 1];

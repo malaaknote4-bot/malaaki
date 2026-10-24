@@ -16,9 +16,15 @@ model User {
   image         String?
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
-  accounts      Account[]
-  sessions      Session[]
-  watchlist     WatchlistItem[]
+  accounts           Account[]
+  sessions           Session[]
+  watchlist          WatchlistItem[]
+  onboardingDone     Boolean  @default(false)
+  childAgeRange      String?
+  childAllergies     String[] @default([])
+  childFoodDislikes  String?
+  numChildren        Int?
+  dietaryPreferences String[] @default([])
 }
 
 model WatchlistItem {
