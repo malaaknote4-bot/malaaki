@@ -1,34 +1,90 @@
 @import "tailwindcss";
 
+/* ── Light mode (warm cream, Kidszoo-inspired) ── */
 :root {
-  --background: #09090b;
-  --foreground: #f4f4f5;
+  --background:   #faf4ec;
+  --foreground:   #1c1917;
+  --card:         #ffffff;
+  --card-fg:      #1c1917;
+  --border:       rgba(0,0,0,0.07);
+  --muted:        #f5ede0;
+  --soft:         #a8836e;
+  --primary:      #f59e0b;
+  --primary-fg:   #ffffff;
+  --surface:      #fff8f0;
+  --surface2:     #fdefd9;
+  --accent:       #f59e0b;
+  --accent-lt:    #fbbf24;
+  --accent-dim:   rgba(245,158,11,0.15);
+  --meals:        #10b981;
+  --meals-dim:    rgba(16,185,129,0.12);
+  --activities:   #8b5cf6;
+  --activities-dim: rgba(139,92,246,0.12);
+  --stories:      #ec4899;
+  --stories-dim:  rgba(236,72,153,0.12);
+  --positive:     #10b981;
+  --negative:     #ef4444;
+}
+
+/* ── Dark mode ── */
+.dark {
+  --background:   #1e1b2e;
+  --foreground:   #f0eeff;
+  --card:         #2a2540;
+  --card-fg:      #f0eeff;
+  --border:       rgba(255,255,255,0.07);
+  --muted:        #2e2848;
+  --soft:         #b9aadd;
+  --primary:      #f59e0b;
+  --primary-fg:   #1c1917;
+  --surface:      #241e38;
+  --surface2:     #2e2848;
+  --accent:       #f59e0b;
+  --accent-lt:    #fbbf24;
+  --accent-dim:   rgba(245,158,11,0.15);
+  --meals:        #34d399;
+  --meals-dim:    rgba(52,211,153,0.12);
+  --activities:   #a78bfa;
+  --activities-dim: rgba(167,139,250,0.12);
+  --stories:      #f472b6;
+  --stories-dim:  rgba(244,114,182,0.12);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-
-  /* Design system tokens */
-  --color-surface:      #12122a;
-  --color-surface2:     #1a1a3e;
-  --color-surface3:     #0f0f23;
-  --color-border:       rgba(255,255,255,0.07);
-  --color-accent:       #4361ee;
-  --color-accent-lt:    #6c8bff;
-  --color-accent-dim:   rgba(67,97,238,0.18);
-  --color-positive:     #22c55e;
-  --color-positive-dim: rgba(34,197,94,0.15);
-  --color-negative:     #ef4444;
-  --color-negative-dim: rgba(239,68,68,0.15);
-  --color-muted:        #71717a;
-  --color-soft:         #a1a1aa;
+  --font-sans:              var(--font-nunito);
+  --color-background:       var(--background);
+  --color-foreground:       var(--foreground);
+  --color-card:             var(--card);
+  --color-card-fg:          var(--card-fg);
+  --color-border:           var(--border);
+  --color-muted:            var(--muted);
+  --color-soft:             var(--soft);
+  --color-primary:          var(--primary);
+  --color-primary-fg:       var(--primary-fg);
+  --color-surface:          var(--surface);
+  --color-surface2:         var(--surface2);
+  --color-accent:           var(--accent);
+  --color-accent-lt:        var(--accent-lt);
+  --color-accent-dim:       var(--accent-dim);
+  --color-meals:            var(--meals);
+  --color-meals-dim:        var(--meals-dim);
+  --color-activities:       var(--activities);
+  --color-activities-dim:   var(--activities-dim);
+  --color-stories:          var(--stories);
+  --color-stories-dim:      var(--stories-dim);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  font-family: var(--font-nunito), 'Nunito', system-ui, sans-serif;
+}
+
+/* Floating decorative circles (background blobs) */
+.blob {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(48px);
+  opacity: 0.55;
+  pointer-events: none;
 }

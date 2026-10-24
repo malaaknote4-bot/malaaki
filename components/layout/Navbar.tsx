@@ -2,77 +2,78 @@
 
 import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
-import { TrendingUp, BarChart2, BookmarkCheck, LogIn, LogOut, User } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import SearchBar from "@/components/home/SearchBar";
+import { usePathname, useRouter } from "next/navigation";
+import { LogOut, User, ChevronLeft } from "lucide-react";
+import ThemeToggle from "@/components/ThemeToggle";
+import Image from "next/image";
 
 export default function Navbar() {
   const { data: session } = useSession();
+  const pathname = usePathname();
+  const router = useRouter();
+
+  const isHome = pathname === "/";
+  const isLogin = pathname === "/login";
+
+  if (isLogin) return null;
 
   return (
-    <nav className="sticky top-0 z-50 border-b border-border bg-background/90 backdrop-blur-sm">
-      <div className="mx-auto flex h-14 max-w-7xl items-center gap-3 px-4">
-        {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 text-white font-bold text-lg shrink-0">
-          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-accent">
-            <TrendingUp className="h-4 w-4 text-white" />
-          </div>
-          <span className="hidden sm:block tracking-tight">Stock Docs</span>
-        </Link>
+    <nav className="sticky top-0 z-50 border-b border-border bg-card/90 backdrop-blur-sm">
+      <div className="mx-auto flex h-14 max-w-2xl items-center gap-3 px-4">
+        {/* Back button on sub-pages */}
+        {!isHome ? (
+          <button
+            onClick={() => router.back()}
+            className="flex items-center gap-1 rounded-full px-3 py-1.5 text-sm font-semibold text-foreground hover:bg-muted transition-colors shrink-0"
+          >
+            <ChevronLeft className="h-4 w-4" />
+            Back
+          </button>
+        ) : (
+          <Link href="/" className="flex items-center gap-2 shrink-0">
+            <span className="text-xl">🏡</span>
+            <span className="font-black text-lg text-foreground tracking-tight">
+              Mum&apos;s Corner
+            </span>
+          </Link>
+        )}
 
-        {/* Search - grows to fill space */}
-        <div className="flex-1 max-w-lg">
-          <SearchBar />
-        </div>
+        <div className="flex-1" />
 
-        {/* Nav links */}
-        <div className="hidden md:flex items-center gap-1">
-          <Button variant="ghost" size="sm" asChild>
-            <Link href="/" className="gap-1.5">
-              <BarChart2 className="h-4 w-4" />
-              Markets
-            </Link>
-          </Button>
-          <Button variant="ghost" size="sm" asChild>
-            <Link href="/portfolio" className="gap-1.5">
-              <BookmarkCheck className="h-4 w-4" />
-              Watchlist
-            </Link>
-          </Button>
-        </div>
+        {/* Theme toggle */}
+        <ThemeToggle />
 
         {/* Auth */}
         {session ? (
           <div className="flex items-center gap-2">
             {session.user?.image ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
+              <Image
                 src={session.user.image}
                 alt={session.user.name ?? "User"}
-                className="h-8 w-8 rounded-full ring-1 ring-border"
+                width={32}
+                height={32}
+                className="h-8 w-8 rounded-full ring-2 ring-border"
               />
             ) : (
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-surface2">
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-muted">
                 <User className="h-4 w-4 text-soft" />
               </div>
             )}
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => signOut({ callbackUrl: "/" })}
-              className="gap-1.5"
+            <button
+              onClick={() => signOut({ callbackUrl: "/login" })}
+              className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-semibold text-soft hover:bg-muted hover:text-foreground transition-colors"
             >
               <LogOut className="h-4 w-4" />
               <span className="hidden sm:block">Sign out</span>
-            </Button>
+            </button>
           </div>
         ) : (
-          <Button variant="default" size="sm" asChild>
-            <Link href="/login" className="gap-1.5">
-              <LogIn className="h-4 w-4" />
-              Sign in
-            </Link>
-          </Button>
+          <Link
+            href="/login"
+            className="rounded-full bg-primary px-4 py-1.5 text-sm font-bold text-white hover:opacity-90 transition-opacity"
+          >
+            Sign in
+          </Link>
         )}
       </div>
     </nav>

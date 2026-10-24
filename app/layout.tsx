@@ -1,31 +1,24 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Nunito } from "next/font/google";
 import "./globals.css";
 import Providers from "./providers";
 import Navbar from "@/components/layout/Navbar";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const nunito = Nunito({
+  variable: "--font-nunito",
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800", "900"],
 });
 
 export const metadata: Metadata = {
-  title: "Stock Docs",
-  description: "Live stock prices, charts, news, and watchlist",
+  title: "Mum's Corner",
+  description: "Meal plans, daily activities & bedtime stories for your family",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col bg-zinc-950 text-zinc-100">
+    <html lang="en" className={nunito.variable} suppressHydrationWarning>
+      <body className="min-h-screen flex flex-col bg-background text-foreground antialiased">
         <Providers>
           <Navbar />
           <main className="flex-1">{children}</main>
