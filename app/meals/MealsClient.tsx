@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 import { weekMeals, DAYS, alternatives, getEffectiveMeal } from "@/lib/data/meals";
 import { SectionTitle } from "@/components/ui/decor";
 
@@ -56,23 +58,31 @@ export default function MealsClient({
         {mealLabels.map(({ key, label, time, panel }) => {
           const meal = getEffectiveMeal(meals[key], alternatives[key], dislikedFoods, selectedDay);
           return (
-            <article key={key} className="min-w-0 flex flex-col overflow-hidden rounded-[22px] border border-border bg-card">
+            <Link
+              key={key}
+              href={`/meals/${meal.slug}`}
+              className="group min-w-0 flex flex-col overflow-hidden rounded-[22px] border border-border bg-card transition-all hover:-translate-y-0.5 hover:shadow-lg"
+            >
               <div className={`${panel} relative flex aspect-[16/10] items-center justify-center`}>
-                <span className="text-7xl">{meal.emoji}</span>
+                <span className="text-7xl transition-transform group-hover:scale-105">{meal.emoji}</span>
                 <span className="absolute left-4 top-4 rounded-full bg-card/85 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-primary">
                   {label}
                 </span>
               </div>
               <div className="flex flex-1 flex-col p-5">
-                <p className="text-xs font-medium uppercase tracking-[0.14em] text-soft">{time}</p>
+                <p className="text-xs font-medium uppercase tracking-[0.14em] text-soft">
+                  {time} · {meal.time}
+                </p>
                 <h3 className="mt-1 font-display text-2xl leading-tight text-foreground">{meal.name}</h3>
-                <p className="mt-1.5 text-sm text-soft">{meal.note}</p>
-                <div className="mt-4 border-t border-border pt-4">
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-primary">How to make it</p>
-                  <p className="mt-1 text-sm leading-relaxed text-foreground/85">{meal.prep}</p>
+                <p className="mt-1.5 flex-1 text-sm text-soft">{meal.note}</p>
+                <div className="mt-4 flex items-center justify-between gap-3 border-t border-border pt-4">
+                  <span className="text-sm font-semibold text-primary">View recipe</span>
+                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-fg">
+                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                  </span>
                 </div>
               </div>
-            </article>
+            </Link>
           );
         })}
       </div>

@@ -38,7 +38,7 @@ export default async function HomePage() {
     { href: "/meals", emoji: "🍽️", title: "Weekly Meals", meta: "21 meals · 7 days", panel: "bg-peach" },
     { href: "/activities", emoji: "🪁", title: "Daily Activities", meta: `${activityCount} ideas today`, panel: "bg-sky" },
     { href: "/stories", emoji: "🌙", title: "Bedtime Stories", meta: `${stories.length} stories`, panel: "bg-blush" },
-    { href: "/meals", emoji: todayMeals[2].meal.emoji, title: "Tonight's Dinner", meta: todayMeals[2].meal.name, panel: "bg-peach" },
+    { href: `/meals/${todayMeals[2].meal.slug}`, emoji: todayMeals[2].meal.emoji, title: "Tonight's Dinner", meta: todayMeals[2].meal.name, panel: "bg-peach" },
   ];
 
   return (
@@ -72,16 +72,21 @@ export default async function HomePage() {
           </div>
           <ul className="mt-5 flex flex-col divide-y divide-border">
             {todayMeals.map(({ slot, meal }) => (
-              <li key={slot} className="flex items-center gap-4 py-3.5">
-                <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-peach text-2xl">
-                  {meal.emoji}
-                </span>
-                <span className="min-w-0 flex-1">
-                  <span className="block text-[11px] font-semibold uppercase tracking-[0.16em] text-primary">
-                    {slot}
+              <li key={slot}>
+                <Link href={`/meals/${meal.slug}`} className="group flex items-center gap-4 py-3.5">
+                  <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-peach text-2xl">
+                    {meal.emoji}
                   </span>
-                  <span className="block truncate font-semibold text-foreground">{meal.name}</span>
-                </span>
+                  <span className="min-w-0 flex-1">
+                    <span className="block text-[11px] font-semibold uppercase tracking-[0.16em] text-primary">
+                      {slot}
+                    </span>
+                    <span className="block truncate font-semibold text-foreground group-hover:text-primary transition-colors">
+                      {meal.name}
+                    </span>
+                  </span>
+                  <ArrowRight className="h-4 w-4 shrink-0 text-primary opacity-50 transition-opacity group-hover:opacity-100" />
+                </Link>
               </li>
             ))}
           </ul>
