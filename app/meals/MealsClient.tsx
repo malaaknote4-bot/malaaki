@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { weekMeals, DAYS } from "@/lib/data/meals";
+import { weekMeals, DAYS, alternatives, getEffectiveMeal } from "@/lib/data/meals";
 
 const mealLabels = [
   { key: "breakfast" as const, label: "Breakfast", emoji: "🌅", time: "Morning" },
@@ -52,10 +52,7 @@ export default function MealsClient({
       {/* Meal cards */}
       <div className="flex flex-col gap-4">
         {mealLabels.map(({ key, label, emoji, time }) => {
-          const meal = meals[key];
-          const dislikedMatches = dislikedFoods.length > 0
-            ? meal.tags.filter((t) => dislikedFoods.includes(t))
-            : [];
+          const meal = getEffectiveMeal(meals[key], alternatives[key], dislikedFoods);
           return (
             <div key={key} className="rounded-3xl bg-card border border-border shadow-sm p-5">
               <div className="flex items-start gap-4">
@@ -68,11 +65,6 @@ export default function MealsClient({
                 <div className="flex-1 min-w-0">
                   <span className="text-xs font-bold text-meals uppercase tracking-wide">{emoji} {label}</span>
                   <h3 className="font-black text-lg text-foreground leading-tight">{meal.name}</h3>
-                  {dislikedMatches.length > 0 && (
-                    <p className="mt-1 inline-flex items-center gap-1 rounded-full bg-amber-100 dark:bg-amber-900/30 border border-amber-300/50 px-2.5 py-0.5 text-xs font-bold text-amber-700 dark:text-amber-400">
-                      ⚠️ Contains {dislikedMatches.join(", ")}
-                    </p>
-                  )}
                   <p className="mt-0.5 text-sm text-soft font-medium">{meal.note}</p>
                   <p className="mt-2 flex items-start gap-1 text-xs font-semibold text-meals leading-snug">
                     <span>📋</span>
@@ -101,9 +93,9 @@ export default function MealsClient({
                 {i === todayIndex ? "Today" : d.slice(0, 3)}
               </span>
               <div className="flex-1 flex gap-2 text-xs font-medium text-soft truncate">
-                <span>{weekMeals[d].breakfast.emoji} {weekMeals[d].breakfast.name.split(" ").slice(0, 2).join(" ")}</span>
+                <span>{getEffectiveMeal(weekMeals[d].breakfast, alternatives.breakfast, dislikedFoods).emoji} {getEffectiveMeal(weekMeals[d].breakfast, alternatives.breakfast, dislikedFoods).name.split(" ").slice(0, 2).join(" ")}</span>
                 <span className="opacity-40">·</span>
-                <span>{weekMeals[d].dinner.emoji} {weekMeals[d].dinner.name.split(" ").slice(0, 2).join(" ")}</span>
+                <span>{getEffectiveMeal(weekMeals[d].dinner, alternatives.dinner, dislikedFoods).emoji} {getEffectiveMeal(weekMeals[d].dinner, alternatives.dinner, dislikedFoods).name.split(" ").slice(0, 2).join(" ")}</span>
               </div>
             </button>
           ))}

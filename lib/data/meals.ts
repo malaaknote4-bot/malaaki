@@ -167,3 +167,47 @@ export const weekMeals: WeekPlan = {
 };
 
 export const DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"] as const;
+
+export const alternatives: { breakfast: Meal[]; lunch: Meal[]; dinner: Meal[] } = {
+  breakfast: [
+    { emoji: "🥣", name: "Porridge with Honey & Berries", note: "Warm, filling and ready in 5 minutes", prep: "Cook oats with milk over medium heat. Top with fresh berries and a drizzle of honey.", tags: ["oats"] },
+    { emoji: "🍇", name: "Fruit Salad & Granola", note: "Fresh, colourful and no cooking needed", prep: "Chop seasonal fruit and layer with granola and a spoonful of yogurt.", tags: ["yogurt", "oats"] },
+    { emoji: "🥐", name: "Croissant & Jam", note: "A special morning treat", prep: "Warm croissants in the oven for 3 min. Serve with butter and jam.", tags: ["bread"] },
+    { emoji: "🫐", name: "Blueberry Smoothie Bowl", note: "Five minutes, no mess, packed with vitamins", prep: "Blend blueberries, milk and a spoon of honey. Pour into a bowl and top with granola.", tags: ["oats"] },
+    { emoji: "🍊", name: "Yogurt with Fruit & Seeds", note: "Creamy, fresh and ready instantly", prep: "Spoon yogurt into a bowl. Top with chopped fruit and a pinch of seeds.", tags: ["yogurt"] },
+    { emoji: "🌽", name: "Cornflakes & Milk", note: "Quick, simple, classic", prep: "Pour cereal into a bowl and add cold milk. Done in 30 seconds.", tags: [] },
+    { emoji: "🍑", name: "Rice Cakes with Nut Butter & Fruit", note: "Light, crunchy and satisfying", prep: "Spread rice cakes with nut butter and top with banana slices or jam.", tags: [] },
+    { emoji: "🧇", name: "Waffles with Maple Syrup & Berries", note: "Crispy, sweet and perfect for weekends", prep: "Toast waffles, serve with fresh berries and a drizzle of maple syrup.", tags: ["eggs", "bread"] },
+  ],
+  lunch: [
+    { emoji: "🥗", name: "Rainbow Veggie Wrap", note: "Colourful, crunchy and fun to eat", prep: "Fill a tortilla with hummus, grated carrot, cucumber and red pepper. Roll tight.", tags: ["bread", "carrot"] },
+    { emoji: "🥣", name: "Lentil & Veggie Soup", note: "Hearty and filling — great with bread", prep: "Simmer red lentils, diced carrot and stock for 20 min. Blend half for a creamy texture.", tags: ["lentils", "carrot"] },
+    { emoji: "🧆", name: "Falafel & Hummus Plate", note: "Great finger food with salad", prep: "Bake ready-made falafel at 200°C for 12 min. Serve with hummus and cucumber.", tags: [] },
+    { emoji: "🫕", name: "Minestrone Soup", note: "Packed with veg, ready in 20 minutes", prep: "Simmer tinned tomatoes, mixed veg, beans and stock 15 min. Top with a little cheese.", tags: ["tomato", "beans", "cheese"] },
+    { emoji: "🥙", name: "Avocado & Salad Flatbread", note: "Creamy, quick and kid-approved", prep: "Mash avocado with lemon juice. Spread onto flatbread with salad leaves and cucumber.", tags: ["avocado", "bread"] },
+    { emoji: "🍜", name: "Vegetable Noodle Soup", note: "Light, warming and ready in 15 minutes", prep: "Simmer stock with noodles, sweetcorn and peas for 10 min. Season gently.", tags: ["sweetcorn", "peas"] },
+    { emoji: "🧀", name: "Baked Sweet Potato with Beans", note: "Naturally sweet, filling and easy", prep: "Microwave sweet potato 8 min, crisp in oven 10 min. Fill with warm beans and a little cheese.", tags: ["beans", "cheese"] },
+    { emoji: "🥪", name: "Cream Cheese & Veggie Sandwich", note: "Soft, fresh and ready in 2 minutes", prep: "Spread cream cheese on bread, top with cucumber, spinach and a pinch of salt.", tags: ["cheese", "bread"] },
+  ],
+  dinner: [
+    { emoji: "🍛", name: "Mild Veggie Curry & Rice", note: "Warming, colourful and packed with veg", prep: "Sauté onion, add diced veg and mild curry paste with coconut milk. Simmer 20 min. Serve on rice.", tags: ["onion", "rice", "tomato"] },
+    { emoji: "🥘", name: "Bean & Vegetable Stew", note: "Hearty, nutritious and totally plant-based", prep: "Simmer tinned beans, diced veg, tomatoes and stock 20 min. Season gently.", tags: ["beans", "tomato"] },
+    { emoji: "🍖", name: "Pork Tenderloin with Roasted Veg", note: "Tender, juicy and full of flavour", prep: "Season pork, sear in a pan, finish in oven at 200°C for 20 min. Roast veg alongside.", tags: ["pork", "carrot", "potato"] },
+    { emoji: "🐑", name: "Lamb Koftas & Rice", note: "Mild spiced meatballs kids love", prep: "Mix lamb mince with mild spices. Shape into balls, bake at 200°C for 15 min. Serve with rice.", tags: ["lamb", "rice"] },
+    { emoji: "🥦", name: "Broccoli & Potato Bake", note: "Simple and comforting without the cheese", prep: "Slice potatoes thin, layer with broccoli and a light cream sauce. Bake 30 min at 190°C.", tags: ["broccoli", "potato"] },
+    { emoji: "🫕", name: "Butternut Squash Soup & Bread Roll", note: "Silky, sweet and ready in 30 minutes", prep: "Roast squash 25 min, blend with stock, ginger and coconut milk. Serve with a warm roll.", tags: ["bread"] },
+    { emoji: "🍤", name: "Prawn Stir-Fry with Noodles", note: "Quick, colourful and packed with veg", prep: "Stir-fry prawns 3 min, add peppers, sweetcorn and noodles with mild soy sauce.", tags: ["sweetcorn", "pepper"] },
+    { emoji: "🌱", name: "Lentil Shepherd's Pie", note: "A veggie twist on a classic comfort dish", prep: "Simmer lentils with veg and tomatoes 20 min. Top with mashed potato and bake 20 min.", tags: ["lentils", "tomato", "potato"] },
+  ],
+};
+
+export function getEffectiveMeal(
+  meal: Meal,
+  pool: Meal[],
+  dislikes: string[]
+): Meal {
+  if (dislikes.length === 0) return meal;
+  if (!meal.tags.some((t) => dislikes.includes(t))) return meal;
+  const alt = pool.find((m) => !m.tags.some((t) => dislikes.includes(t)));
+  return alt ?? meal;
+}
