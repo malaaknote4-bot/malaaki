@@ -66,7 +66,7 @@ const STEPS = [
   {
     emoji: "🙅",
     question: "Any foods they really don't like?",
-    subtitle: "Search and pick — we'll flag these on the meal plan",
+    subtitle: "Search and pick — we'll swap these out of the meal plan",
     type: "search-multi" as const,
     field: "childFoodDislikes",
   },
@@ -198,31 +198,28 @@ export default function OnboardingClient() {
   }
 
   return (
-    <div className="relative overflow-hidden min-h-screen flex items-center justify-center">
-      <div className="blob h-72 w-72 bg-amber-200 -top-10 -right-10" />
-      <div className="blob h-56 w-56 bg-pink-100 bottom-20 -left-10" />
-      <div className="blob h-40 w-40 bg-violet-100 top-1/3 left-0" />
-
-      <div className="relative z-10 w-full max-w-md px-4 py-10">
+    <div className="min-h-screen flex items-center justify-center bg-background">
+      <div className="w-full max-w-lg px-4 py-10">
         {/* Progress dots */}
         <div className="flex gap-2 justify-center mb-8">
           {STEPS.map((_, i) => (
             <div
               key={i}
-              className={`h-2 rounded-full transition-all ${
-                i <= step ? "w-8 bg-primary" : "w-2 bg-border"
+              className={`h-1.5 rounded-full transition-all ${
+                i <= step ? "w-8 bg-primary" : "w-1.5 bg-primary/25"
               }`}
             />
           ))}
         </div>
 
         {/* Card */}
-        <div className="rounded-3xl bg-card border border-border shadow-lg p-6">
-          <div className="text-center mb-6">
+        <div className="overflow-hidden rounded-[28px] bg-card border border-border">
+          <div className="bg-blush px-6 py-8 text-center">
             <div className="text-5xl mb-3">{current.emoji}</div>
-            <h2 className="text-xl font-black text-foreground leading-tight">{current.question}</h2>
-            <p className="mt-1 text-sm font-medium text-soft">{current.subtitle}</p>
+            <h2 className="font-display text-3xl sm:text-4xl leading-[1] text-primary">{current.question}</h2>
+            <p className="mt-2 text-sm text-foreground/75">{current.subtitle}</p>
           </div>
+          <div className="p-6">
 
           {/* Single select */}
           {current.type === "single" && (
@@ -231,13 +228,13 @@ export default function OnboardingClient() {
                 <button
                   key={opt.value}
                   onClick={() => selectSingle(opt.value)}
-                  className={`rounded-2xl border-2 p-4 text-left transition-all ${
+                  className={`rounded-2xl border p-4 text-left transition-all ${
                     getSingleValue() === opt.value
-                      ? "border-primary bg-primary/10"
-                      : "border-border bg-muted hover:border-primary/40"
+                      ? "border-primary bg-blush"
+                      : "border-border bg-card hover:border-primary/40"
                   }`}
                 >
-                  <div className="font-black text-foreground">{opt.label}</div>
+                  <div className="font-semibold text-foreground">{opt.label}</div>
                   {"sub" in opt && (
                     <div className="text-xs font-semibold text-soft mt-0.5">{opt.sub}</div>
                   )}
@@ -253,10 +250,10 @@ export default function OnboardingClient() {
                 <button
                   key={opt.value}
                   onClick={() => toggleMulti(opt.value)}
-                  className={`rounded-2xl border-2 px-4 py-2 text-sm font-bold transition-all ${
+                  className={`rounded-full border px-4 py-2 text-sm font-semibold transition-all ${
                     getMultiValues().includes(opt.value)
-                      ? "border-primary bg-primary/10 text-foreground"
-                      : "border-border bg-muted text-soft hover:border-primary/40"
+                      ? "border-primary bg-blush text-foreground"
+                      : "border-border bg-card text-soft hover:border-primary/40"
                   }`}
                 >
                   {opt.label}
@@ -277,7 +274,7 @@ export default function OnboardingClient() {
                       <button
                         key={val}
                         onClick={() => toggleFoodDislike(val)}
-                        className="flex items-center gap-1 rounded-2xl bg-primary/15 border border-primary/30 px-3 py-1 text-xs font-bold text-foreground"
+                        className="flex items-center gap-1 rounded-full bg-primary text-primary-fg px-3 py-1 text-xs font-semibold"
                       >
                         {food?.label}
                         <span className="ml-0.5 opacity-60">×</span>
@@ -293,7 +290,7 @@ export default function OnboardingClient() {
                 placeholder="Search foods (e.g. chicken, pasta…)"
                 value={foodSearch}
                 onChange={(e) => setFoodSearch(e.target.value)}
-                className="w-full rounded-2xl border border-border bg-muted px-4 py-3 text-foreground font-semibold text-sm placeholder:text-soft focus:outline-none focus:border-primary mb-3"
+                className="w-full rounded-full border border-border bg-background px-5 py-3 text-foreground font-semibold text-sm placeholder:text-soft focus:outline-none focus:border-primary mb-3"
               />
 
               {/* Filtered chip list */}
@@ -302,10 +299,10 @@ export default function OnboardingClient() {
                   <button
                     key={opt.value}
                     onClick={() => toggleFoodDislike(opt.value)}
-                    className={`rounded-2xl border-2 px-3 py-1.5 text-sm font-bold transition-all ${
+                    className={`rounded-full border px-3 py-1.5 text-sm font-semibold transition-all ${
                       answers.childFoodDislikes.includes(opt.value)
-                        ? "border-primary bg-primary/10 text-foreground"
-                        : "border-border bg-muted text-soft hover:border-primary/40"
+                        ? "border-primary bg-blush text-foreground"
+                        : "border-border bg-card text-soft hover:border-primary/40"
                     }`}
                   >
                     {opt.label}
@@ -323,6 +320,7 @@ export default function OnboardingClient() {
               )}
             </div>
           )}
+          </div>
         </div>
 
         {/* Navigation */}
@@ -330,7 +328,7 @@ export default function OnboardingClient() {
           {step > 0 && (
             <button
               onClick={() => setStep((s) => s - 1)}
-              className="flex-1 rounded-2xl border border-border bg-card py-3 text-sm font-bold text-soft hover:bg-muted transition-colors"
+              className="flex-1 rounded-full border border-border bg-card py-3 text-sm font-semibold text-soft hover:bg-muted transition-colors"
             >
               ← Back
             </button>
@@ -338,7 +336,7 @@ export default function OnboardingClient() {
           <button
             onClick={handleNext}
             disabled={!canAdvance() || saving}
-            className={`flex-1 rounded-2xl py-3 text-sm font-black text-white transition-all ${
+            className={`flex-1 rounded-full py-3 text-sm font-semibold text-primary-fg transition-all ${
               canAdvance() && !saving
                 ? "bg-primary hover:opacity-90"
                 : "bg-primary/40 cursor-not-allowed"

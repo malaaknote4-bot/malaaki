@@ -1,57 +1,72 @@
 @import "tailwindcss";
 
-/* ── Light mode (warm cream, Kidszoo-inspired) ── */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ── Light: cream page, blush/sky/peach panels, tomato red accent ── */
 :root {
-  --background:   #faf4ec;
-  --foreground:   #1c1917;
-  --card:         #ffffff;
-  --card-fg:      #1c1917;
-  --border:       rgba(0,0,0,0.07);
-  --muted:        #f5ede0;
-  --soft:         #a8836e;
-  --primary:      #f59e0b;
-  --primary-fg:   #ffffff;
-  --surface:      #fff8f0;
-  --surface2:     #fdefd9;
-  --accent:       #f59e0b;
-  --accent-lt:    #fbbf24;
-  --accent-dim:   rgba(245,158,11,0.15);
-  --meals:        #10b981;
-  --meals-dim:    rgba(16,185,129,0.12);
-  --activities:   #8b5cf6;
-  --activities-dim: rgba(139,92,246,0.12);
-  --stories:      #ec4899;
-  --stories-dim:  rgba(236,72,153,0.12);
-  --positive:     #10b981;
-  --negative:     #ef4444;
+  --background:     #fbf3ec;
+  --foreground:     #2b1916;
+  --card:           #fffaf6;
+  --card-fg:        #2b1916;
+  --border:         rgba(140, 50, 35, 0.12);
+  --muted:          #f5e7de;
+  --soft:           #7d5c54;
+  --primary:        #d42a1f;
+  --primary-fg:     #ffffff;
+  --primary-dim:    rgba(212, 42, 31, 0.10);
+  --blush:          #f9d5d6;
+  --sky:            #cddff0;
+  --peach:          #f7e1cf;
+  --surface:        #fffaf6;
+  --surface2:       #f5e7de;
+  --accent:         #d42a1f;
+  --accent-lt:      #e8574d;
+  --accent-dim:     rgba(212, 42, 31, 0.10);
+  --meals:          #d42a1f;
+  --meals-dim:      #f7e1cf;
+  --activities:     #d42a1f;
+  --activities-dim: #cddff0;
+  --stories:        #d42a1f;
+  --stories-dim:    #f9d5d6;
+  --positive:       #2f8a5b;
+  --negative:       #d42a1f;
 }
 
-/* ── Dark mode ── */
+/* ── Dark: deep cocoa page, muted panels, brighter coral accent ── */
 .dark {
-  --background:   #1e1b2e;
-  --foreground:   #f0eeff;
-  --card:         #2a2540;
-  --card-fg:      #f0eeff;
-  --border:       rgba(255,255,255,0.07);
-  --muted:        #2e2848;
-  --soft:         #b9aadd;
-  --primary:      #f59e0b;
-  --primary-fg:   #1c1917;
-  --surface:      #241e38;
-  --surface2:     #2e2848;
-  --accent:       #f59e0b;
-  --accent-lt:    #fbbf24;
-  --accent-dim:   rgba(245,158,11,0.15);
-  --meals:        #34d399;
-  --meals-dim:    rgba(52,211,153,0.12);
-  --activities:   #a78bfa;
-  --activities-dim: rgba(167,139,250,0.12);
-  --stories:      #f472b6;
-  --stories-dim:  rgba(244,114,182,0.12);
+  --background:     #1c1312;
+  --foreground:     #f8ebe4;
+  --card:           #271b19;
+  --card-fg:        #f8ebe4;
+  --border:         rgba(255, 210, 195, 0.10);
+  --muted:          #33231f;
+  --soft:           #c4a59b;
+  --primary:        #f05a4d;
+  --primary-fg:     #1c1312;
+  --primary-dim:    rgba(240, 90, 77, 0.14);
+  --blush:          #3d2427;
+  --sky:            #1f2b38;
+  --peach:          #36261d;
+  --surface:        #271b19;
+  --surface2:       #33231f;
+  --accent:         #f05a4d;
+  --accent-lt:      #f5776c;
+  --accent-dim:     rgba(240, 90, 77, 0.14);
+  --meals:          #f05a4d;
+  --meals-dim:      #36261d;
+  --activities:     #f05a4d;
+  --activities-dim: #1f2b38;
+  --stories:        #f05a4d;
+  --stories-dim:    #3d2427;
+  --positive:       #5cc28c;
+  --negative:       #f05a4d;
+  color-scheme: dark;
 }
 
 @theme inline {
-  --font-sans:              var(--font-nunito);
+  --font-sans:              var(--font-dm-sans);
+  --font-display:           var(--font-dm-serif);
+  --font-reading:           var(--font-lora);
   --color-background:       var(--background);
   --color-foreground:       var(--foreground);
   --color-card:             var(--card);
@@ -61,6 +76,10 @@
   --color-soft:             var(--soft);
   --color-primary:          var(--primary);
   --color-primary-fg:       var(--primary-fg);
+  --color-primary-dim:      var(--primary-dim);
+  --color-blush:            var(--blush);
+  --color-sky:              var(--sky);
+  --color-peach:            var(--peach);
   --color-surface:          var(--surface);
   --color-surface2:         var(--surface2);
   --color-accent:           var(--accent);
@@ -77,14 +96,19 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-nunito), 'Nunito', system-ui, sans-serif;
+  font-family: var(--font-dm-sans), "DM Sans", system-ui, sans-serif;
 }
 
-/* Floating decorative circles (background blobs) */
-.blob {
-  position: absolute;
-  border-radius: 9999px;
-  filter: blur(48px);
+h1, h2, h3 {
+  text-wrap: balance;
+}
+
+/* Small grid of dots used as a decorative accent on panels */
+.dot-grid {
+  width: 44px;
+  height: 44px;
+  background-image: radial-gradient(var(--primary) 1.6px, transparent 1.7px);
+  background-size: 11px 11px;
   opacity: 0.55;
   pointer-events: none;
 }
