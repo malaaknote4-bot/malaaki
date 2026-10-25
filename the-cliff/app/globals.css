@@ -1,0 +1,52 @@
+@import "tailwindcss";
+@import "@fontsource-variable/cormorant-garamond/wght.css";
+@import "@fontsource-variable/cormorant-garamond/wght-italic.css";
+@import "@fontsource-variable/inter/index.css";
+
+/* One calm palette, used everywhere: sand, stone, sea and ink. */
+@theme {
+  --color-sand: #f6f1ea;
+  --color-shell: #fbf8f4;
+  --color-stone: #e7dfd4;
+  --color-mist: #c9d6d6;
+  --color-sea: #5f8288;
+  --color-sea-deep: #2f4a50;
+  --color-ink: #24302f;
+  --color-ink-soft: #5b6664;
+
+  --font-serif: "Cormorant Garamond Variable", Georgia, serif;
+  --font-sans: "Inter Variable", system-ui, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+body {
+  background: var(--color-sand);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--color-mist);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-sea);
+  outline-offset: 3px;
+}
+
+/* Make the native date picker icon match the palette */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  opacity: 0.55;
+  cursor: pointer;
+}
