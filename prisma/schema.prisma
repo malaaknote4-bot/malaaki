@@ -26,6 +26,7 @@ model User {
   numChildren        Int?
   dietaryPreferences String[] @default([])
   mealChoices        Json     @default("{}")
+  activityChoices    Json     @default("{}")
   customMeals        CustomMeal[]
 }
 

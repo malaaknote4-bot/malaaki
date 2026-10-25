@@ -7,7 +7,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { DAYS, resolveMeal, parseMealChoices } from "@/lib/data/meals";
 import { loadCustomMeals } from "@/lib/custom-meals.server";
-import { morningActivities, afternoonActivities, eveningActivities } from "@/lib/data/activities";
+import { PERIODS, PER_PERIOD } from "@/lib/data/activities";
 import { stories } from "@/lib/data/stories";
 import { Sparkle, PillLink, SectionTitle } from "@/components/ui/decor";
 
@@ -34,12 +34,11 @@ export default async function HomePage() {
     meal: resolveMeal(today, k, dislikes, choices, customMeals),
   }));
   const tonight = stories[now.getDay()];
-  const activityCount =
-    morningActivities.length + afternoonActivities.length + eveningActivities.length;
+  const activityCount = PERIODS.length * PER_PERIOD;
 
   const cards = [
     { href: "/meals", emoji: "🍽️", title: "Weekly Meals", meta: "21 meals · 7 days", panel: "bg-peach" },
-    { href: "/activities", emoji: "🪁", title: "Daily Activities", meta: `${activityCount} ideas today`, panel: "bg-sky" },
+    { href: "/activities", emoji: "🪁", title: "Daily Activities", meta: `${activityCount} activities today`, panel: "bg-sky" },
     { href: "/stories", emoji: "🌙", title: "Bedtime Stories", meta: `${stories.length} stories`, panel: "bg-blush" },
     { href: `/meals/${todayMeals[2].meal.slug}`, emoji: todayMeals[2].meal.emoji, title: "Tonight's Dinner", meta: todayMeals[2].meal.name, panel: "bg-peach" },
   ];
