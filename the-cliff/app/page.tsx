@@ -1,88 +1,121 @@
 import Image from "next/image";
-import Header from "@/components/Header";
+import ArrowButton from "@/components/ArrowButton";
 import BookingForm from "@/components/BookingForm";
+import GridLines from "@/components/GridLines";
+import Header from "@/components/Header";
+import Logo from "@/components/Logo";
 import MobileBookBar from "@/components/MobileBookBar";
 import SectionHeading from "@/components/SectionHeading";
 import { airbnbLink } from "@/lib/airbnb";
 import { amenities, bookingSteps, experiences, faqs, gallery, highlights, rating, site, spaces } from "@/lib/content";
 
+const container = "mx-auto w-full max-w-6xl px-5 md:px-8";
+
 export default function Home() {
   return (
     <>
       <Header />
-      <main id="top" className="pb-20 md:pb-0">
+      <GridLines />
+      <main id="top">
         {/* Hero */}
-        <section className="relative flex min-h-[92svh] items-end overflow-hidden">
-          <Image src="/images/deck-view.jpg" alt="" fill preload sizes="100vw" className="object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-b from-ink/40 via-ink/25 to-ink/60" />
-          <div className="relative mx-auto w-full max-w-6xl px-5 pb-28 pt-32 text-white md:px-8 md:pb-36">
-            <p className="text-xs font-medium uppercase tracking-[0.28em] opacity-90">{site.region}</p>
-            <h1 className="mt-5 max-w-3xl font-serif text-5xl leading-[1.05] font-light md:text-7xl">
-              Where the land ends, <em className="italic">and the quiet begins.</em>
-            </h1>
-            <p className="mt-6 max-w-xl text-lg leading-relaxed opacity-90">
-              {site.name} is a private clifftop home high above the rainforest valleys of Springbrook. Slow mornings,
-              wide horizons and nothing to do but rest.
-            </p>
-            <div className="mt-9 flex flex-wrap gap-3">
-              <a href="#book" className="rounded-full bg-white px-7 py-3.5 font-medium text-ink transition-colors hover:bg-sand">
-                Check availability
-              </a>
+        <section className="relative isolate flex min-h-[100svh] flex-col overflow-hidden bg-night text-white">
+          <Image src="/images/deck-view.jpg" alt="" fill preload sizes="100vw" className="-z-10 animate-settle object-cover" />
+          <div className="absolute inset-0 -z-10 bg-gradient-to-b from-night/75 via-night/35 to-night" />
+          <div className="absolute inset-0 -z-10 bg-gradient-to-r from-night/70 to-transparent" />
+
+          <div className={`${container} flex flex-1 flex-col justify-end pb-32 pt-32 md:pb-40`}>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-white/70">{site.region}</p>
+
+            <div className="mt-8 grid items-end gap-10 md:grid-cols-[1fr_auto]">
+              <h1 className="font-serif text-[clamp(3.3rem,10vw,8.4rem)] leading-[0.9] font-light tracking-[-0.035em]">
+                <span className="block animate-rise">Wake up</span>
+                <span className="block animate-rise [animation-delay:120ms]">above the</span>
+                <span className="block animate-rise italic [animation-delay:240ms]">rainforest.</span>
+              </h1>
+
               <a
-                href="#retreat"
-                className="rounded-full border border-white/60 px-7 py-3.5 font-medium text-white transition-colors hover:bg-white/10"
+                href={airbnbLink()}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group hidden w-72 items-stretch bg-paper text-ink md:flex"
               >
-                Explore the retreat
+                <span className="relative w-24 shrink-0">
+                  <Image src="/images/house.jpg" alt="" fill sizes="96px" className="object-cover" />
+                </span>
+                <span className="flex flex-col justify-center gap-1 p-4">
+                  <span className="font-serif text-3xl font-light leading-none">★ {rating.score}</span>
+                  <span className="text-xs font-semibold text-ink-soft">
+                    {rating.badge} · {rating.reviews} reviews
+                  </span>
+                  <span className="mt-1 text-[11px] font-semibold uppercase tracking-[0.2em] group-hover:underline">Read on Airbnb ↗</span>
+                </span>
               </a>
             </div>
-            <p className="mt-8 text-sm opacity-90">
-              <span aria-hidden="true">★ </span>
-              {rating.score} · {rating.badge} on Airbnb · {rating.reviews} reviews
+
+            <div className="mt-12 grid gap-8 md:grid-cols-4 md:items-stretch">
+              <div className="flex md:col-span-2 md:items-end">
+                <ArrowButton href="#book" className="w-full sm:w-72">Check availability</ArrowButton>
+              </div>
+              <p className="border-l-2 border-white/60 bg-night/40 px-6 py-5 text-[15px] leading-relaxed text-white/80 backdrop-blur-md md:col-span-2">
+                {site.listingTitle}. A private clifftop home in Springbrook with layer after layer of World Heritage rainforest
+                falling away below the deck.
+              </p>
+            </div>
+
+            <p className="mt-8 text-xs font-semibold text-white/70 md:hidden">
+              ★ {rating.score} · {rating.badge} · {rating.reviews} reviews on Airbnb
             </p>
           </div>
         </section>
 
         {/* Booking */}
-        <section id="book" className="relative z-10 mx-auto -mt-16 max-w-6xl scroll-mt-28 px-5 md:px-8">
+        <section id="book" className={`${container} relative z-30 -mt-20 scroll-mt-28`}>
           <BookingForm />
         </section>
 
-        {/* Intro + highlights */}
-        <section id="retreat" className="mx-auto max-w-6xl px-5 py-24 md:px-8 md:py-32">
-          <div className="grid gap-14 md:grid-cols-2 md:items-center">
-            <SectionHeading
-              eyebrow="The Retreat"
-              title="A calm place to arrive, unwind and stay a little longer"
-              text="Perched on the edge of the Springbrook escarpment, The Cliff looks out across layer after layer of World Heritage rainforest. The deck sits right on the edge, so the view is part of every meal, every morning coffee and every sunset."
-            />
-            <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-3xl bg-stone">
+        {/* The Retreat */}
+        <section id="retreat" className="py-28 md:py-40">
+          <div className={container}>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-ink-soft">The Retreat</p>
+            <p className="mt-8 max-w-4xl font-serif text-[clamp(1.9rem,3.6vw,3.1rem)] leading-[1.15] font-light tracking-[-0.015em] text-balance">
+              Perched on the edge of the Springbrook escarpment, The Cliff is a place to <em>slow right down</em>. Coffee on the
+              deck, mist in the valley, and nothing on the schedule but the view.
+            </p>
+
+            <dl className="mt-20 grid grid-cols-2 border-t border-line md:grid-cols-4">
               {highlights.map((h) => (
-                <div key={h.label} className="bg-shell p-7 md:p-9">
-                  <dt className="text-xs uppercase tracking-[0.18em] text-ink-soft">{h.label}</dt>
-                  <dd className="mt-2 font-serif text-3xl">{h.value}</dd>
+                <div key={h.label} className="border-b border-line py-8 pr-4 md:border-b-0">
+                  <dd className="font-serif text-6xl font-light tabular-nums tracking-tight md:text-7xl">{h.value.replace(/\D/g, "").padStart(2, "0")}</dd>
+                  <dt className="mt-3 text-[11px] font-semibold uppercase tracking-[0.24em] text-ink-soft">{h.label}</dt>
                 </div>
               ))}
             </dl>
-          </div>
-          <div className="mt-8 flex justify-end">
-            <a href={airbnbLink()} target="_blank" rel="noopener noreferrer" className="text-sm text-ink-soft underline-offset-4 hover:text-ink hover:underline">
+
+            <a
+              href={airbnbLink()}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-10 inline-block text-sm font-semibold underline decoration-line underline-offset-8 transition-colors hover:decoration-ink"
+            >
               ★ {rating.score} from {rating.reviews} guest reviews. Read them on Airbnb ↗
             </a>
           </div>
         </section>
 
         {/* Spaces */}
-        <section className="bg-shell py-24 md:py-32">
-          <div className="mx-auto max-w-6xl px-5 md:px-8">
-            <SectionHeading eyebrow="The Spaces" title="Made for slow days above the valley" />
-            <div className="mt-14 grid gap-10 md:grid-cols-3 md:gap-8">
-              {spaces.map((s) => (
-                <article key={s.title}>
-                  <div className="relative aspect-[4/5] overflow-hidden rounded-3xl">
-                    <Image src={s.image} alt={s.alt} fill sizes="(min-width: 768px) 33vw, 100vw" className="object-cover" />
+        <section className="bg-paper py-28 md:py-40">
+          <div className={container}>
+            <SectionHeading eyebrow="The Spaces" title={<>Made for slow days <em>above the valley</em></>} />
+            <div className="mt-20 grid gap-20 md:gap-28">
+              {spaces.map((s, i) => (
+                <article key={s.title} className="grid items-end gap-8 md:grid-cols-4 md:gap-0">
+                  <div className={`relative aspect-[4/3] md:col-span-2 ${i % 2 ? "md:order-2" : ""}`}>
+                    <Image src={s.image} alt={s.alt} fill sizes="(min-width: 768px) 50vw, 100vw" className="object-cover" />
                   </div>
-                  <h3 className="mt-6 font-serif text-2xl">{s.title}</h3>
-                  <p className="mt-2 leading-relaxed text-ink-soft">{s.text}</p>
+                  <div className={`md:col-span-2 ${i % 2 ? "md:pr-12" : "md:pl-12"}`}>
+                    <h3 className="font-serif text-4xl font-light tracking-tight md:text-5xl">{s.title}</h3>
+                    <p className="mt-4 max-w-md text-lg leading-relaxed text-ink-soft">{s.text}</p>
+                  </div>
                 </article>
               ))}
             </div>
@@ -90,38 +123,38 @@ export default function Home() {
         </section>
 
         {/* Amenities */}
-        <section id="amenities" className="mx-auto max-w-6xl px-5 py-24 md:px-8 md:py-32">
-          <SectionHeading
-            eyebrow="Amenities"
-            title="Everything you need, nothing you don't"
-            text="Thoughtful comforts so you can settle in from the moment you arrive."
-          />
-          <ul className="mt-14 grid gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
-            {amenities.map((a) => (
-              <li key={a.title} className="border-t border-stone pt-5">
-                <h3 className="font-medium">{a.title}</h3>
-                <p className="mt-1.5 text-sm leading-relaxed text-ink-soft">{a.text}</p>
-              </li>
-            ))}
-          </ul>
+        <section id="amenities" className="bg-night py-28 text-white md:py-40">
+          <div className={container}>
+            <SectionHeading
+              dark
+              eyebrow="Amenities"
+              title={<>Everything you need, <em>nothing you don&rsquo;t</em></>}
+              text="The whole house to yourselves, with the view doing most of the work."
+            />
+            <ul className="mt-20 grid grid-cols-2 gap-y-12 md:grid-cols-4">
+              {amenities.map((a) => (
+                <li key={a.title} className="border-t border-line-light pr-4 pt-6 md:pr-6">
+                  <h3 className="font-semibold">{a.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-white/60">{a.text}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
         </section>
 
         {/* Gallery */}
-        <section id="gallery" className="bg-shell py-24 md:py-32">
-          <div className="mx-auto max-w-6xl px-5 md:px-8">
-            <SectionHeading eyebrow="Gallery" title="Every hour, a different view" />
-            <div className="mt-14 grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
+        <section id="gallery" className="py-28 md:py-40">
+          <div className={container}>
+            <SectionHeading eyebrow="Gallery" title={<>Every hour, <em>a different view</em></>} />
+            <div className="mt-16 grid grid-cols-2 gap-2 md:grid-cols-4">
               {gallery.map((g, i) => (
-                <div
-                  key={g.src + i}
-                  className={`relative overflow-hidden rounded-2xl ${i === 0 ? "col-span-2 aspect-[5/4] md:row-span-2" : "aspect-[5/4] md:aspect-auto"}`}
-                >
+                <div key={g.src} className={`relative overflow-hidden ${i === 0 ? "col-span-2 aspect-[5/4] md:row-span-2" : "aspect-[5/4] md:aspect-auto"}`}>
                   <Image
                     src={g.src}
                     alt={g.alt}
                     fill
                     sizes={i === 0 ? "(min-width: 768px) 50vw, 100vw" : "(min-width: 768px) 25vw, 50vw"}
-                    className="object-cover transition-transform duration-700 hover:scale-[1.03]"
+                    className="object-cover transition-transform duration-[1.2s] hover:scale-[1.04]"
                   />
                 </div>
               ))}
@@ -130,107 +163,107 @@ export default function Home() {
         </section>
 
         {/* Location */}
-        <section id="location" className="mx-auto max-w-6xl px-5 py-24 md:px-8 md:py-32">
-          <div className="grid gap-14 md:grid-cols-[1.1fr_1fr] md:items-center">
-            <div className="relative aspect-[16/9] overflow-hidden rounded-3xl">
-              <Image src="/images/valley.jpg" alt="Rainforest valleys of Springbrook stretching to the coast" fill sizes="(min-width: 768px) 50vw, 100vw" className="object-cover" />
-            </div>
-            <div>
+        <section id="location" className="bg-paper py-28 md:py-40">
+          <div className={`${container} grid gap-14 md:grid-cols-4 md:gap-0`}>
+            <div className="md:col-span-2 md:pr-12">
               <SectionHeading
                 eyebrow="The Location"
-                title="High in the Gold Coast Hinterland"
+                title={<>High in the <em>Gold Coast Hinterland</em></>}
                 text="Springbrook is cool, green and quiet, with national park on the doorstep and the coast an easy drive away. Airbnb shares the exact address once your booking is confirmed."
               />
-              <ul className="mt-10 space-y-6">
-                {experiences.map((e) => (
-                  <li key={e.title} className="flex gap-4">
-                    <span className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-gum" aria-hidden="true" />
-                    <div>
-                      <h3 className="font-medium">{e.title}</h3>
-                      <p className="mt-1 text-ink-soft">{e.text}</p>
-                    </div>
-                  </li>
-                ))}
-              </ul>
             </div>
+            <div className="relative aspect-[16/10] md:col-span-2 md:self-end">
+              <Image src="/images/valley.jpg" alt="Rainforest valleys of Springbrook stretching to the coast" fill sizes="(min-width: 768px) 50vw, 100vw" className="object-cover" />
+            </div>
+            <ul className="border-t border-line md:col-span-4 md:mt-20 md:grid md:grid-cols-4">
+              {experiences.map((e) => (
+                <li key={e.title} className="border-b border-line py-6 pr-6 md:border-b-0">
+                  <h3 className="font-semibold">{e.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-ink-soft">{e.text}</p>
+                </li>
+              ))}
+            </ul>
           </div>
         </section>
 
         {/* How to book */}
-        <section className="bg-gum-deep py-24 text-white md:py-32">
-          <div className="mx-auto max-w-6xl px-5 md:px-8">
-            <div className="max-w-2xl">
-              <p className="text-xs font-medium uppercase tracking-[0.22em] text-mist">How to book</p>
-              <h2 className="mt-4 font-serif text-4xl leading-tight font-light md:text-5xl">Three simple steps to the cliff</h2>
-            </div>
-            <ol className="mt-14 grid gap-10 md:grid-cols-3">
-              {bookingSteps.map((s, i) => (
-                <li key={s.title}>
-                  <span className="font-serif text-5xl font-light text-mist">0{i + 1}</span>
-                  <h3 className="mt-4 text-lg font-medium">{s.title}</h3>
-                  <p className="mt-2 leading-relaxed text-white/75">{s.text}</p>
-                </li>
-              ))}
-            </ol>
-            <div className="mt-14 flex flex-wrap gap-3">
-              <a href="#book" className="rounded-full bg-white px-7 py-3.5 font-medium text-ink transition-colors hover:bg-sand">
-                Choose your dates
-              </a>
-              <a
-                href={airbnbLink()}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="rounded-full border border-white/50 px-7 py-3.5 font-medium transition-colors hover:bg-white/10"
-              >
-                View listing on Airbnb ↗
-              </a>
+        <section className="bg-night py-28 text-white md:py-40">
+          <div className={container}>
+            <SectionHeading dark eyebrow="How to book" title={<>Three simple steps <em>to the cliff</em></>} />
+            <div className="mt-20 grid gap-12 md:grid-cols-4 md:gap-0">
+              <ol className="grid gap-12 md:col-span-3 md:grid-cols-3 md:gap-0">
+                {bookingSteps.map((s, i) => (
+                  <li key={s.title} className="border-t border-line-light pr-8 pt-6">
+                    <span className="font-serif text-6xl font-light text-moss md:text-7xl">0{i + 1}</span>
+                    <h3 className="mt-6 text-lg font-semibold">{s.title}</h3>
+                    <p className="mt-2 leading-relaxed text-white/60">{s.text}</p>
+                  </li>
+                ))}
+              </ol>
+              <div className="flex flex-col gap-3 border-t border-line-light pt-6 md:pl-8">
+                <ArrowButton href="#book" className="w-full">Choose dates</ArrowButton>
+                <a
+                  href={airbnbLink()}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm font-semibold text-white/70 underline decoration-white/30 underline-offset-8 hover:text-white"
+                >
+                  View the listing on Airbnb ↗
+                </a>
+              </div>
             </div>
           </div>
         </section>
 
         {/* FAQ */}
-        <section id="faq" className="mx-auto max-w-3xl px-5 py-24 md:px-8 md:py-32">
-          <SectionHeading eyebrow="FAQ" title="Good to know" center />
-          <div className="mt-12 divide-y divide-stone border-y border-stone">
-            {faqs.map((f) => (
-              <details key={f.q} className="group py-2">
-                <summary className="flex cursor-pointer list-none items-center justify-between gap-6 py-4 text-lg [&::-webkit-details-marker]:hidden">
-                  {f.q}
-                  <span className="text-2xl font-light text-gum transition-transform duration-300 group-open:rotate-45" aria-hidden="true">
-                    +
-                  </span>
-                </summary>
-                <p className="pb-5 leading-relaxed text-ink-soft">{f.a}</p>
-              </details>
-            ))}
+        <section id="faq" className="py-28 md:py-40">
+          <div className={`${container} grid gap-12 md:grid-cols-4 md:gap-0`}>
+            <div className="md:col-span-2 md:pr-12">
+              <SectionHeading eyebrow="FAQ" title={<>Good <em>to know</em></>} />
+            </div>
+            <div className="border-t border-line md:col-span-2">
+              {faqs.map((f) => (
+                <details key={f.q} className="group border-b border-line">
+                  <summary className="flex cursor-pointer list-none items-center justify-between gap-6 py-6 text-lg font-medium [&::-webkit-details-marker]:hidden">
+                    {f.q}
+                    <span className="grid h-8 w-8 shrink-0 place-items-center border border-line text-lg font-light transition-transform duration-300 group-open:rotate-45" aria-hidden="true">
+                      +
+                    </span>
+                  </summary>
+                  <p className="pb-6 pr-12 leading-relaxed text-ink-soft">{f.a}</p>
+                </details>
+              ))}
+            </div>
           </div>
         </section>
 
         {/* Closing CTA */}
-        <section className="relative overflow-hidden">
-          <Image src="/images/valley.jpg" alt="" fill sizes="100vw" className="object-cover" />
-          <div className="absolute inset-0 bg-ink/40" />
-          <div className="relative mx-auto max-w-3xl px-5 py-28 text-center text-white md:py-40">
-            <h2 className="font-serif text-4xl leading-tight font-light md:text-6xl">Your stay on the cliff is waiting</h2>
-            <p className="mx-auto mt-5 max-w-lg text-lg opacity-90">Choose your dates and book securely through our official Airbnb listing.</p>
-            <a href="#book" className="mt-9 inline-block rounded-full bg-white px-8 py-4 font-medium text-ink transition-colors hover:bg-sand">
+        <section className="relative isolate overflow-hidden bg-night text-white">
+          <Image src="/images/valley.jpg" alt="" fill sizes="100vw" className="-z-10 object-cover" />
+          <div className="absolute inset-0 -z-10 bg-night/65" />
+          <div className={`${container} py-32 md:py-48`}>
+            <h2 className="max-w-4xl font-serif text-[clamp(2.8rem,7vw,6rem)] leading-[0.95] font-light tracking-[-0.03em]">
+              Your stay on the cliff <em>is waiting.</em>
+            </h2>
+            <p className="mt-8 max-w-md text-lg text-white/75">Choose your dates and book securely through our official Airbnb listing.</p>
+            <ArrowButton href="#book" className="mt-12 w-full sm:w-72">
               Book your stay
-            </a>
+            </ArrowButton>
           </div>
         </section>
       </main>
 
-      <footer className="bg-shell">
-        <div className="mx-auto flex max-w-6xl flex-col gap-6 px-5 py-12 pb-28 text-sm text-ink-soft md:flex-row md:items-center md:justify-between md:px-8 md:pb-12">
-          <div>
-            <p className="font-serif text-2xl text-ink">{site.name}</p>
-            <p className="mt-1">{site.region}</p>
+      <footer className="border-t border-line-light bg-night text-white/60">
+        <div className={`${container} flex flex-col gap-8 py-12 pb-24 text-sm md:flex-row md:items-center md:justify-between md:pb-12`}>
+          <div className="text-white">
+            <Logo />
+            <p className="mt-3 text-white/50">{site.region}</p>
           </div>
           <nav className="flex flex-wrap gap-6" aria-label="Footer">
-            <a href="#retreat" className="hover:text-ink">The Retreat</a>
-            <a href="#gallery" className="hover:text-ink">Gallery</a>
-            <a href="#faq" className="hover:text-ink">FAQ</a>
-            <a href={airbnbLink()} target="_blank" rel="noopener noreferrer" className="hover:text-ink">
+            <a href="#retreat" className="hover:text-white">The Retreat</a>
+            <a href="#gallery" className="hover:text-white">Gallery</a>
+            <a href="#faq" className="hover:text-white">FAQ</a>
+            <a href={airbnbLink()} target="_blank" rel="noopener noreferrer" className="hover:text-white">
               Airbnb listing ↗
             </a>
           </nav>

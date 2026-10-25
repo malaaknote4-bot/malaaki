@@ -19,9 +19,7 @@ function nightsBetween(a: string, b: string) {
   return Math.round((new Date(`${b}T00:00:00`).getTime() - new Date(`${a}T00:00:00`).getTime()) / 86400000);
 }
 
-type Props = { variant?: "light" | "panel" };
-
-export default function BookingForm({ variant = "panel" }: Props) {
+export default function BookingForm() {
   const today = useMemo(() => isoDate(new Date()), []);
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
@@ -50,57 +48,55 @@ export default function BookingForm({ variant = "panel" }: Props) {
     );
   }
 
-  const field =
-    "w-full rounded-xl border border-stone bg-shell px-4 py-3 text-base text-ink outline-none transition-colors focus:border-gum";
-  const label = "mb-1.5 block text-xs font-medium uppercase tracking-[0.14em] text-ink-soft";
+  const label = "block text-[10px] font-semibold uppercase tracking-[0.26em] text-ink-soft";
+  const field = "mt-2 w-full bg-transparent text-base font-medium text-ink outline-none";
+  const cell = "flex flex-col justify-center px-5 py-4 md:px-6";
 
   return (
-    <form
-      onSubmit={onSubmit}
-      className={`grid gap-4 rounded-3xl p-5 sm:p-7 md:grid-cols-[1fr_1fr_1.3fr_auto] md:items-end ${
-        variant === "panel" ? "bg-white shadow-[0_20px_60px_-30px_rgba(36,48,47,0.45)]" : "bg-shell"
-      }`}
-      aria-label="Check availability"
-    >
-      <div>
-        <label htmlFor="check-in" className={label}>
-          Check-in
-        </label>
-        <input id="check-in" type="date" min={today} value={checkIn} onChange={(e) => onCheckInChange(e.target.value)} className={field} />
+    <form onSubmit={onSubmit} className="bg-paper shadow-[0_30px_80px_-40px_rgba(0,0,0,0.55)]" aria-label="Check availability">
+      <div className="grid divide-y divide-line md:grid-cols-[1fr_1fr_1.5fr_auto] md:divide-x md:divide-y-0">
+        <div className="grid grid-cols-2 divide-x divide-line md:col-span-2">
+          <label htmlFor="check-in" className={cell}>
+            <span className={label}>Check-in</span>
+            <input id="check-in" type="date" min={today} value={checkIn} onChange={(e) => onCheckInChange(e.target.value)} className={field} />
+          </label>
+          <label htmlFor="check-out" className={cell}>
+            <span className={label}>Check-out</span>
+            <input
+              id="check-out"
+              type="date"
+              min={checkIn ? addDays(checkIn, 1) : today}
+              value={checkOut}
+              onChange={(e) => setCheckOut(e.target.value)}
+              className={field}
+              aria-invalid={datesInvalid}
+              aria-describedby="booking-note"
+            />
+          </label>
+        </div>
+        <fieldset className="grid grid-cols-2 divide-x divide-line">
+          <legend className="sr-only">Guests</legend>
+          <Stepper label="Adults" value={adults} min={1} max={site.maxGuests - children} onChange={setAdults} />
+          <Stepper label="Children" value={children} min={0} max={site.maxGuests - adults} onChange={setChildren} />
+        </fieldset>
+        <button
+          type="submit"
+          disabled={datesInvalid}
+          className="group flex min-h-16 items-stretch text-[15px] font-semibold text-white disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          <span className="flex flex-1 items-center bg-ink px-6 md:px-7">Check availability</span>
+          <span className="grid w-16 place-items-center bg-moss transition-[width] duration-300 group-hover:w-[4.5rem]" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.6">
+              <path d="M2 9h13M10 4l5 5-5 5" />
+            </svg>
+          </span>
+        </button>
       </div>
-      <div>
-        <label htmlFor="check-out" className={label}>
-          Check-out
-        </label>
-        <input
-          id="check-out"
-          type="date"
-          min={checkIn ? addDays(checkIn, 1) : today}
-          value={checkOut}
-          onChange={(e) => setCheckOut(e.target.value)}
-          className={field}
-          aria-invalid={datesInvalid}
-          aria-describedby="booking-note"
-        />
-      </div>
-      <fieldset className="grid grid-cols-2 gap-3">
-        <legend className="sr-only">Guests</legend>
-        <Stepper label="Adults" value={adults} min={1} max={site.maxGuests - children} onChange={setAdults} />
-        <Stepper label="Children" value={children} min={0} max={site.maxGuests - adults} onChange={setChildren} />
-      </fieldset>
-      <button
-        type="submit"
-        disabled={datesInvalid}
-        className="h-[50px] rounded-full bg-gum-deep px-7 text-base font-medium text-white transition-colors hover:bg-ink disabled:cursor-not-allowed disabled:opacity-50"
-      >
-        Check availability
-      </button>
-
-      <p id="booking-note" className="text-sm text-ink-soft md:col-span-4" aria-live="polite">
+      <p id="booking-note" className="border-t border-line px-5 py-3 text-[13px] text-ink-soft md:px-6" aria-live="polite">
         {datesInvalid
           ? "Check-out needs to be after check-in."
           : nights > 0
-            ? `${nights} night${nights === 1 ? "" : "s"} · ${totalGuests} guest${totalGuests === 1 ? "" : "s"} — you'll confirm price and book securely on Airbnb.`
+            ? `${nights} night${nights === 1 ? "" : "s"} · ${totalGuests} guest${totalGuests === 1 ? "" : "s"}. You'll see the price and book securely on Airbnb.`
             : `Up to ${site.maxGuests} guests. You'll see live prices and book securely on Airbnb.`}
       </p>
     </form>
@@ -121,15 +117,15 @@ function Stepper({
   onChange: (n: number) => void;
 }) {
   const btn =
-    "grid h-8 w-8 place-items-center rounded-full border border-stone text-lg leading-none text-ink transition-colors hover:border-gum disabled:opacity-30 disabled:hover:border-stone";
+    "grid h-8 w-8 place-items-center border border-line text-lg leading-none text-ink transition-colors hover:border-ink disabled:opacity-30 disabled:hover:border-line";
   return (
-    <div>
-      <span className="mb-1.5 block text-xs font-medium uppercase tracking-[0.14em] text-ink-soft">{label}</span>
-      <div className="flex h-[50px] items-center justify-between rounded-xl border border-stone bg-shell px-2.5">
+    <div className="flex flex-col justify-center px-5 py-4 md:px-6">
+      <span className="block text-[10px] font-semibold uppercase tracking-[0.26em] text-ink-soft">{label}</span>
+      <div className="mt-2 flex items-center justify-between gap-2">
         <button type="button" className={btn} onClick={() => onChange(value - 1)} disabled={value <= min} aria-label={`Fewer ${label.toLowerCase()}`}>
           −
         </button>
-        <span className="tabular-nums" aria-live="polite" aria-label={`${value} ${label.toLowerCase()}`}>
+        <span className="tabular-nums font-medium" aria-live="polite" aria-label={`${value} ${label.toLowerCase()}`}>
           {value}
         </span>
         <button type="button" className={btn} onClick={() => onChange(value + 1)} disabled={value >= max} aria-label={`More ${label.toLowerCase()}`}>
