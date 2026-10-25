@@ -968,6 +968,74 @@ export function findMealBySlug(slug: string): Meal | undefined {
   return allMeals.find((m) => m.slug === slug);
 }
 
+export type Slot = "breakfast" | "lunch" | "dinner";
+export const SLOTS: Slot[] = ["breakfast", "lunch", "dinner"];
+// Saved swaps, keyed "Monday.breakfast" → meal slug.
+export type MealChoices = Record<string, string>;
+export const choiceKey = (day: string, slot: Slot) => `${day}.${slot}`;
+
+const slotOf = new Map<string, Slot>(
+  SLOTS.flatMap((slot) => [
+    ...Object.values(weekMeals).map((d) => [d[slot].slug, slot] as const),
+    ...alternatives[slot].map((m) => [m.slug, slot] as const),
+  ])
+);
+
+const containsDislike = (meal: Meal, dislikes: string[]) => meal.tags.some((t) => dislikes.includes(t));
+
+export function getSwapOptions(slot: Slot, dislikes: string[], currentSlug: string): Meal[] {
+  return allMeals.filter(
+    (m) => slotOf.get(m.slug) === slot && m.slug !== currentSlug && !containsDislike(m, dislikes)
+  );
+}
+
+export type MealSearch = {
+  results: { meal: Meal; sameSlot: boolean }[];
+  hidden: { count: number; foods: string[] };
+};
+
+export function searchMeals(query: string, slot: Slot, dislikes: string[], currentSlug = ""): MealSearch {
+  const words = query
+    .toLowerCase()
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((w) => (w.length > 3 && w.endsWith("s") ? w.slice(0, -1) : w))
+    // Match at the start of a word, so "egg" doesn't hit "veggie".
+    .map((w) => new RegExp(`\\b${w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`));
+  const matches = allMeals.filter((m) => {
+    if (m.slug === currentSlug) return false;
+    const haystack = [m.name, m.note, ...m.ingredients.map((i) => i.name), ...m.tags].join(" ").toLowerCase();
+    return words.every((w) => w.test(haystack));
+  });
+  const hiddenMeals = matches.filter((m) => containsDislike(m, dislikes));
+  const visible = matches
+    .filter((m) => !containsDislike(m, dislikes))
+    .map((meal) => ({ meal, sameSlot: slotOf.get(meal.slug) === slot }))
+    .sort((a, b) => Number(b.sameSlot) - Number(a.sameSlot));
+  return {
+    results: visible,
+    hidden: {
+      count: hiddenMeals.length,
+      foods: [...new Set(hiddenMeals.flatMap((m) => m.tags.filter((t) => dislikes.includes(t))))],
+    },
+  };
+}
+
+// The meal shown for a day/slot: the family's own pick if it's still allowed, otherwise the plan's meal.
+export function resolveMeal(day: string, slot: Slot, dislikes: string[], choices: MealChoices): Meal {
+  const picked = choices[choiceKey(day, slot)];
+  const chosen = picked ? findMealBySlug(picked) : undefined;
+  if (chosen && !containsDislike(chosen, dislikes)) return chosen;
+  return getEffectiveMeal(weekMeals[day][slot], alternatives[slot], dislikes, DAYS.indexOf(day as (typeof DAYS)[number]));
+}
+
+export function parseMealChoices(value: unknown): MealChoices {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return {};
+  return Object.fromEntries(
+    Object.entries(value).filter((e): e is [string, string] => typeof e[1] === "string")
+  );
+}
+
 export function formatAmount(amount: number, unit: "g" | "ml"): string {
   if (amount >= 1000) {
     const big = Number((amount / 1000).toFixed(2)).toString();

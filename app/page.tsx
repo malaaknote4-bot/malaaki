@@ -5,7 +5,7 @@ import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { DAYS, weekMeals, alternatives, getEffectiveMeal } from "@/lib/data/meals";
+import { DAYS, resolveMeal, parseMealChoices } from "@/lib/data/meals";
 import { morningActivities, afternoonActivities, eveningActivities } from "@/lib/data/activities";
 import { stories } from "@/lib/data/stories";
 import { Sparkle, PillLink, SectionTitle } from "@/components/ui/decor";
@@ -16,7 +16,7 @@ export default async function HomePage() {
 
   const user = await db.user.findUnique({
     where: { id: session.user!.id },
-    select: { onboardingDone: true, childFoodDislikes: true },
+    select: { onboardingDone: true, childFoodDislikes: true, mealChoices: true },
   });
   if (!user?.onboardingDone) redirect("/onboarding");
 
@@ -25,10 +25,11 @@ export default async function HomePage() {
   const today = DAYS[dayIdx];
   const firstName = session.user?.name?.split(" ")[0] ?? "there";
   const dislikes = user.childFoodDislikes ?? [];
+  const choices = parseMealChoices(user.mealChoices);
 
   const todayMeals = (["breakfast", "lunch", "dinner"] as const).map((k) => ({
     slot: k,
-    meal: getEffectiveMeal(weekMeals[today][k], alternatives[k], dislikes, dayIdx),
+    meal: resolveMeal(today, k, dislikes, choices),
   }));
   const tonight = stories[now.getDay()];
   const activityCount =

@@ -25,6 +25,7 @@ model User {
   childFoodDislikes  String[] @default([])
   numChildren        Int?
   dietaryPreferences String[] @default([])
+  mealChoices        Json     @default("{}")
 }
 
 model WatchlistItem {

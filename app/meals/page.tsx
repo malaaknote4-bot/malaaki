@@ -4,6 +4,7 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
 import MealsClient from "./MealsClient";
+import { parseMealChoices } from "@/lib/data/meals";
 import { PageHeader } from "@/components/ui/decor";
 
 export default async function MealsPage() {
@@ -12,7 +13,7 @@ export default async function MealsPage() {
 
   const user = await db.user.findUnique({
     where: { id: session.user!.id },
-    select: { childFoodDislikes: true },
+    select: { childFoodDislikes: true, mealChoices: true },
   });
 
   const day = new Date().getDay();
@@ -25,7 +26,11 @@ export default async function MealsPage() {
         title="This Week's Table"
         subtitle="Breakfast, lunch and dinner for every day — tap a day to see what's cooking."
       />
-      <MealsClient todayIndex={todayIndex} dislikedFoods={user?.childFoodDislikes ?? []} />
+      <MealsClient
+        todayIndex={todayIndex}
+        dislikedFoods={user?.childFoodDislikes ?? []}
+        initialChoices={parseMealChoices(user?.mealChoices)}
+      />
     </div>
   );
 }
