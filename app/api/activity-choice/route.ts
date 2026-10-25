@@ -2,7 +2,7 @@ import { z } from "zod";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { DAYS } from "@/lib/data/meals";
-import { PERIODS, PER_PERIOD, activityKey, findActivity, parseActivityChoices } from "@/lib/data/activities";
+import { PERIODS, PER_PERIOD, activityKey, findActivity, parseActivityChoices, parseCustomActivities } from "@/lib/data/activities";
 
 const Body = z.object({
   day: z.enum(DAYS),
@@ -18,12 +18,16 @@ export async function POST(req: Request) {
   }
 
   const body = Body.safeParse(await req.json().catch(() => null));
-  if (!body.success || (body.data.id !== null && !findActivity(body.data.id))) {
+  const user = await db.user.findUnique({
+    where: { id: session.user.id },
+    select: { activityChoices: true, customActivities: true },
+  });
+  const custom = parseCustomActivities(user?.customActivities);
+  if (!body.success || (body.data.id !== null && !findActivity(body.data.id, custom))) {
     return Response.json({ error: "Invalid activity choice" }, { status: 400 });
   }
   const { day, period, index, id } = body.data;
 
-  const user = await db.user.findUnique({ where: { id: session.user.id }, select: { activityChoices: true } });
   const choices = parseActivityChoices(user?.activityChoices);
   const key = activityKey(day, period as (typeof PERIODS)[number], index);
   if (id === null) delete choices[key];

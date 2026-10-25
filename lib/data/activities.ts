@@ -11,6 +11,8 @@ export type Activity = {
   title: string;
   duration: string;
   description: string;
+  // Set on an activity a parent added themselves.
+  custom?: true;
 };
 
 type Entry = Omit<Activity, "period">;
@@ -88,8 +90,8 @@ export type ActivityChoices = Record<string, string>;
 export const activityKey = (day: string, period: Period, index: number) => `${day}.${period}.${index}`;
 export const parseActivityChoices = parseMealChoices;
 
-export function findActivity(id: string | undefined): Activity | undefined {
-  return id ? ACTIVITIES.find((a) => a.id === id) : undefined;
+export function findActivity(id: string | undefined, custom: Activity[] = []): Activity | undefined {
+  return id ? (custom.find((a) => a.id === id) ?? ACTIVITIES.find((a) => a.id === id)) : undefined;
 }
 
 export function scheduledActivity(day: string, period: Period, index: number): Activity {
@@ -98,28 +100,37 @@ export function scheduledActivity(day: string, period: Period, index: number): A
   return list[(d * PER_PERIOD + index) % list.length];
 }
 
-export function resolveActivity(day: string, period: Period, index: number, choices: ActivityChoices): Activity {
-  return findActivity(choices[activityKey(day, period, index)]) ?? scheduledActivity(day, period, index);
+export function resolveActivity(
+  day: string,
+  period: Period,
+  index: number,
+  choices: ActivityChoices,
+  custom: Activity[] = []
+): Activity {
+  return findActivity(choices[activityKey(day, period, index)], custom) ?? scheduledActivity(day, period, index);
 }
 
-export function dayActivities(day: string, choices: ActivityChoices): Record<Period, Activity[]> {
+export function dayActivities(day: string, choices: ActivityChoices, custom: Activity[] = []): Record<Period, Activity[]> {
   return Object.fromEntries(
-    PERIODS.map((p) => [p, Array.from({ length: PER_PERIOD }, (_, i) => resolveActivity(day, p, i, choices))])
+    PERIODS.map((p) => [p, Array.from({ length: PER_PERIOD }, (_, i) => resolveActivity(day, p, i, choices, custom))])
   ) as Record<Period, Activity[]>;
 }
 
-export function getActivityOptions(period: Period, excludeIds: string[]): Activity[] {
-  return activitiesByPeriod[period].filter((a) => !excludeIds.includes(a.id));
+// A family's own activities come first, for the time of day they were added for.
+export function getActivityOptions(period: Period, excludeIds: string[], custom: Activity[] = []): Activity[] {
+  return [...custom.filter((a) => a.period === period), ...activitiesByPeriod[period]].filter(
+    (a) => !excludeIds.includes(a.id)
+  );
 }
 
-export function searchActivities(query: string, period: Period, excludeIds: string[]) {
+export function searchActivities(query: string, period: Period, excludeIds: string[], custom: Activity[] = []) {
   const words = query
     .toLowerCase()
     .split(/\s+/)
     .filter(Boolean)
     .map((w) => (w.length > 3 && w.endsWith("s") ? w.slice(0, -1) : w))
     .map((w) => new RegExp(`\\b${w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`));
-  const matches = ACTIVITIES.filter((a) => {
+  const matches = [...custom, ...ACTIVITIES].filter((a) => {
     if (excludeIds.includes(a.id)) return false;
     const haystack = `${a.title} ${a.description}`.toLowerCase();
     return words.every((w) => w.test(haystack));
@@ -128,4 +139,26 @@ export function searchActivities(query: string, period: Period, excludeIds: stri
     same: matches.filter((a) => a.period === period),
     other: matches.filter((a) => a.period !== period),
   };
+}
+
+// Parents' own activities, stored as a JSON list on the user.
+export function parseCustomActivities(value: unknown): Activity[] {
+  if (!Array.isArray(value)) return [];
+  return value.flatMap((v) => {
+    if (!v || typeof v !== "object") return [];
+    const a = v as Record<string, unknown>;
+    const str = (k: string) => (typeof a[k] === "string" ? (a[k] as string) : "");
+    if (!str("id") || !str("title") || !PERIODS.includes(a.period as Period)) return [];
+    return [
+      {
+        id: str("id"),
+        period: a.period as Period,
+        emoji: str("emoji") || "⭐",
+        title: str("title"),
+        duration: str("duration") || "Any time",
+        description: str("description"),
+        custom: true as const,
+      },
+    ];
+  });
 }

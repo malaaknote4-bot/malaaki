@@ -45,7 +45,7 @@ function ActivityCard({
     >
       {isPick && (
         <span className="absolute right-4 top-4 rounded-full bg-primary px-2.5 py-0.5 text-[11px] font-semibold text-primary-fg">
-          Your pick
+          {activity.custom ? "Your activity" : "Your pick"}
         </span>
       )}
       <div className="flex items-start gap-4">
@@ -90,12 +90,15 @@ function ActivityCard({
 export default function ActivitiesClient({
   todayIndex,
   initialChoices,
+  initialCustomActivities,
 }: {
   todayIndex: number;
   initialChoices: ActivityChoices;
+  initialCustomActivities: Activity[];
 }) {
   const [selectedDay, setSelectedDay] = useState(todayIndex);
   const [choices, setChoices] = useState<ActivityChoices>(initialChoices);
+  const [customActivities, setCustomActivities] = useState<Activity[]>(initialCustomActivities);
   const [done, setDone] = useState<Set<string>>(new Set());
   const [swap, setSwap] = useState<Slot | null>(null);
   const [saveError, setSaveError] = useState<string | null>(null);
@@ -103,7 +106,7 @@ export default function ActivitiesClient({
   const openSlot = useRef<Slot | null>(null);
 
   const day = DAYS[selectedDay];
-  const plan = dayActivities(day, choices);
+  const plan = dayActivities(day, choices, customActivities);
   const dayIds = PERIODS.flatMap((p) => plan[p].map((a) => a.id));
   const doneKey = (a: Activity) => `${day}.${a.id}`;
   const doneCount = dayIds.filter((id) => done.has(`${day}.${id}`)).length;
@@ -214,10 +217,18 @@ export default function ActivitiesClient({
         <ActivitySwapSheet
           day={day}
           period={swap.period}
+          index={swap.index}
           current={plan[swap.period][swap.index]}
           dayIds={dayIds}
           hasPick={Boolean(choices[activityKey(day, swap.period, swap.index)])}
+          customActivities={customActivities}
           onChoose={(id) => saveChoice(swap, id)}
+          onCustomSaved={(activity, saved) => {
+            setCustomActivities((list) => [activity, ...list]);
+            setChoices(saved);
+            setSaveError(null);
+            closeSheet();
+          }}
           onReset={() => saveChoice(swap, null)}
           onClose={closeSheet}
         />
@@ -228,7 +239,7 @@ export default function ActivitiesClient({
         <SectionTitle>Week at a Glance</SectionTitle>
         <div className="overflow-hidden rounded-[22px] border border-border bg-card">
           {DAYS.map((d, i) => {
-            const dp = dayActivities(d, choices);
+            const dp = dayActivities(d, choices, customActivities);
             return (
               <button
                 key={d}

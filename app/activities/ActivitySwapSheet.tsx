@@ -1,8 +1,15 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Search, X } from "lucide-react";
-import { getActivityOptions, searchActivities, type Activity, type Period } from "@/lib/data/activities";
+import { Plus, Search, X } from "lucide-react";
+import {
+  getActivityOptions,
+  searchActivities,
+  type Activity,
+  type ActivityChoices,
+  type Period,
+} from "@/lib/data/activities";
+import CustomActivityForm from "./CustomActivityForm";
 
 const PANEL: Record<Period, string> = { morning: "bg-peach", afternoon: "bg-sky", evening: "bg-blush" };
 
@@ -17,6 +24,7 @@ function OptionRow({ activity, panel, onChoose }: { activity: Activity; panel: s
         <span className="min-w-0 flex-1">
           <span className="block truncate font-semibold text-foreground">{activity.title}</span>
           <span className="block truncate text-xs text-soft">
+            {activity.custom && <span className="font-semibold text-primary">Your activity · </span>}
             {activity.duration} · {activity.description}
           </span>
         </span>
@@ -30,26 +38,52 @@ function OptionRow({ activity, panel, onChoose }: { activity: Activity; panel: s
 
 const label = "px-3 pb-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-soft";
 
+function AddOwnRow({ query, onClick }: { query: string; onClick: () => void }) {
+  return (
+    <button
+      onClick={onClick}
+      className="mb-2 flex w-full items-center gap-3 rounded-2xl border border-dashed border-primary/50 px-3 py-2.5 text-left transition-colors hover:bg-blush"
+    >
+      <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-fg">
+        <Plus className="h-5 w-5" />
+      </span>
+      <span className="min-w-0 flex-1">
+        <span className="block truncate font-semibold text-foreground">
+          {query ? <>Add &ldquo;{query}&rdquo; as your own activity</> : "Add your own activity"}
+        </span>
+        <span className="block truncate text-xs text-soft">Type anything you like — we can fill in the details</span>
+      </span>
+    </button>
+  );
+}
+
 export default function ActivitySwapSheet({
   day,
   period,
+  index,
   current,
   dayIds,
   hasPick,
+  customActivities,
   onChoose,
+  onCustomSaved,
   onReset,
   onClose,
 }: {
   day: string;
   period: Period;
+  index: number;
   current: Activity;
   dayIds: string[];
   hasPick: boolean;
+  customActivities: Activity[];
   onChoose: (id: string) => void;
+  onCustomSaved: (activity: Activity, choices: ActivityChoices) => void;
   onReset: () => void;
   onClose: () => void;
 }) {
   const [query, setQuery] = useState("");
+  const [mode, setMode] = useState<"browse" | "create">("browse");
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -65,11 +99,20 @@ export default function ActivitySwapSheet({
   }, [onClose]);
 
   const q = query.trim();
-  const options = useMemo(() => getActivityOptions(period, dayIds), [period, dayIds]);
-  const search = useMemo(() => (q ? searchActivities(q, period, dayIds) : null), [q, period, dayIds]);
+  const options = useMemo(
+    () => getActivityOptions(period, dayIds, customActivities),
+    [period, dayIds, customActivities]
+  );
+  const search = useMemo(
+    () => (q ? searchActivities(q, period, dayIds, customActivities) : null),
+    [q, period, dayIds, customActivities]
+  );
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-end justify-center bg-black/40 backdrop-blur-[2px] sm:items-center sm:p-6" onClick={onClose}>
+    <div
+      className="fixed inset-0 z-[60] flex items-end justify-center bg-black/40 backdrop-blur-[2px] sm:items-center sm:p-6"
+      onClick={() => mode === "browse" && onClose()}
+    >
       <div
         role="dialog"
         aria-modal="true"
@@ -78,9 +121,11 @@ export default function ActivitySwapSheet({
         className="flex max-h-[88vh] w-full flex-col overflow-hidden rounded-t-[28px] border border-border bg-card shadow-2xl sm:max-w-xl sm:rounded-[28px]"
       >
         <div className="relative bg-blush px-6 pb-5 pt-6">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">Other options</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">
+            {mode === "browse" ? "Other options" : "Your own activity"}
+          </p>
           <h2 id="swap-title" className="mt-1 pr-8 font-display text-3xl leading-tight text-primary">
-            Swap {day}&apos;s {period} activity
+            {mode === "browse" ? <>Swap {day}&apos;s {period} activity</> : <>Add an activity for {day}&apos;s {period}</>}
           </h2>
           <p className="mt-1 truncate text-sm text-foreground/75">
             Instead of {current.emoji} {current.title}
@@ -94,6 +139,17 @@ export default function ActivitySwapSheet({
           </button>
         </div>
 
+        {mode === "create" ? (
+          <CustomActivityForm
+            day={day}
+            period={period}
+            index={index}
+            initialTitle={q}
+            onSaved={onCustomSaved}
+            onBack={() => setMode("browse")}
+          />
+        ) : (
+        <>
         <div className="border-b border-border px-6 py-4">
           <label className="relative block">
             <span className="sr-only">Type what they&apos;d enjoy</span>
@@ -110,6 +166,8 @@ export default function ActivitySwapSheet({
         </div>
 
         <div className="min-h-0 flex-1 overflow-y-auto px-3 py-3">
+          <AddOwnRow query={q} onClick={() => setMode("create")} />
+
           {!search && (
             <>
               <p className={label}>{options.length} {period} ideas</p>
@@ -142,7 +200,7 @@ export default function ActivitySwapSheet({
           )}
           {search && search.same.length + search.other.length === 0 && (
             <p className="px-3 py-6 text-center text-sm text-soft">
-              No activities match &ldquo;{q}&rdquo; — try another word, like &ldquo;outside&rdquo; or &ldquo;draw&rdquo;.
+              Nothing on our list matches &ldquo;{q}&rdquo; — add it as your own activity above.
             </p>
           )}
         </div>
@@ -153,6 +211,8 @@ export default function ActivitySwapSheet({
               Back to the suggested activity
             </button>
           </div>
+        )}
+        </>
         )}
       </div>
     </div>

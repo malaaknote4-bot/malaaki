@@ -42,7 +42,13 @@ export class RecipeError extends Error {
   }
 }
 
-export async function generateRecipe(name: string, notes: string, slot: Slot): Promise<MealDraft> {
+// One structured call to Claude, with errors turned into messages a parent can read.
+export async function askClaude<S extends z.ZodType>(
+  system: string,
+  content: string,
+  schema: S,
+  noun: { one: string; many: string }
+): Promise<z.infer<S>> {
   let response;
   try {
     const client = new Anthropic();
@@ -51,34 +57,38 @@ export async function generateRecipe(name: string, notes: string, slot: Slot): P
       max_tokens: 16000,
       betas: ["server-side-fallback-2026-07-01"],
       fallbacks: "default",
-      output_config: { effort: "medium", format: betaZodOutputFormat(GeneratedRecipe) },
-      system: SYSTEM,
-      messages: [
-        {
-          role: "user",
-          content: `This is for ${slot}.\n<dish>${name}</dish>\n<notes>${notes || "None given."}</notes>`,
-        },
-      ],
+      output_config: { effort: "medium", format: betaZodOutputFormat(schema) },
+      system,
+      messages: [{ role: "user", content }],
     });
   } catch (error) {
     if (error instanceof Anthropic.AuthenticationError || error instanceof Anthropic.PermissionDeniedError) {
-      throw new RecipeError("Automatic recipes aren't set up yet.", 503);
+      throw new RecipeError(`Automatic ${noun.many} aren't set up yet.`, 503);
     }
     if (error instanceof Anthropic.RateLimitError) {
-      throw new RecipeError("Lots of recipes are being written right now — try again in a minute.", 429);
+      throw new RecipeError(`Lots of ${noun.many} are being written right now — try again in a minute.`, 429);
     }
     if (error instanceof Anthropic.APIError) {
-      throw new RecipeError("We couldn't write that recipe just now — please try again.", 502);
+      throw new RecipeError(`We couldn't write that ${noun.one} just now — please try again.`, 502);
     }
     // Most likely no API credentials configured at all.
-    throw new RecipeError("Automatic recipes aren't set up yet.", 503);
+    throw new RecipeError(`Automatic ${noun.many} aren't set up yet.`, 503);
   }
 
   if (response.stop_reason === "refusal") {
-    throw new RecipeError("We can't write a recipe for that one — try describing the dish differently.", 422);
+    throw new RecipeError(`We can't write that ${noun.one} — try describing it differently.`, 422);
   }
-  const out = response.parsed_output;
-  if (!out) throw new RecipeError("We couldn't write that recipe just now — please try again.", 502);
+  if (!response.parsed_output) throw new RecipeError(`We couldn't write that ${noun.one} just now — please try again.`, 502);
+  return response.parsed_output as z.infer<S>;
+}
+
+export async function generateRecipe(name: string, notes: string, slot: Slot): Promise<MealDraft> {
+  const out = await askClaude(
+    SYSTEM,
+    `This is for ${slot}.\n<dish>${name}</dish>\n<notes>${notes || "None given."}</notes>`,
+    GeneratedRecipe,
+    { one: "recipe", many: "recipes" }
+  );
   if (!out.is_recipe) throw new RecipeError(out.reason || "That doesn't look like a dish we can write a recipe for.", 422);
 
   const draft = MealDraftSchema.safeParse({
