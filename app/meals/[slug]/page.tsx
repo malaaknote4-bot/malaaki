@@ -5,15 +5,21 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { auth } from "@/lib/auth";
-import { findMealBySlug } from "@/lib/data/meals";
+import { findMealBySlug, type Meal } from "@/lib/data/meals";
+import { findCustomMeal } from "@/lib/custom-meals.server";
 import { Sparkle, SectionTitle, PillLink } from "@/components/ui/decor";
 import IngredientList from "./IngredientList";
 
 type Props = { params: Promise<{ slug: string }> };
 
+async function lookupMeal(slug: string, userId: string | undefined): Promise<Meal | null> {
+  return findMealBySlug(slug) ?? (userId ? await findCustomMeal(userId, slug) : null);
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const meal = findMealBySlug(slug);
+  const session = await auth();
+  const meal = await lookupMeal(slug, session?.user?.id);
   return { title: meal ? `${meal.name} · Mum's Corner` : "Recipe · Mum's Corner" };
 }
 
@@ -22,7 +28,7 @@ export default async function RecipePage({ params }: Props) {
   if (!session) redirect("/login");
 
   const { slug } = await params;
-  const meal = findMealBySlug(slug);
+  const meal = await lookupMeal(slug, session.user?.id);
   if (!meal) notFound();
 
   const { servings } = meal;
@@ -49,7 +55,7 @@ export default async function RecipePage({ params }: Props) {
           <div className="dot-grid absolute bottom-6 left-7 hidden sm:block" />
         </div>
         <div className="min-w-0 rounded-[28px] bg-blush px-6 py-8 sm:px-10 sm:py-10 flex flex-col justify-center">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">Recipe</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">{meal.custom ? "Your family recipe" : "Recipe"}</p>
           <h1 className="mt-2 font-display text-[42px] leading-[0.95] text-primary sm:text-6xl">{meal.name}</h1>
           <p className="mt-3 text-foreground/80">{meal.note}</p>
           <dl className="mt-6 grid grid-cols-3 gap-2 sm:gap-3">

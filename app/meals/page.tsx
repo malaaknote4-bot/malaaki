@@ -5,16 +5,20 @@ import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
 import MealsClient from "./MealsClient";
 import { parseMealChoices } from "@/lib/data/meals";
+import { loadCustomMeals } from "@/lib/custom-meals.server";
 import { PageHeader } from "@/components/ui/decor";
 
 export default async function MealsPage() {
   const session = await auth();
   if (!session) redirect("/login");
 
-  const user = await db.user.findUnique({
-    where: { id: session.user!.id },
-    select: { childFoodDislikes: true, mealChoices: true },
-  });
+  const [user, customMeals] = await Promise.all([
+    db.user.findUnique({
+      where: { id: session.user!.id },
+      select: { childFoodDislikes: true, mealChoices: true },
+    }),
+    loadCustomMeals(session.user!.id),
+  ]);
 
   const day = new Date().getDay();
   const todayIndex = day === 0 ? 6 : day - 1;
@@ -30,6 +34,7 @@ export default async function MealsPage() {
         todayIndex={todayIndex}
         dislikedFoods={user?.childFoodDislikes ?? []}
         initialChoices={parseMealChoices(user?.mealChoices)}
+        initialCustomMeals={customMeals}
       />
     </div>
   );

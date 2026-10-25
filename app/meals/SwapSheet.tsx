@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Search, X } from "lucide-react";
-import { getSwapOptions, searchMeals, type Meal, type Slot } from "@/lib/data/meals";
+import { Plus, Search, X } from "lucide-react";
+import { getSwapOptions, searchMeals, type Meal, type MealChoices, type Slot } from "@/lib/data/meals";
 import { foodName } from "@/lib/data/foods";
+import CustomMealForm from "./CustomMealForm";
 
 const PANEL: Record<Slot, string> = { breakfast: "bg-peach", lunch: "bg-sky", dinner: "bg-blush" };
 
@@ -20,6 +21,7 @@ function OptionRow({ meal, panel, onChoose }: { meal: Meal; panel: string; onCho
         <span className="min-w-0 flex-1">
           <span className="block truncate font-semibold text-foreground">{meal.name}</span>
           <span className="block truncate text-xs text-soft">
+            {meal.custom && <span className="font-semibold text-primary">Family recipe · </span>}
             {meal.time} · {meal.note}
           </span>
         </span>
@@ -31,13 +33,34 @@ function OptionRow({ meal, panel, onChoose }: { meal: Meal; panel: string; onCho
   );
 }
 
+function AddOwnRow({ query, onClick }: { query: string; onClick: () => void }) {
+  return (
+    <button
+      onClick={onClick}
+      className="mb-2 flex w-full items-center gap-3 rounded-2xl border border-dashed border-primary/50 px-3 py-2.5 text-left transition-colors hover:bg-blush"
+    >
+      <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-fg">
+        <Plus className="h-5 w-5" />
+      </span>
+      <span className="min-w-0 flex-1">
+        <span className="block truncate font-semibold text-foreground">
+          {query ? <>Add &ldquo;{query}&rdquo; as your own meal</> : "Add your own meal"}
+        </span>
+        <span className="block truncate text-xs text-soft">We&apos;ll write the recipe for you — or type it in yourself</span>
+      </span>
+    </button>
+  );
+}
+
 export default function SwapSheet({
   day,
   slot,
   current,
   hasPick,
   dislikes,
+  customMeals,
   onChoose,
+  onCustomSaved,
   onReset,
   onClose,
 }: {
@@ -46,11 +69,14 @@ export default function SwapSheet({
   current: Meal;
   hasPick: boolean;
   dislikes: string[];
+  customMeals: Meal[];
   onChoose: (slug: string) => void;
+  onCustomSaved: (meal: Meal, choices: MealChoices) => void;
   onReset: () => void;
   onClose: () => void;
 }) {
   const [query, setQuery] = useState("");
+  const [mode, setMode] = useState<"browse" | "create">("browse");
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -66,13 +92,22 @@ export default function SwapSheet({
   }, [onClose]);
 
   const q = query.trim();
-  const options = useMemo(() => getSwapOptions(slot, dislikes, current.slug), [slot, dislikes, current.slug]);
-  const search = useMemo(() => (q ? searchMeals(q, slot, dislikes, current.slug) : null), [q, slot, dislikes, current.slug]);
+  const options = useMemo(
+    () => getSwapOptions(slot, dislikes, current.slug, customMeals),
+    [slot, dislikes, current.slug, customMeals]
+  );
+  const search = useMemo(
+    () => (q ? searchMeals(q, slot, dislikes, current.slug, customMeals) : null),
+    [q, slot, dislikes, current.slug, customMeals]
+  );
   const sameSlot = search?.results.filter((r) => r.sameSlot).map((r) => r.meal) ?? [];
   const otherSlots = search?.results.filter((r) => !r.sameSlot).map((r) => r.meal) ?? [];
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-end justify-center bg-black/40 backdrop-blur-[2px] sm:items-center sm:p-6" onClick={onClose}>
+    <div
+      className="fixed inset-0 z-[60] flex items-end justify-center bg-black/40 backdrop-blur-[2px] sm:items-center sm:p-6"
+      onClick={() => mode === "browse" && onClose()}
+    >
       <div
         role="dialog"
         aria-modal="true"
@@ -81,9 +116,11 @@ export default function SwapSheet({
         className="flex max-h-[88vh] w-full flex-col overflow-hidden rounded-t-[28px] border border-border bg-card shadow-2xl sm:max-w-xl sm:rounded-[28px]"
       >
         <div className="relative bg-blush px-6 pb-5 pt-6">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">Other options</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">
+            {mode === "browse" ? "Other options" : "Your own meal"}
+          </p>
           <h2 id="swap-title" className="mt-1 font-display text-3xl leading-tight text-primary">
-            Swap {day}&apos;s {slot}
+            {mode === "browse" ? <>Swap {day}&apos;s {slot}</> : <>Add a meal for {day}&apos;s {slot}</>}
           </h2>
           <p className="mt-1 truncate text-sm text-foreground/75">
             Instead of {current.emoji} {current.name}
@@ -97,6 +134,10 @@ export default function SwapSheet({
           </button>
         </div>
 
+        {mode === "create" ? (
+          <CustomMealForm day={day} slot={slot} initialName={q} onSaved={onCustomSaved} onBack={() => setMode("browse")} />
+        ) : (
+        <>
         <div className="border-b border-border px-6 py-4">
           <label className="relative block">
             <span className="sr-only">Type what they&apos;d like</span>
@@ -109,9 +150,12 @@ export default function SwapSheet({
               placeholder="Type what they'd like, e.g. pasta"
               className="w-full rounded-full border border-border bg-background py-3 pl-11 pr-4 text-sm font-medium text-foreground placeholder:text-soft focus:border-primary focus:outline-none"
             />
-          </label>        </div>
+          </label>
+        </div>
 
         <div className="min-h-0 flex-1 overflow-y-auto px-3 py-3">
+          <AddOwnRow query={q} onClick={() => setMode("create")} />
+
           {!search && (
             <>
               <p className="px-3 pb-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-soft">
@@ -151,7 +195,7 @@ export default function SwapSheet({
 
           {search && search.results.length === 0 && (
             <p className="px-3 py-6 text-center text-sm text-soft">
-              No recipes match &ldquo;{q}&rdquo; yet — try another word, like an ingredient.
+              No recipes match &ldquo;{q}&rdquo; yet — add it as your own meal above, and we&apos;ll write the recipe.
             </p>
           )}
 
@@ -169,6 +213,8 @@ export default function SwapSheet({
               Back to the suggested meal
             </button>
           </div>
+        )}
+        </>
         )}
       </div>
     </div>

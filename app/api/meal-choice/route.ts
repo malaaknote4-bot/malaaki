@@ -13,11 +13,16 @@ export async function POST(req: Request) {
   const slot = body?.slot;
   const slug = body?.slug;
 
-  if (
-    !(DAYS as readonly string[]).includes(day) ||
-    !SLOTS.includes(slot) ||
-    !(slug === null || (typeof slug === "string" && findMealBySlug(slug)))
-  ) {
+  const knownMeal =
+    slug === null ||
+    (typeof slug === "string" &&
+      (findMealBySlug(slug) ||
+        (await db.customMeal.findUnique({
+          where: { userId_slug: { userId: session.user.id, slug } },
+          select: { id: true },
+        }))));
+
+  if (!(DAYS as readonly string[]).includes(day) || !SLOTS.includes(slot) || !knownMeal) {
     return Response.json({ error: "Invalid meal choice" }, { status: 400 });
   }
 

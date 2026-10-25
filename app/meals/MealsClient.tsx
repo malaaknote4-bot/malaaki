@@ -3,7 +3,7 @@
 import { useCallback, useRef, useState } from "react";
 import Link from "next/link";
 import { ArrowRight, Shuffle } from "lucide-react";
-import { DAYS, choiceKey, resolveMeal, type MealChoices, type Slot } from "@/lib/data/meals";
+import { DAYS, choiceKey, resolveMeal, type Meal, type MealChoices, type Slot } from "@/lib/data/meals";
 import { SectionTitle } from "@/components/ui/decor";
 import SwapSheet from "./SwapSheet";
 
@@ -17,19 +17,22 @@ export default function MealsClient({
   todayIndex,
   dislikedFoods,
   initialChoices,
+  initialCustomMeals,
 }: {
   todayIndex: number;
   dislikedFoods: string[];
   initialChoices: MealChoices;
+  initialCustomMeals: Meal[];
 }) {
   const [selectedDay, setSelectedDay] = useState(todayIndex);
   const [choices, setChoices] = useState<MealChoices>(initialChoices);
+  const [customMeals, setCustomMeals] = useState<Meal[]>(initialCustomMeals);
   const [swapSlot, setSwapSlot] = useState<Slot | null>(null);
   const [saveError, setSaveError] = useState<string | null>(null);
   const triggers = useRef<Partial<Record<Slot, HTMLButtonElement | null>>>({});
 
   const day = DAYS[selectedDay];
-  const mealFor = (d: string, slot: Slot) => resolveMeal(d, slot, dislikedFoods, choices);
+  const mealFor = (d: string, slot: Slot) => resolveMeal(d, slot, dislikedFoods, choices, customMeals);
 
   const openSlot = useRef<Slot | null>(null);
 
@@ -120,7 +123,7 @@ export default function MealsClient({
                   </span>
                   {isPick && (
                     <span className="absolute right-4 top-4 rounded-full bg-primary px-3 py-1 text-[11px] font-semibold text-primary-fg">
-                      Your pick
+                      {meal.custom ? "Family recipe" : "Your pick"}
                     </span>
                   )}
                 </div>
@@ -163,7 +166,14 @@ export default function MealsClient({
           current={mealFor(day, swapSlot)}
           hasPick={Boolean(choices[choiceKey(day, swapSlot)])}
           dislikes={dislikedFoods}
+          customMeals={customMeals}
           onChoose={(slug) => saveChoice(swapSlot, slug)}
+          onCustomSaved={(meal, saved) => {
+            setCustomMeals((list) => [meal, ...list]);
+            setChoices(saved);
+            setSaveError(null);
+            closeSheet();
+          }}
           onReset={() => saveChoice(swapSlot, null)}
           onClose={closeSheet}
         />

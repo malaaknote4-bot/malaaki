@@ -11,6 +11,8 @@ export type Meal = {
   ingredients: Ingredient[];
   steps: string[];
   tags: string[];
+  // Set on a family's own recipe: the slot it was added for.
+  custom?: { slot: Slot };
 };
 export type DayMeals = { breakfast: Meal; lunch: Meal; dinner: Meal };
 export type WeekPlan = Record<string, DayMeals>;
@@ -964,8 +966,8 @@ export const allMeals: Meal[] = [
   ...alternatives.dinner,
 ];
 
-export function findMealBySlug(slug: string): Meal | undefined {
-  return allMeals.find((m) => m.slug === slug);
+export function findMealBySlug(slug: string, custom: Meal[] = []): Meal | undefined {
+  return custom.find((m) => m.slug === slug) ?? allMeals.find((m) => m.slug === slug);
 }
 
 export type Slot = "breakfast" | "lunch" | "dinner";
@@ -981,11 +983,12 @@ const slotOf = new Map<string, Slot>(
   ])
 );
 
+const mealSlot = (m: Meal) => m.custom?.slot ?? slotOf.get(m.slug);
 const containsDislike = (meal: Meal, dislikes: string[]) => meal.tags.some((t) => dislikes.includes(t));
 
-export function getSwapOptions(slot: Slot, dislikes: string[], currentSlug: string): Meal[] {
-  return allMeals.filter(
-    (m) => slotOf.get(m.slug) === slot && m.slug !== currentSlug && !containsDislike(m, dislikes)
+export function getSwapOptions(slot: Slot, dislikes: string[], currentSlug: string, custom: Meal[] = []): Meal[] {
+  return [...custom, ...allMeals].filter(
+    (m) => mealSlot(m) === slot && m.slug !== currentSlug && !containsDislike(m, dislikes)
   );
 }
 
@@ -994,7 +997,13 @@ export type MealSearch = {
   hidden: { count: number; foods: string[] };
 };
 
-export function searchMeals(query: string, slot: Slot, dislikes: string[], currentSlug = ""): MealSearch {
+export function searchMeals(
+  query: string,
+  slot: Slot,
+  dislikes: string[],
+  currentSlug = "",
+  custom: Meal[] = []
+): MealSearch {
   const words = query
     .toLowerCase()
     .split(/\s+/)
@@ -1002,7 +1011,7 @@ export function searchMeals(query: string, slot: Slot, dislikes: string[], curre
     .map((w) => (w.length > 3 && w.endsWith("s") ? w.slice(0, -1) : w))
     // Match at the start of a word, so "egg" doesn't hit "veggie".
     .map((w) => new RegExp(`\\b${w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`));
-  const matches = allMeals.filter((m) => {
+  const matches = [...custom, ...allMeals].filter((m) => {
     if (m.slug === currentSlug) return false;
     const haystack = [m.name, m.note, ...m.ingredients.map((i) => i.name), ...m.tags].join(" ").toLowerCase();
     return words.every((w) => w.test(haystack));
@@ -1010,7 +1019,7 @@ export function searchMeals(query: string, slot: Slot, dislikes: string[], curre
   const hiddenMeals = matches.filter((m) => containsDislike(m, dislikes));
   const visible = matches
     .filter((m) => !containsDislike(m, dislikes))
-    .map((meal) => ({ meal, sameSlot: slotOf.get(meal.slug) === slot }))
+    .map((meal) => ({ meal, sameSlot: mealSlot(meal) === slot }))
     .sort((a, b) => Number(b.sameSlot) - Number(a.sameSlot));
   return {
     results: visible,
@@ -1022,9 +1031,15 @@ export function searchMeals(query: string, slot: Slot, dislikes: string[], curre
 }
 
 // The meal shown for a day/slot: the family's own pick if it's still allowed, otherwise the plan's meal.
-export function resolveMeal(day: string, slot: Slot, dislikes: string[], choices: MealChoices): Meal {
+export function resolveMeal(
+  day: string,
+  slot: Slot,
+  dislikes: string[],
+  choices: MealChoices,
+  custom: Meal[] = []
+): Meal {
   const picked = choices[choiceKey(day, slot)];
-  const chosen = picked ? findMealBySlug(picked) : undefined;
+  const chosen = picked ? findMealBySlug(picked, custom) : undefined;
   if (chosen && !containsDislike(chosen, dislikes)) return chosen;
   return getEffectiveMeal(weekMeals[day][slot], alternatives[slot], dislikes, DAYS.indexOf(day as (typeof DAYS)[number]));
 }

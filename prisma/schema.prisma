@@ -26,6 +26,19 @@ model User {
   numChildren        Int?
   dietaryPreferences String[] @default([])
   mealChoices        Json     @default("{}")
+  customMeals        CustomMeal[]
+}
+
+// A family's own recipe, written by the parent or generated for them. `data` holds the Meal fields.
+model CustomMeal {
+  id        String   @id @default(cuid())
+  userId    String
+  slug      String
+  data      Json
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, slug])
 }
 
 model WatchlistItem {

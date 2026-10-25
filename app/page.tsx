@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { DAYS, resolveMeal, parseMealChoices } from "@/lib/data/meals";
+import { loadCustomMeals } from "@/lib/custom-meals.server";
 import { morningActivities, afternoonActivities, eveningActivities } from "@/lib/data/activities";
 import { stories } from "@/lib/data/stories";
 import { Sparkle, PillLink, SectionTitle } from "@/components/ui/decor";
@@ -26,10 +27,11 @@ export default async function HomePage() {
   const firstName = session.user?.name?.split(" ")[0] ?? "there";
   const dislikes = user.childFoodDislikes ?? [];
   const choices = parseMealChoices(user.mealChoices);
+  const customMeals = await loadCustomMeals(session.user!.id);
 
   const todayMeals = (["breakfast", "lunch", "dinner"] as const).map((k) => ({
     slot: k,
-    meal: resolveMeal(today, k, dislikes, choices),
+    meal: resolveMeal(today, k, dislikes, choices, customMeals),
   }));
   const tonight = stories[now.getDay()];
   const activityCount =
