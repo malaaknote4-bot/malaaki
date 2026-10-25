@@ -3,13 +3,13 @@ import "./globals.css";
 import { site } from "@/lib/content";
 
 export const metadata: Metadata = {
-  title: `${site.name} — Luxury clifftop retreat, Southern Australia`,
+  title: `${site.name} — Clifftop retreat in Springbrook, Gold Coast Hinterland`,
   description:
-    "A calm, luxury clifftop retreat on Australia's southern coast. Ocean views from every room. Book your stay through our official Airbnb listing.",
+    "A calm clifftop home in Springbrook with panoramic rainforest valley views. Sleeps 6. Book your stay through our official Airbnb listing.",
   openGraph: {
     title: site.name,
     description: site.tagline,
-    images: ["/images/hero.svg"],
+    images: ["/images/deck-view.jpg"],
   },
 };
 

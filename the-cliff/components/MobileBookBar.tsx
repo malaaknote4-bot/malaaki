@@ -12,7 +12,7 @@ export default function MobileBookBar() {
           href={airbnbLink()}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex-1 rounded-full bg-sea-deep py-3 text-center text-sm font-medium text-white"
+          className="flex-1 rounded-full bg-gum-deep py-3 text-center text-sm font-medium text-white"
         >
           Book on Airbnb
         </a>

@@ -6,11 +6,6 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: path.join(__dirname),
   },
-  images: {
-    // Placeholder scenes are local SVGs; swap for real photos in public/images.
-    dangerouslyAllowSVG: true,
-    contentDispositionType: "attachment",
-  },
 };
 
 export default nextConfig;

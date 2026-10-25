@@ -51,7 +51,7 @@ export default function BookingForm({ variant = "panel" }: Props) {
   }
 
   const field =
-    "w-full rounded-xl border border-stone bg-shell px-4 py-3 text-base text-ink outline-none transition-colors focus:border-sea";
+    "w-full rounded-xl border border-stone bg-shell px-4 py-3 text-base text-ink outline-none transition-colors focus:border-gum";
   const label = "mb-1.5 block text-xs font-medium uppercase tracking-[0.14em] text-ink-soft";
 
   return (
@@ -91,7 +91,7 @@ export default function BookingForm({ variant = "panel" }: Props) {
       <button
         type="submit"
         disabled={datesInvalid}
-        className="h-[50px] rounded-full bg-sea-deep px-7 text-base font-medium text-white transition-colors hover:bg-ink disabled:cursor-not-allowed disabled:opacity-50"
+        className="h-[50px] rounded-full bg-gum-deep px-7 text-base font-medium text-white transition-colors hover:bg-ink disabled:cursor-not-allowed disabled:opacity-50"
       >
         Check availability
       </button>
@@ -121,7 +121,7 @@ function Stepper({
   onChange: (n: number) => void;
 }) {
   const btn =
-    "grid h-8 w-8 place-items-center rounded-full border border-stone text-lg leading-none text-ink transition-colors hover:border-sea disabled:opacity-30 disabled:hover:border-stone";
+    "grid h-8 w-8 place-items-center rounded-full border border-stone text-lg leading-none text-ink transition-colors hover:border-gum disabled:opacity-30 disabled:hover:border-stone";
   return (
     <div>
       <span className="mb-1.5 block text-xs font-medium uppercase tracking-[0.14em] text-ink-soft">{label}</span>

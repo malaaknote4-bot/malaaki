@@ -49,7 +49,7 @@ export default function Header() {
           <a
             href="#book"
             className={`hidden rounded-full px-5 py-2.5 text-sm font-medium transition-colors sm:inline-block ${
-              solid ? "bg-sea-deep text-white hover:bg-ink" : "bg-white/90 text-ink hover:bg-white"
+              solid ? "bg-gum-deep text-white hover:bg-ink" : "bg-white/90 text-ink hover:bg-white"
             }`}
           >
             Book your stay

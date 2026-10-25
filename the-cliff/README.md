@@ -1,6 +1,6 @@
 # The Cliff
 
-Marketing website for **The Cliff**, a luxury clifftop Airbnb on Australia's southern coast. Its job is to showcase the retreat and send guests to the official Airbnb listing to book.
+Marketing website for **The Cliff** ("Cliff House with amazing views"), a clifftop Airbnb in Springbrook, Gold Coast Hinterland. Its job is to showcase the retreat and send guests to the official Airbnb listing to book.
 
 Built with Next.js 16 (App Router), Tailwind CSS v4 and self-hosted fonts (Cormorant Garamond + Inter).
 
@@ -14,9 +14,9 @@ npm run dev      # http://localhost:3000
 
 ## Before going live
 
-1. **Airbnb link**: set `NEXT_PUBLIC_AIRBNB_URL` to the listing URL (e.g. `https://www.airbnb.com.au/rooms/12345678`), or edit `airbnbUrl` in `lib/content.ts`.
-2. **Listing details**: check every value marked `// UPDATE` in `lib/content.ts` (guests, bedrooms, check-in times, house rules).
-3. **Photos**: `public/images/*.svg` are placeholder coastal scenes. Add real photos (e.g. `public/images/living.jpg`) and point the paths in `lib/content.ts` and `app/page.tsx` at them.
+1. **Photos**: the images in `public/images/` were cropped from a screenshot of the Airbnb listing, so they are low resolution. Replace them with the original full-size photos, keeping the same filenames.
+2. **Rating**: the rating and review count in `lib/content.ts` are a snapshot. Update them from time to time.
+3. **Airbnb link**: already set to the live listing in `lib/content.ts`. You can override it with `NEXT_PUBLIC_AIRBNB_URL`.
 
 ## How booking works
 

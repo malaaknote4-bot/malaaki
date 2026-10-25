@@ -3,14 +3,14 @@
 @import "@fontsource-variable/cormorant-garamond/wght-italic.css";
 @import "@fontsource-variable/inter/index.css";
 
-/* One calm palette, used everywhere: sand, stone, sea and ink. */
+/* One calm palette, used everywhere: sand, stone, eucalyptus and ink. */
 @theme {
   --color-sand: #f6f1ea;
   --color-shell: #fbf8f4;
   --color-stone: #e7dfd4;
-  --color-mist: #c9d6d6;
-  --color-sea: #5f8288;
-  --color-sea-deep: #2f4a50;
+  --color-mist: #ccd9cf;
+  --color-gum: #5c7a68;
+  --color-gum-deep: #2e443a;
   --color-ink: #24302f;
   --color-ink-soft: #5b6664;
 
@@ -41,7 +41,7 @@ body {
 }
 
 :focus-visible {
-  outline: 2px solid var(--color-sea);
+  outline: 2px solid var(--color-gum);
   outline-offset: 3px;
 }
 
