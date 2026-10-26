@@ -53,7 +53,7 @@ export default function BookingForm() {
   const cell = "flex flex-col justify-center px-5 py-4 md:px-6";
 
   return (
-    <form onSubmit={onSubmit} className="bg-paper shadow-[0_30px_80px_-40px_rgba(0,0,0,0.55)]" aria-label="Check availability">
+    <form onSubmit={onSubmit} className="border border-line bg-paper shadow-[0_30px_80px_-40px_rgba(0,0,0,0.8)]" aria-label="Check availability">
       <div className="grid divide-y divide-line md:grid-cols-[1fr_1fr_1.5fr_auto] md:divide-x md:divide-y-0">
         <div className="grid grid-cols-2 divide-x divide-line md:col-span-2">
           <label htmlFor="check-in" className={cell}>
@@ -84,7 +84,7 @@ export default function BookingForm() {
           disabled={datesInvalid}
           className="group flex min-h-16 items-stretch text-[15px] font-semibold text-white disabled:cursor-not-allowed disabled:opacity-50"
         >
-          <span className="flex flex-1 items-center bg-ink px-6 md:px-7">Check availability</span>
+          <span className="flex flex-1 items-center bg-white px-6 text-coal md:px-7">Check availability</span>
           <span className="grid w-16 place-items-center bg-moss transition-[width] duration-300 group-hover:w-[4.5rem]" aria-hidden="true">
             <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.6">
               <path d="M2 9h13M10 4l5 5-5 5" />

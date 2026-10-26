@@ -12,8 +12,8 @@ export default function ArrowButton({
   external?: boolean;
   className?: string;
 }) {
-  const label = tone === "light" ? "bg-white/10 text-white border-white/40 backdrop-blur-sm" : "bg-ink text-white border-ink";
-  const arrow = tone === "light" ? "bg-white text-ink" : "bg-moss text-white";
+  const label = tone === "light" ? "bg-white/10 text-white border-white/40 backdrop-blur-sm" : "bg-white text-coal border-white";
+  const arrow = tone === "light" ? "bg-white text-coal" : "bg-moss text-white";
   return (
     <a
       href={href}

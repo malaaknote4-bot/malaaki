@@ -51,7 +51,7 @@ export default function MobileBookBar() {
         href={airbnbLink()}
         target="_blank"
         rel="noopener noreferrer"
-        className="flex h-14 flex-1 items-center justify-center gap-2 bg-white text-sm font-semibold text-ink"
+        className="flex h-14 flex-1 items-center justify-center gap-2 bg-white text-sm font-semibold text-coal"
       >
         Book on Airbnb
         <svg width="14" height="14" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">

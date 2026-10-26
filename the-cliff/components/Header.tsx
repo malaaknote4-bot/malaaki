@@ -48,7 +48,7 @@ export default function Header() {
         <div className="flex items-center gap-2">
           <a
             href="#book"
-            className="hidden h-11 items-center bg-white px-5 text-sm font-semibold text-ink transition-colors hover:bg-bone sm:inline-flex"
+            className="hidden h-11 items-center bg-white px-5 text-sm font-semibold text-coal transition-colors hover:bg-white/85 sm:inline-flex"
           >
             Book your stay
           </a>

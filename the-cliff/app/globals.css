@@ -4,17 +4,21 @@
 @import "@fontsource-variable/manrope/index.css";
 @import "lenis/dist/lenis.css";
 
-/* Layout: a 4-column architectural grid whose column lines run down the whole page.
-   Dark forest-night sections alternate with bone-white ones. */
+/* One dark world: every section sits on a deep forest-night tone, and the
+   tones shift only slightly from section to section, like one long gradient. */
 @theme {
   --color-night: #0e1311;
   --color-night-2: #161d1a;
-  --color-bone: #f1efe9;
-  --color-paper: #f8f7f3;
-  --color-ink: #121816;
-  --color-ink-soft: #59625e;
+  /* Page surface and a slightly raised surface (cards, the booking slab) */
+  --color-bone: #0e1311;
+  --color-paper: #151d19;
+  /* Text on the dark surfaces */
+  --color-ink: #ecebe5;
+  --color-ink-soft: rgba(236, 235, 229, 0.62);
+  /* Dark text for the few white buttons */
+  --color-coal: #121816;
   --color-moss: #8c9a80;
-  --color-line: rgba(18, 24, 22, 0.12);
+  --color-line: rgba(255, 255, 255, 0.13);
   --color-line-light: rgba(255, 255, 255, 0.14);
 
   --font-serif: "Fraunces Variable", Georgia, serif;
@@ -34,6 +38,7 @@
 }
 
 html {
+  color-scheme: dark;
   scroll-behavior: smooth;
   scroll-padding-top: 5rem;
 }
@@ -65,7 +70,7 @@ body {
 }
 
 input[type="date"]::-webkit-calendar-picker-indicator {
-  opacity: 0.5;
+  opacity: 0.6;
   cursor: pointer;
 }
 

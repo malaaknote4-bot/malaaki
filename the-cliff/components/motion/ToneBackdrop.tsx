@@ -2,11 +2,12 @@
 
 import { useEffect, useRef } from "react";
 
-// Section tones, matching the palette in globals.css.
+// Section tones: three close shades of forest night, so moving between sections
+// reads as one slow gradient rather than a change of colour.
 const TONES: Record<string, [number, number, number]> = {
-  bone: [0xf1, 0xef, 0xe9],
-  paper: [0xf8, 0xf7, 0xf3],
-  night: [0x0e, 0x13, 0x11],
+  bone: [0x0e, 0x13, 0x11],
+  paper: [0x13, 0x1b, 0x17],
+  night: [0x0a, 0x0e, 0x0d],
 };
 
 // The blend runs while a section boundary rises from 85% to 45% of the screen
@@ -67,5 +68,10 @@ export default function ToneBackdrop() {
     };
   }, []);
 
-  return <div ref={ref} aria-hidden="true" className="pointer-events-none fixed inset-0 -z-10 bg-bone" />;
+  return (
+    <div ref={ref} aria-hidden="true" className="pointer-events-none fixed inset-0 -z-10 bg-bone">
+      {/* A soft moss glow from above, so the whole page shares one gradient. */}
+      <div className="absolute inset-0 bg-[radial-gradient(120%_70%_at_50%_0%,rgba(140,154,128,0.10),transparent_60%)]" />
+    </div>
+  );
 }
