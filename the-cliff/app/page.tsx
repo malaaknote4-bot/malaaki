@@ -13,6 +13,8 @@ import Parallax from "@/components/motion/Parallax";
 import ScrollWords from "@/components/motion/ScrollWords";
 import FadeIn from "@/components/motion/FadeIn";
 import BookingSteps from "@/components/BookingSteps";
+import NearbyLine from "@/components/NearbyLine";
+import ToneBackdrop from "@/components/motion/ToneBackdrop";
 import RevealHeading from "@/components/motion/RevealHeading";
 import { airbnbLink } from "@/lib/airbnb";
 import { amenities, bookingSteps, experiences, faqs, gallery, highlights, rating, site, spaces } from "@/lib/content";
@@ -23,6 +25,7 @@ export default function Home() {
   return (
     <>
       <Header />
+      <ToneBackdrop />
       <main id="top">
         {/* Hero: scroll to reveal the house, then the pitch and booking form fade in */}
         <CliffHero>
@@ -73,7 +76,7 @@ export default function Home() {
         </CliffHero>
 
         {/* The Retreat */}
-        <section id="retreat" className="py-28 md:py-40">
+        <section id="retreat" data-tone="bone" className="py-28 md:py-40">
           <div className={container}>
             <FadeIn>
               <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-ink-soft">The Retreat</p>
@@ -112,7 +115,7 @@ export default function Home() {
         </section>
 
         {/* Spaces */}
-        <section className="bg-paper py-28 md:py-40">
+        <section data-tone="paper" className="py-28 md:py-40">
           <div className={container}>
             <SectionHeading eyebrow="The Spaces" lines={["Made for slow days", <em key="i">above the valley</em>]} />
             <div className="mt-20 grid gap-20 md:gap-28">
@@ -137,7 +140,7 @@ export default function Home() {
         </section>
 
         {/* Amenities */}
-        <section id="amenities" className="bg-night py-28 text-white md:py-40">
+        <section id="amenities" data-tone="night" className="py-28 text-white md:py-40">
           <div className={container}>
             <SectionHeading
               dark
@@ -157,7 +160,7 @@ export default function Home() {
         </section>
 
         {/* Gallery */}
-        <section id="gallery" className="py-28 md:py-40">
+        <section id="gallery" data-tone="bone" className="py-28 md:py-40">
           <div className={container}>
             <SectionHeading eyebrow="Gallery" lines={["Every hour,", <em key="i">a different view</em>]} />
             <div className="mt-16 grid grid-cols-2 gap-2 md:grid-cols-4">
@@ -177,7 +180,7 @@ export default function Home() {
         </section>
 
         {/* Location */}
-        <section id="location" className="bg-paper py-28 md:py-40">
+        <section id="location" data-tone="paper" className="py-28 md:py-40">
           <div className={`${container} grid gap-14 md:grid-cols-4 md:gap-0`}>
             <div className="md:col-span-2 md:pr-12">
               <SectionHeading
@@ -187,21 +190,16 @@ export default function Home() {
               />
             </div>
             <ImageUnveil from="left" className="aspect-[16/10] md:col-span-2 md:self-end">
-              <Image src="/images/valley.jpg" alt="Rainforest valleys of Springbrook stretching to the coast" fill sizes="(min-width: 768px) 50vw, 100vw" className="object-cover" />
+              <Parallax axis="x" distance={6} scale={1.15}>
+                <Image src="/images/valley.jpg" alt="Rainforest valleys of Springbrook stretching to the coast" fill sizes="(min-width: 768px) 60vw, 100vw" className="object-cover" />
+              </Parallax>
             </ImageUnveil>
-            <ul className="md:col-span-4 md:mt-20 md:grid md:grid-cols-4">
-              {experiences.map((e, i) => (
-                <Ruled key={e.title} as="li" delay={i * 0.12} contentClassName="py-6 pr-6">
-                  <h3 className="font-semibold">{e.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-ink-soft">{e.text}</p>
-                </Ruled>
-              ))}
-            </ul>
+            <NearbyLine />
           </div>
         </section>
 
         {/* How to book */}
-        <section className="bg-night py-28 text-white md:py-40">
+        <section data-tone="night" className="py-28 text-white md:py-40">
           <div className={container}>
             <SectionHeading dark eyebrow="How to book" lines={["Three simple steps", <em key="i">to the cliff</em>]} />
             <BookingSteps />
@@ -209,7 +207,7 @@ export default function Home() {
         </section>
 
         {/* FAQ */}
-        <section id="faq" className="py-28 md:py-40">
+        <section id="faq" data-tone="bone" className="py-28 md:py-40">
           <div className={`${container} grid gap-12 md:grid-cols-4 md:gap-0`}>
             <div className="md:col-span-2 md:pr-12">
               <SectionHeading eyebrow="FAQ" lines={["Good", <em key="i">to know</em>]} />
