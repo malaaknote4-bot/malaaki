@@ -1,6 +1,7 @@
 import Image from "next/image";
 import ArrowButton from "@/components/ArrowButton";
 import BookingForm from "@/components/BookingForm";
+import CliffHero from "@/components/CliffHero";
 import GridLines from "@/components/GridLines";
 import Header from "@/components/Header";
 import Logo from "@/components/Logo";
@@ -17,20 +18,16 @@ export default function Home() {
       <Header />
       <GridLines />
       <main id="top">
-        {/* Hero */}
-        <section className="relative isolate flex min-h-[100svh] flex-col overflow-hidden bg-night text-white">
-          <Image src="/images/deck-view.jpg" alt="" fill preload sizes="100vw" className="-z-10 animate-settle object-cover" />
-          <div className="absolute inset-0 -z-10 bg-gradient-to-b from-night/75 via-night/35 to-night" />
-          <div className="absolute inset-0 -z-10 bg-gradient-to-r from-night/70 to-transparent" />
-
-          <div className={`${container} flex flex-1 flex-col justify-end pb-32 pt-32 md:pb-40`}>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-white/70">{site.region}</p>
+        {/* Hero: scroll to reveal the house, then the pitch and booking form fade in */}
+        <CliffHero>
+          <div className={`${container} pb-28 pt-6 md:pb-36`}>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-white/60">{site.region}</p>
 
             <div className="mt-8 grid items-end gap-10 md:grid-cols-[1fr_auto]">
               <h1 className="font-serif text-[clamp(3.3rem,10vw,8.4rem)] leading-[0.9] font-light tracking-[-0.035em]">
-                <span className="block animate-rise">Wake up</span>
-                <span className="block animate-rise [animation-delay:120ms]">above the</span>
-                <span className="block animate-rise italic [animation-delay:240ms]">rainforest.</span>
+                <span className="block">Wake up</span>
+                <span className="block">above the</span>
+                <span className="block italic">rainforest.</span>
               </h1>
 
               <a
@@ -40,7 +37,7 @@ export default function Home() {
                 className="group hidden w-72 items-stretch bg-paper text-ink md:flex"
               >
                 <span className="relative w-24 shrink-0">
-                  <Image src="/images/house.jpg" alt="" fill sizes="96px" className="object-cover" />
+                  <Image src="/images/deck-rainbow.jpg" alt="" fill sizes="96px" className="object-cover" />
                 </span>
                 <span className="flex flex-col justify-center gap-1 p-4">
                   <span className="font-serif text-3xl font-light leading-none">★ {rating.score}</span>
@@ -53,10 +50,7 @@ export default function Home() {
             </div>
 
             <div className="mt-12 grid gap-8 md:grid-cols-4 md:items-stretch">
-              <div className="flex md:col-span-2 md:items-end">
-                <ArrowButton href="#book" className="w-full sm:w-72">Check availability</ArrowButton>
-              </div>
-              <p className="border-l-2 border-white/60 bg-night/40 px-6 py-5 text-[15px] leading-relaxed text-white/80 backdrop-blur-md md:col-span-2">
+              <p className="border-l-2 border-white/60 bg-white/5 px-6 py-5 text-[15px] leading-relaxed text-white/80 md:col-span-2 md:col-start-3">
                 {site.listingTitle}. A private clifftop home in Springbrook with layer after layer of World Heritage rainforest
                 falling away below the deck.
               </p>
@@ -65,13 +59,12 @@ export default function Home() {
             <p className="mt-8 text-xs font-semibold text-white/70 md:hidden">
               ★ {rating.score} · {rating.badge} · {rating.reviews} reviews on Airbnb
             </p>
-          </div>
-        </section>
 
-        {/* Booking */}
-        <section id="book" className={`${container} relative z-30 -mt-20 scroll-mt-28`}>
-          <BookingForm />
-        </section>
+            <div id="book" className="mt-16 scroll-mt-28 text-ink">
+              <BookingForm />
+            </div>
+          </div>
+        </CliffHero>
 
         {/* The Retreat */}
         <section id="retreat" className="py-28 md:py-40">
