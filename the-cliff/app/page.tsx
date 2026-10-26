@@ -8,6 +8,11 @@ import MobileBookBar from "@/components/MobileBookBar";
 import SectionHeading from "@/components/SectionHeading";
 import { Hairline, Ruled } from "@/components/motion/Hairline";
 import ImageUnveil from "@/components/motion/ImageUnveil";
+import Odometer from "@/components/motion/Odometer";
+import Parallax from "@/components/motion/Parallax";
+import ScrollWords from "@/components/motion/ScrollWords";
+import FadeIn from "@/components/motion/FadeIn";
+import BookingSteps from "@/components/BookingSteps";
 import RevealHeading from "@/components/motion/RevealHeading";
 import { airbnbLink } from "@/lib/airbnb";
 import { amenities, bookingSteps, experiences, faqs, gallery, highlights, rating, site, spaces } from "@/lib/content";
@@ -70,16 +75,26 @@ export default function Home() {
         {/* The Retreat */}
         <section id="retreat" className="py-28 md:py-40">
           <div className={container}>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-ink-soft">The Retreat</p>
-            <p className="mt-8 max-w-4xl font-serif text-[clamp(1.9rem,3.6vw,3.1rem)] leading-[1.15] font-light tracking-[-0.015em] text-balance">
-              Perched on the edge of the Springbrook escarpment, The Cliff is a place to <em>slow right down</em>. Coffee on the
-              deck, mist in the valley, and nothing on the schedule but the view.
-            </p>
+            <FadeIn>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-ink-soft">The Retreat</p>
+            </FadeIn>
+            <ScrollWords
+              className="mt-8 max-w-4xl font-serif text-[clamp(1.9rem,3.6vw,3.1rem)] leading-[1.15] font-light tracking-[-0.015em] text-balance"
+              segments={[
+                { text: "Perched on the edge of the Springbrook escarpment, The Cliff is a place to" },
+                { text: "slow right down.", italic: true },
+                { text: "Coffee on the deck, mist in the valley, and nothing on the schedule but the view." },
+              ]}
+            />
 
             <ul className="mt-20 grid grid-cols-2 md:grid-cols-4">
               {highlights.map((h, i) => (
                 <Ruled key={h.label} as="li" delay={i * 0.12} contentClassName="py-8 pr-4">
-                  <p className="font-serif text-6xl font-light tabular-nums tracking-tight md:text-7xl">{h.value.replace(/\D/g, "").padStart(2, "0")}</p>
+                  <Odometer
+                    value={h.value.replace(/\D/g, "").padStart(2, "0")}
+                    delay={i * 0.12 + 0.6}
+                    className="font-serif text-6xl font-light tabular-nums tracking-tight md:text-7xl"
+                  />
                   <p className="mt-3 text-[11px] font-semibold uppercase tracking-[0.24em] text-ink-soft">{h.label}</p>
                 </Ruled>
               ))}
@@ -104,12 +119,17 @@ export default function Home() {
               {spaces.map((s, i) => (
                 <article key={s.title} className="grid items-end gap-8 md:grid-cols-4 md:gap-0">
                   <ImageUnveil from={i % 2 ? "left" : "right"} className={`aspect-[4/3] md:col-span-2 ${i % 2 ? "md:order-2" : ""}`}>
-                    <Image src={s.image} alt={s.alt} fill sizes="(min-width: 768px) 50vw, 100vw" className="object-cover" />
+                    <Parallax>
+                      <Image src={s.image} alt={s.alt} fill sizes="(min-width: 768px) 50vw, 100vw" className="object-cover" />
+                    </Parallax>
                   </ImageUnveil>
-                  <div className={`md:col-span-2 ${i % 2 ? "md:pr-12" : "md:pl-12"}`}>
-                    <h3 className="font-serif text-4xl font-light tracking-tight md:text-5xl">{s.title}</h3>
+                  <FadeIn delay={0.5} className={`md:col-span-2 ${i % 2 ? "md:pr-12" : "md:pl-12"}`}>
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-ink-soft/60 tabular-nums">
+                      0{i + 1} — 0{spaces.length}
+                    </p>
+                    <h3 className="mt-4 font-serif text-4xl font-light tracking-tight md:text-5xl">{s.title}</h3>
                     <p className="mt-4 max-w-md text-lg leading-relaxed text-ink-soft">{s.text}</p>
-                  </div>
+                  </FadeIn>
                 </article>
               ))}
             </div>
@@ -184,28 +204,7 @@ export default function Home() {
         <section className="bg-night py-28 text-white md:py-40">
           <div className={container}>
             <SectionHeading dark eyebrow="How to book" lines={["Three simple steps", <em key="i">to the cliff</em>]} />
-            <div className="mt-20 grid gap-12 md:grid-cols-4 md:gap-0">
-              <ol className="grid gap-12 md:col-span-3 md:grid-cols-3 md:gap-0">
-                {bookingSteps.map((s, i) => (
-                  <Ruled key={s.title} as="li" delay={i * 0.15} lineClassName="bg-line-light" contentClassName="pr-8 pt-6">
-                    <span className="font-serif text-6xl font-light text-moss md:text-7xl">0{i + 1}</span>
-                    <h3 className="mt-6 text-lg font-semibold">{s.title}</h3>
-                    <p className="mt-2 leading-relaxed text-white/60">{s.text}</p>
-                  </Ruled>
-                ))}
-              </ol>
-              <Ruled delay={0.45} lineClassName="bg-line-light" contentClassName="flex flex-col gap-3 pt-6 md:pl-8">
-                <ArrowButton href="#book" className="w-full">Choose dates</ArrowButton>
-                <a
-                  href={airbnbLink()}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm font-semibold text-white/70 underline decoration-white/30 underline-offset-8 hover:text-white"
-                >
-                  View the listing on Airbnb ↗
-                </a>
-              </Ruled>
-            </div>
+            <BookingSteps />
           </div>
         </section>
 
