@@ -38,7 +38,7 @@ function Word({
   still: boolean;
   children: string;
 }) {
-  const fill = useTransform(progress, range, [0.16, 1]);
+  const fill = useTransform(progress, range, [0.35, 1]);
   const opacity = still ? 1 : fill;
   const Tag = italic ? motion.em : motion.span;
   return (

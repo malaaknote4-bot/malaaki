@@ -128,7 +128,7 @@ export default function Home() {
                     </Parallax>
                   </ImageUnveil>
                   <FadeIn delay={0.5} className={`md:col-span-2 ${i % 2 ? "md:pr-12" : "md:pl-12"}`}>
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-ink-soft/60 tabular-nums">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-ink-soft tabular-nums">
                       0{i + 1} — 0{spaces.length}
                     </p>
                     <h3 className="mt-4 font-serif text-4xl font-light tracking-tight md:text-5xl">{s.title}</h3>
