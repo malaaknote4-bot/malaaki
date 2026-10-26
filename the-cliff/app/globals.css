@@ -103,3 +103,35 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .mist-layer-2 {
   animation: mist-drift 52s ease-in-out -18s infinite alternate-reverse;
 }
+
+/* Without JavaScript (e.g. iOS Files' Quick Look preview) none of the reveals can
+   run, so show every element in its finished state instead of its hidden start.
+   The layout adds .js to <html> as soon as scripts run. */
+html:not(.js) [style="opacity:0"],
+html:not(.js) [style^="opacity:0;"],
+html:not(.js) [style="opacity:0.35"] {
+  opacity: 1 !important;
+  transform: none !important;
+}
+html:not(.js) [style*="scaleX(0)"],
+html:not(.js) [style*="scaleY(0)"] {
+  transform: none !important;
+}
+html:not(.js) [style*="clip-path:inset"] {
+  clip-path: none !important;
+}
+/* Odometer stats: show the real value instead of the rolling digit strips. */
+html:not(.js) [role="img"][aria-label] > span {
+  display: none;
+}
+html:not(.js) [role="img"][aria-label]::after {
+  content: attr(aria-label);
+}
+/* Hero: one still screen with the house photo shown large, not a long scroll track. */
+html:not(.js) [data-reveal-track] {
+  height: auto !important;
+}
+html:not(.js) [data-reveal-media] {
+  width: min(92vw, 1100px) !important;
+  height: 72svh !important;
+}
