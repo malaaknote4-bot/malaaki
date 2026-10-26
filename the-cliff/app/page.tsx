@@ -1,12 +1,11 @@
 import Image from "next/image";
-import ArrowButton from "@/components/ArrowButton";
 import BookingForm from "@/components/BookingForm";
 import CliffHero from "@/components/CliffHero";
 import Header from "@/components/Header";
-import Logo from "@/components/Logo";
+import LogoDraw from "@/components/LogoDraw";
 import MobileBookBar from "@/components/MobileBookBar";
 import SectionHeading from "@/components/SectionHeading";
-import { Hairline, Ruled } from "@/components/motion/Hairline";
+import { Ruled } from "@/components/motion/Hairline";
 import ImageUnveil from "@/components/motion/ImageUnveil";
 import Odometer from "@/components/motion/Odometer";
 import Parallax from "@/components/motion/Parallax";
@@ -18,9 +17,8 @@ import GalleryGrid from "@/components/GalleryGrid";
 import Faq from "@/components/Faq";
 import ClosingCta from "@/components/ClosingCta";
 import ToneBackdrop from "@/components/motion/ToneBackdrop";
-import RevealHeading from "@/components/motion/RevealHeading";
 import { airbnbLink } from "@/lib/airbnb";
-import { amenities, bookingSteps, experiences, faqs, gallery, highlights, rating, site, spaces } from "@/lib/content";
+import { amenities, highlights, rating, site, spaces } from "@/lib/content";
 
 const container = "mx-auto w-full max-w-6xl px-5 md:px-8";
 
@@ -143,8 +141,12 @@ export default function Home() {
         </section>
 
         {/* Amenities */}
-        <section id="amenities" data-tone="night" className="py-28 text-white md:py-40">
-          <div className={container}>
+        <section id="amenities" data-tone="night" className="relative overflow-hidden py-28 text-white md:py-40">
+          <div aria-hidden="true" className="pointer-events-none absolute inset-0">
+            <div className="mist-layer absolute -left-1/4 top-1/4 h-[60%] w-[80%] rounded-full bg-[radial-gradient(closest-side,rgba(255,255,255,0.05),transparent)] blur-3xl" />
+            <div className="mist-layer-2 absolute -right-1/4 bottom-0 h-[55%] w-[70%] rounded-full bg-[radial-gradient(closest-side,rgba(255,255,255,0.04),transparent)] blur-3xl" />
+          </div>
+          <div className={`${container} relative`}>
             <SectionHeading
               dark
               eyebrow="Amenities"
@@ -153,7 +155,7 @@ export default function Home() {
             />
             <ul className="mt-20 grid grid-cols-2 gap-y-12 md:grid-cols-4">
               {amenities.map((a, i) => (
-                <Ruled key={a.title} as="li" delay={(i % 4) * 0.1} lineClassName="bg-line-light" contentClassName="pr-4 pt-6 md:pr-6">
+                <Ruled key={a.title} as="li" delay={(Math.floor(i / 4) + (i % 4)) * 0.12} lineClassName="bg-line-light" contentClassName="pr-4 pt-6 md:pr-6">
                   <h3 className="font-semibold">{a.title}</h3>
                   <p className="mt-2 text-sm leading-relaxed text-white/60">{a.text}</p>
                 </Ruled>
@@ -214,7 +216,7 @@ export default function Home() {
       <footer className="border-t border-line-light bg-night text-white/60">
         <div className={`${container} flex flex-col gap-8 py-12 pb-24 text-sm md:flex-row md:items-center md:justify-between md:pb-12`}>
           <div className="text-white">
-            <Logo />
+            <LogoDraw />
             <p className="mt-3 text-white/50">{site.region}</p>
           </div>
           <nav className="flex flex-wrap gap-6" aria-label="Footer">
