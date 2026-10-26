@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { site } from "@/lib/content";
+import Providers from "./providers";
 
 export const metadata: Metadata = {
   title: `${site.name} — Clifftop retreat in Springbrook, Gold Coast Hinterland`,
@@ -20,7 +21,9 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en-AU">
-      <body className="min-h-screen">{children}</body>
+      <body className="min-h-screen">
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }
