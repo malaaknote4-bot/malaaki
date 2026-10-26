@@ -71,3 +71,12 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Slow pan-and-zoom for the large gallery photo while it's on screen. */
+@keyframes kenburns {
+  from { transform: scale(1) translate(0, 0); }
+  to { transform: scale(1.1) translate(-2%, -1.5%); }
+}
+.animate-kenburns {
+  animation: kenburns 24s ease-in-out infinite alternate;
+}

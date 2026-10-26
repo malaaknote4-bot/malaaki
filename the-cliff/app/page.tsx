@@ -14,6 +14,9 @@ import ScrollWords from "@/components/motion/ScrollWords";
 import FadeIn from "@/components/motion/FadeIn";
 import BookingSteps from "@/components/BookingSteps";
 import NearbyLine from "@/components/NearbyLine";
+import GalleryGrid from "@/components/GalleryGrid";
+import Faq from "@/components/Faq";
+import ClosingCta from "@/components/ClosingCta";
 import ToneBackdrop from "@/components/motion/ToneBackdrop";
 import RevealHeading from "@/components/motion/RevealHeading";
 import { airbnbLink } from "@/lib/airbnb";
@@ -163,19 +166,7 @@ export default function Home() {
         <section id="gallery" data-tone="bone" className="py-28 md:py-40">
           <div className={container}>
             <SectionHeading eyebrow="Gallery" lines={["Every hour,", <em key="i">a different view</em>]} />
-            <div className="mt-16 grid grid-cols-2 gap-2 md:grid-cols-4">
-              {gallery.map((g, i) => (
-                <ImageUnveil key={g.src} from="bottom" delay={i * 0.15} className={i === 0 ? "col-span-2 aspect-[5/4] md:row-span-2" : "aspect-[5/4] md:aspect-auto"}>
-                  <Image
-                    src={g.src}
-                    alt={g.alt}
-                    fill
-                    sizes={i === 0 ? "(min-width: 768px) 50vw, 100vw" : "(min-width: 768px) 25vw, 50vw"}
-                    className="object-cover transition-transform duration-[1.2s] hover:scale-[1.04]"
-                  />
-                </ImageUnveil>
-              ))}
-            </div>
+            <GalleryGrid />
           </div>
         </section>
 
@@ -212,41 +203,12 @@ export default function Home() {
             <div className="md:col-span-2 md:pr-12">
               <SectionHeading eyebrow="FAQ" lines={["Good", <em key="i">to know</em>]} />
             </div>
-            <div className="md:col-span-2">
-              {faqs.map((f, i) => (
-                <Ruled key={f.q} delay={i * 0.1}>
-                <details className="group">
-                  <summary className="flex cursor-pointer list-none items-center justify-between gap-6 py-6 text-lg font-medium [&::-webkit-details-marker]:hidden">
-                    {f.q}
-                    <span className="grid h-8 w-8 shrink-0 place-items-center border border-line text-lg font-light transition-transform duration-300 group-open:rotate-45" aria-hidden="true">
-                      +
-                    </span>
-                  </summary>
-                  <p className="pb-6 pr-12 leading-relaxed text-ink-soft">{f.a}</p>
-                </details>
-                </Ruled>
-              ))}
-              <Hairline delay={faqs.length * 0.1} />
-            </div>
+            <Faq />
           </div>
         </section>
 
         {/* Closing CTA */}
-        <section className="relative isolate overflow-hidden bg-night text-white">
-          <Image src="/images/valley.jpg" alt="" fill sizes="100vw" className="-z-10 object-cover" />
-          <div className="absolute inset-0 -z-10 bg-night/65" />
-          <div className={`${container} py-32 md:py-48`}>
-            <RevealHeading
-              lines={["Your stay on the cliff", <em key="i">is waiting.</em>]}
-              className="max-w-4xl"
-              titleClassName="font-serif text-[clamp(2.8rem,7vw,6rem)] leading-[0.95] font-light tracking-[-0.03em]"
-            />
-            <p className="mt-8 max-w-md text-lg text-white/75">Choose your dates and book securely through our official Airbnb listing.</p>
-            <ArrowButton href="#book" className="mt-12 w-full sm:w-72">
-              Book your stay
-            </ArrowButton>
-          </div>
-        </section>
+        <ClosingCta container={container} />
       </main>
 
       <footer className="border-t border-line-light bg-night text-white/60">
