@@ -2,6 +2,7 @@
 
 import {
   useEffect,
+  useRef,
   useState,
   ReactNode,
   TouchEvent,
@@ -9,6 +10,13 @@ import {
 } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
+
+// How much one unit of wheel/touch movement advances the reveal (0 → 1).
+const WHEEL_SENSITIVITY = 0.0003;
+const TOUCH_SENSITIVITY = 0.002;
+const MAX_WHEEL_DELTA = 100;
+// Fraction of the remaining distance covered each frame; lower is calmer.
+const EASING = 0.06;
 
 interface ScrollExpandMediaProps {
   mediaType?: "video" | "image";
@@ -35,96 +43,105 @@ const ScrollExpandMedia = ({
 }: ScrollExpandMediaProps) => {
   const [scrollProgress, setScrollProgress] = useState<number>(0);
   const [showContent, setShowContent] = useState<boolean>(false);
-  const [mediaFullyExpanded, setMediaFullyExpanded] = useState<boolean>(false);
-  const [touchStartY, setTouchStartY] = useState<number>(0);
   const [isMobileState, setIsMobileState] = useState<boolean>(false);
 
+  // Scrolling moves a target; the visible progress eases toward it every frame,
+  // so the reveal glides open at a calm pace instead of jumping with each scroll.
+  const targetRef = useRef(0);
+  const progressRef = useRef(0);
+  const expandedRef = useRef(false);
+  const touchYRef = useRef(0);
+  const frameRef = useRef<number | null>(null);
+
+  const tick = () => {
+    const target = targetRef.current;
+    const eased = progressRef.current + (target - progressRef.current) * EASING;
+    const settled = Math.abs(target - eased) < 0.0005;
+    const value = settled ? target : eased;
+
+    progressRef.current = value;
+    setScrollProgress(value);
+
+    if (value >= 1) {
+      expandedRef.current = true;
+      setShowContent(true);
+    } else if (value < 0.75) {
+      setShowContent(false);
+    }
+
+    frameRef.current = settled ? null : requestAnimationFrame(tick);
+  };
+
+  const moveTarget = (delta: number) => {
+    targetRef.current = Math.min(Math.max(targetRef.current + delta, 0), 1);
+    if (frameRef.current === null) frameRef.current = requestAnimationFrame(tick);
+  };
+
   const expandFully = () => {
+    if (frameRef.current !== null) cancelAnimationFrame(frameRef.current);
+    frameRef.current = null;
+    targetRef.current = 1;
+    progressRef.current = 1;
+    expandedRef.current = true;
     setScrollProgress(1);
-    setMediaFullyExpanded(true);
     setShowContent(true);
   };
 
   useEffect(() => {
+    targetRef.current = 0;
+    progressRef.current = 0;
+    expandedRef.current = false;
     setScrollProgress(0);
     setShowContent(false);
-    setMediaFullyExpanded(false);
   }, [mediaType]);
 
-  // Respect reduced motion: show the expanded state and never hijack scrolling.
   useEffect(() => {
+    // Respect reduced motion: show the expanded state and never hijack scrolling.
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       expandFully();
     }
-  }, []);
 
-  useEffect(() => {
     const handleWheel = (e: WheelEvent) => {
-      if (mediaFullyExpanded && e.deltaY < 0 && window.scrollY <= 5) {
-        setMediaFullyExpanded(false);
+      if (expandedRef.current && e.deltaY < 0 && window.scrollY <= 5) {
+        expandedRef.current = false;
         e.preventDefault();
-      } else if (!mediaFullyExpanded) {
+      } else if (!expandedRef.current) {
         e.preventDefault();
-        const scrollDelta = e.deltaY * 0.0009;
-        const newProgress = Math.min(
-          Math.max(scrollProgress + scrollDelta, 0),
-          1,
-        );
-        setScrollProgress(newProgress);
-
-        if (newProgress >= 1) {
-          setMediaFullyExpanded(true);
-          setShowContent(true);
-        } else if (newProgress < 0.75) {
-          setShowContent(false);
-        }
+        // Cap each event so a hard flick or a big mouse-wheel notch can't jump ahead.
+        const delta = Math.max(-MAX_WHEEL_DELTA, Math.min(MAX_WHEEL_DELTA, e.deltaY));
+        moveTarget(delta * WHEEL_SENSITIVITY);
       }
     };
 
     const handleTouchStart = (e: TouchEvent) => {
-      setTouchStartY(e.touches[0].clientY);
+      touchYRef.current = e.touches[0].clientY;
     };
 
     const handleTouchMove = (e: TouchEvent) => {
-      if (!touchStartY) return;
+      if (!touchYRef.current) return;
 
       const touchY = e.touches[0].clientY;
-      const deltaY = touchStartY - touchY;
+      const deltaY = touchYRef.current - touchY;
 
-      if (mediaFullyExpanded && deltaY < -20 && window.scrollY <= 5) {
-        setMediaFullyExpanded(false);
+      if (expandedRef.current && deltaY < -20 && window.scrollY <= 5) {
+        expandedRef.current = false;
         e.preventDefault();
-      } else if (!mediaFullyExpanded) {
+      } else if (!expandedRef.current) {
         e.preventDefault();
-        // Increase sensitivity for mobile, especially when scrolling back
-        const scrollFactor = deltaY < 0 ? 0.008 : 0.005; // Higher sensitivity for scrolling back
-        const scrollDelta = deltaY * scrollFactor;
-        const newProgress = Math.min(
-          Math.max(scrollProgress + scrollDelta, 0),
-          1,
-        );
-        setScrollProgress(newProgress);
-
-        if (newProgress >= 1) {
-          setMediaFullyExpanded(true);
-          setShowContent(true);
-        } else if (newProgress < 0.75) {
-          setShowContent(false);
-        }
-
-        setTouchStartY(touchY);
+        moveTarget(deltaY * TOUCH_SENSITIVITY);
+        touchYRef.current = touchY;
       }
     };
 
     const handleTouchEnd = (): void => {
-      setTouchStartY(0);
+      touchYRef.current = 0;
     };
 
     // Wheel and touch scrolling are cancelled above, so any scroll that still happens
     // came from the keyboard, an anchor link or the scrollbar. Let it through by
     // finishing the reveal instead of trapping the visitor at the top.
     const handleScroll = (): void => {
-      if (!mediaFullyExpanded && window.scrollY > 5) {
+      if (!expandedRef.current && window.scrollY > 5) {
         expandFully();
       }
     };
@@ -146,6 +163,7 @@ const ScrollExpandMedia = ({
     window.addEventListener("touchend", handleTouchEnd as EventListener);
 
     return () => {
+      if (frameRef.current !== null) cancelAnimationFrame(frameRef.current);
       window.removeEventListener(
         "wheel",
         handleWheel as unknown as EventListener,
@@ -161,7 +179,9 @@ const ScrollExpandMedia = ({
       );
       window.removeEventListener("touchend", handleTouchEnd as EventListener);
     };
-  }, [scrollProgress, mediaFullyExpanded, touchStartY]);
+    // Handlers read refs, so they're registered once.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     const checkIfMobile = (): void => {

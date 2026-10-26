@@ -2,7 +2,6 @@ import Image from "next/image";
 import ArrowButton from "@/components/ArrowButton";
 import BookingForm from "@/components/BookingForm";
 import CliffHero from "@/components/CliffHero";
-import GridLines from "@/components/GridLines";
 import Header from "@/components/Header";
 import Logo from "@/components/Logo";
 import MobileBookBar from "@/components/MobileBookBar";
@@ -16,7 +15,6 @@ export default function Home() {
   return (
     <>
       <Header />
-      <GridLines />
       <main id="top">
         {/* Hero: scroll to reveal the house, then the pitch and booking form fade in */}
         <CliffHero>
