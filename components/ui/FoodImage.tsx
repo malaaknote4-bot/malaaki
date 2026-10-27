@@ -13,7 +13,7 @@ export default function FoodImage({ className, alt, ...props }: ImageProps) {
       <div
         role="img"
         aria-label={alt}
-        className={cn("absolute inset-0 flex items-center justify-center bg-sun dots", className)}
+        className={cn("absolute inset-0 flex items-center justify-center asphalt", className)}
       >
         <span className="text-7xl drop-shadow-md" aria-hidden="true">🍔</span>
       </div>

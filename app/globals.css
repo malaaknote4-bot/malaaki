@@ -1,33 +1,30 @@
 @import "tailwindcss";
 
 /*
-  Road 8 brand tokens.
-  When the official logo is added, sample its colors and update these values —
-  every section of the site reads from them.
+  Road 8 brand tokens, taken from the logo (public/logo.png):
+  signal red, asphalt black and white road markings.
 */
 :root {
-  --brand: #e4312b;       /* ketchup red — primary */
-  --brand-dark: #b8221d;
-  --sun: #ffc233;         /* mustard yellow — highlights, road lines */
-  --leaf: #2fb36d;        /* lettuce green — small accents */
-  --asphalt: #1e1a19;     /* road charcoal — dark sections, text */
-  --asphalt-2: #2b2524;
-  --cream: #fff6e6;       /* bun cream — page background */
-  --cream-2: #ffe9c7;
-  --ink: #1e1a19;
+  --brand: #e5130c;       /* logo red — the "8", burger and road edges */
+  --brand-dark: #a80e09;
+  --line: #ffffff;        /* white lane markings */
+  --asphalt: #111010;     /* logo background */
+  --asphalt-2: #1d1b1b;
+  --cream: #f6f4f1;       /* light page background */
+  --cream-2: #e9e5e0;
+  --ink: #111010;
 }
 
 @theme inline {
   --color-brand: var(--brand);
   --color-brand-dark: var(--brand-dark);
-  --color-sun: var(--sun);
-  --color-leaf: var(--leaf);
+  --color-line: var(--line);
   --color-asphalt: var(--asphalt);
   --color-asphalt-2: var(--asphalt-2);
   --color-cream: var(--cream);
   --color-cream-2: var(--cream-2);
   --color-ink: var(--ink);
-  --font-display: var(--font-lalezar), var(--font-cairo), system-ui, sans-serif;
+  --font-display: var(--font-anton), var(--font-lalezar), var(--font-cairo), system-ui, sans-serif;
   --font-sans: var(--font-cairo), system-ui, sans-serif;
 }
 
@@ -43,27 +40,28 @@ body {
   overflow-x: hidden;
 }
 
-/* Dashed yellow road line */
+/* Dashed white lane line */
 .road-line {
   background-image: repeating-linear-gradient(
     90deg,
-    var(--sun) 0 36px,
+    var(--line) 0 36px,
     transparent 36px 64px
   );
 }
 
-/* Asphalt texture for dark sections */
+/* Asphalt texture for dark sections, like the logo background */
 .asphalt {
   background-color: var(--asphalt);
   background-image:
-    radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-    radial-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-  background-size: 14px 14px, 23px 23px;
-  background-position: 0 0, 7px 11px;
+    radial-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1.5px),
+    radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1.5px),
+    radial-gradient(rgba(0, 0, 0, 0.5) 1px, transparent 1.5px);
+  background-size: 9px 9px, 17px 17px, 13px 13px;
+  background-position: 0 0, 5px 8px, 3px 2px;
 }
 
 .dots {
-  background-image: radial-gradient(rgba(30, 26, 25, 0.08) 2px, transparent 2px);
+  background-image: radial-gradient(rgba(17, 16, 16, 0.07) 2px, transparent 2px);
   background-size: 22px 22px;
 }
 

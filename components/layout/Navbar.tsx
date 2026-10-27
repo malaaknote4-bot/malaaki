@@ -39,7 +39,7 @@ export default function Navbar() {
     >
       <nav className="mx-auto flex h-18 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6">
         <Link href={`/${lang}`} aria-label="Road 8" className="shrink-0">
-          <Logo />
+          <Logo size={52} priority />
         </Link>
 
         <ul className="hidden items-center gap-1 md:flex">
@@ -51,7 +51,7 @@ export default function Navbar() {
                   href={l.href}
                   className={cn(
                     "rounded-full px-4 py-2 font-bold transition hover:bg-cream-2",
-                    active && "bg-sun text-asphalt hover:bg-sun",
+                    active && "bg-brand text-white hover:bg-brand",
                   )}
                 >
                   {l.label}
@@ -88,7 +88,7 @@ export default function Navbar() {
               href={l.href}
               className={cn(
                 "block whitespace-nowrap rounded-full bg-cream-2 px-4 py-1.5 text-sm font-bold",
-                l.href === pathname && "bg-sun",
+                l.href === pathname && "bg-brand text-white",
               )}
             >
               {l.label}

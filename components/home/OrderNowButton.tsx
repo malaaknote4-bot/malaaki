@@ -7,7 +7,7 @@ import { useCart } from "@/components/cart/CartProvider";
 export default function OrderNowButton({ label }: { label: string }) {
   const { lang, count, open } = useCart();
   const className =
-    "inline-flex h-14 items-center rounded-full bg-sun px-8 text-lg font-black text-asphalt shadow-[0_5px_0_var(--asphalt)] transition hover:-translate-y-0.5 active:translate-y-1 active:shadow-none";
+    "inline-flex h-14 items-center rounded-full bg-brand px-8 text-lg font-black text-white shadow-[0_5px_0_var(--brand-dark)] transition hover:-translate-y-0.5 active:translate-y-1 active:shadow-none";
 
   if (count > 0) {
     return (

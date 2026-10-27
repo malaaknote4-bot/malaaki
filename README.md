@@ -16,12 +16,10 @@ npm run build
 | Menu items, prices, categories, photos | `lib/menu.ts` |
 | All site text (Arabic + English) | `lib/i18n.ts` |
 | Brand colors | `app/globals.css` (`:root` tokens) |
-| Logo | `components/brand/Logo.tsx`, `app/icon.svg` |
+| Logo | `public/logo.png` (also `app/icon.png`, `app/apple-icon.png` for the browser tab) |
 
-### Adding the official logo
-1. Put the file in `public/` (e.g. `public/logo.png`).
-2. In `components/brand/Logo.tsx`, replace the placeholder shield + wordmark with `<Image src="/logo.png" alt="Road 8" ... />`.
-3. Update the color tokens in `app/globals.css` to the logo's colors; the whole site follows them.
+### Brand
+Colors come from the logo: signal red, asphalt black and white lane markings (tokens in `app/globals.css`). Dark sections use an asphalt texture and the logo's curving red road (`components/brand/RoadCurves.tsx`). For a sharper logo, replace `public/logo.png` with the original high-resolution file (square, ideally 800px+).
 
 ### Using your own food photos
 Put photos in `public/menu/` and set `image: "/menu/your-photo.jpg"` on the item in `lib/menu.ts`. Placeholder photos come from Unsplash.

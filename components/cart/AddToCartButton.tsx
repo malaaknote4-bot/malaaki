@@ -42,7 +42,7 @@ export default function AddToCartButton({ id, className }: { id: string; classNa
         <Minus className="size-4" strokeWidth={3} />
       </button>
       <span key={qty} className="animate-pop flex min-w-8 items-center justify-center gap-1 font-bold" aria-live="polite">
-        <Check className="size-3.5 text-sun" strokeWidth={3} aria-label={t.added} />
+        <Check className="size-3.5 text-brand" strokeWidth={3} aria-label={t.added} />
         {qty}
       </span>
       <button

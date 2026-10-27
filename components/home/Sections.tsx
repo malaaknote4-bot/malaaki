@@ -9,11 +9,16 @@ import { galleryImages, menu } from "@/lib/menu";
 import { site } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
-function SectionHeading({ kicker, title, subtitle, light = false }: { kicker?: string; title: string; subtitle?: string; light?: boolean }) {
+function SectionHeading({ kicker, title, subtitle, light = false, dark = false }: { kicker?: string; title: string; subtitle?: string; light?: boolean; dark?: boolean }) {
   return (
     <div className="mx-auto mb-10 max-w-2xl space-y-3 text-center">
       {kicker && (
-        <span className="inline-block rotate-[-2deg] rounded-lg bg-sun px-3 py-1 text-sm font-black uppercase tracking-wide text-asphalt">
+        <span
+          className={cn(
+            "inline-block rotate-[-2deg] rounded-lg px-3 py-1 text-sm font-black uppercase tracking-wide text-white",
+            dark ? "bg-asphalt" : "bg-brand",
+          )}
+        >
           {kicker}
         </span>
       )}
@@ -48,7 +53,7 @@ export function Featured({ lang }: { lang: Locale }) {
   );
 }
 
-const comboColors = ["bg-sun", "bg-leaf", "bg-brand"];
+const comboColors = ["bg-white", "bg-brand", "bg-white"];
 
 export function Combos({ lang }: { lang: Locale }) {
   const t = dictionaries[lang].combos;
@@ -70,12 +75,12 @@ export function Combos({ lang }: { lang: Locale }) {
                 />
               </div>
               <div className="flex items-end justify-between gap-4 p-6">
-                <div className={cn(i % 3 === 2 && "text-white")}>
+                <div className={cn(i % 3 === 1 && "text-white")}>
                   <h3 className="font-display text-3xl">{item.name[lang]}</h3>
                   <p className="text-sm opacity-80">{item.desc[lang]}</p>
                   <p className="mt-2 text-xl font-black">{formatPrice(item.price, lang, site.currency)}</p>
                 </div>
-                <AddToCartButton id={item.id} className={cn(i % 3 === 2 && "bg-asphalt shadow-none")} />
+                <AddToCartButton id={item.id} className={cn(i % 3 === 1 && "bg-asphalt shadow-none")} />
               </div>
             </article>
           ))}
@@ -86,7 +91,7 @@ export function Combos({ lang }: { lang: Locale }) {
 }
 
 const whyIcons = [Beef, Timer, Flame];
-const whyColors = ["bg-brand text-white", "bg-sun text-asphalt", "bg-leaf text-white"];
+const whyColors = ["bg-brand text-white", "asphalt text-white", "bg-brand text-white"];
 
 export function WhyUs({ lang }: { lang: Locale }) {
   const t = dictionaries[lang].why;
@@ -116,9 +121,9 @@ export function WhyUs({ lang }: { lang: Locale }) {
 export function Gallery({ lang }: { lang: Locale }) {
   const t = dictionaries[lang].gallery;
   return (
-    <section className="bg-sun py-20">
+    <section className="relative overflow-hidden bg-brand py-20">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        <SectionHeading kicker={t.kicker} title={t.title} />
+        <SectionHeading kicker={t.kicker} title={t.title} light dark />
         <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4 md:grid-rows-2">
           {galleryImages.map((src, i) => (
             <div
@@ -139,7 +144,7 @@ export function Gallery({ lang }: { lang: Locale }) {
             </div>
           ))}
         </div>
-        <p className="mt-8 flex items-center justify-center gap-2 font-bold text-asphalt">
+        <p className="mt-8 flex items-center justify-center gap-2 font-bold text-white">
           <Sparkles className="size-5" />
           <a href={site.instagram} target="_blank" rel="noopener noreferrer" className="underline-offset-4 hover:underline">
             Instagram
@@ -160,13 +165,13 @@ export function Visit({ lang }: { lang: Locale }) {
   return (
     <section id="visit" className="py-20">
       <div className="mx-auto grid max-w-7xl items-stretch gap-8 px-4 sm:px-6 lg:grid-cols-2">
-        <div className="flex flex-col justify-center rounded-[2rem] bg-brand p-8 text-white sm:p-10">
-          <span className="mb-3 inline-block w-fit rotate-[-2deg] rounded-lg bg-sun px-3 py-1 text-sm font-black text-asphalt">{t.kicker}</span>
+        <div className="asphalt relative flex flex-col justify-center overflow-hidden rounded-[2rem] p-8 text-white sm:p-10">
+          <span className="mb-3 inline-block w-fit rotate-[-2deg] rounded-lg bg-brand px-3 py-1 text-sm font-black text-white">{t.kicker}</span>
           <h2 className="font-display text-5xl leading-tight">{t.title}</h2>
           <ul className="mt-8 space-y-5">
             {rows.map(({ icon: Icon, label, value, ltr }) => (
               <li key={label} className="flex items-start gap-4">
-                <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-white/15">
+                <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-brand">
                   <Icon className="size-6" />
                 </span>
                 <span>
@@ -190,14 +195,14 @@ export function Visit({ lang }: { lang: Locale }) {
               href={site.mapsUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex h-12 items-center gap-2 rounded-full bg-white px-6 font-bold text-brand transition hover:-translate-y-0.5"
+              className="inline-flex h-12 items-center gap-2 rounded-full bg-white px-6 font-bold text-asphalt transition hover:-translate-y-0.5"
             >
               <MapPin className="size-5" />
               {t.directions}
             </a>
           </div>
         </div>
-        <div className="min-h-80 overflow-hidden rounded-[2rem] bg-cream-2 ring-4 ring-asphalt">
+        <div className="min-h-80 overflow-hidden rounded-[2rem] bg-cream-2 ring-4 ring-brand">
           <iframe
             title={t.directions}
             src={site.mapsEmbed}

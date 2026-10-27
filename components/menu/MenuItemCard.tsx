@@ -6,8 +6,8 @@ import { site } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
 const tagStyles: Record<Tag, string> = {
-  bestseller: "bg-sun text-asphalt",
-  new: "bg-leaf text-white",
+  bestseller: "bg-asphalt text-white",
+  new: "bg-white text-asphalt",
   spicy: "bg-brand text-white",
 };
 const tagEmoji: Record<Tag, string> = { bestseller: "⭐", new: "✨", spicy: "🌶️" };

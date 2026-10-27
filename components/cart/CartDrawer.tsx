@@ -71,7 +71,7 @@ export default function CartDrawer() {
           isOpen ? "translate-x-0" : "ltr:translate-x-full rtl:-translate-x-full",
         )}
       >
-        <header className="flex items-center justify-between bg-brand px-5 py-4 text-white">
+        <header className="asphalt flex items-center justify-between px-5 py-4 text-white">
           <h2 className="font-display text-3xl">{t.title}</h2>
           <button
             type="button"
@@ -82,7 +82,7 @@ export default function CartDrawer() {
             <X className="size-5" />
           </button>
         </header>
-        <div className="road-line h-1.5 bg-asphalt" />
+        <div className="road-line h-1.5 bg-brand" aria-hidden="true" />
 
         {lines.length === 0 ? (
           <div className="flex flex-1 flex-col items-center justify-center gap-4 p-8 text-center">
@@ -117,7 +117,7 @@ export default function CartDrawer() {
                           type="button"
                           onClick={() => setQty(line.id, line.qty - 1)}
                           aria-label={line.qty === 1 ? t.remove : "-1"}
-                          className="flex size-8 items-center justify-center rounded-full bg-cream-2 transition hover:bg-sun"
+                          className="flex size-8 items-center justify-center rounded-full bg-cream-2 transition hover:bg-asphalt hover:text-white"
                         >
                           {line.qty === 1 ? <Trash2 className="size-4" /> : <Minus className="size-4" />}
                         </button>
