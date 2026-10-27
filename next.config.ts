@@ -1,9 +1,14 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
   cacheComponents: true,
   partialPrefetching: true,
+  images: {
+    remotePatterns: [new URL("https://images.unsplash.com/**")],
+  },
+  async redirects() {
+    return [{ source: "/", destination: "/ar", permanent: false }];
+  },
   turbopack: {
     rules: {
       "*.css": {
