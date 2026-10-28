@@ -1,7 +1,9 @@
 import type { Localized } from "./i18n";
 
-// Placeholder menu — edit names, descriptions, prices (SYP) and photos to match the real menu.
-// Photos: put your own in /public/menu and set `image: "/menu/your-file.jpg"`.
+// Road 8's real menu (from the Instagram menu, June 2025).
+// Prices are optional: add `price: 45000` (SYP) to an item and it shows on the card and in the order total.
+// Photos: items without `image` show a branded Road 8 tile. Put your own photos in /public/menu
+// and set `image: "/menu/your-file.jpg"`.
 
 export type Tag = "bestseller" | "new" | "spicy";
 
@@ -16,8 +18,8 @@ export type MenuItem = {
   category: Category["id"];
   name: Localized;
   desc: Localized;
-  price: number;
-  image: string;
+  price?: number;
+  image?: string;
   tags?: Tag[];
   featured?: boolean;
 };
@@ -25,208 +27,294 @@ export type MenuItem = {
 const u = (id: string) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=1200&q=80`;
 
 export const categories: Category[] = [
-  { id: "burgers", name: { ar: "برغر لحم", en: "Beef burgers" }, emoji: "🍔" },
-  { id: "chicken", name: { ar: "دجاج", en: "Chicken" }, emoji: "🍗" },
-  { id: "meals", name: { ar: "وجبات", en: "Meals" }, emoji: "🍱" },
-  { id: "sides", name: { ar: "جانبيات", en: "Sides" }, emoji: "🍟" },
-  { id: "drinks", name: { ar: "مشروبات", en: "Drinks" }, emoji: "🥤" },
-  { id: "desserts", name: { ar: "حلويات", en: "Desserts" }, emoji: "🍩" },
+  { id: "burgers", name: { ar: "برجر", en: "Burgers" }, emoji: "🍔" },
+  { id: "tortilla", name: { ar: "تورتيلا", en: "Tortilla" }, emoji: "🌯" },
+  { id: "sandwiches", name: { ar: "الساندويش", en: "Sandwiches" }, emoji: "🥖" },
+  { id: "meals", name: { ar: "الوجبات", en: "Meals" }, emoji: "🍗" },
+  { id: "fries", name: { ar: "الفرايز", en: "Fries" }, emoji: "🍟" },
+  { id: "appetizers", name: { ar: "المقبلات", en: "Appetizers" }, emoji: "🧀" },
+  { id: "salads", name: { ar: "السلطات", en: "Salads" }, emoji: "🥗" },
 ];
 
 export const menu: MenuItem[] = [
+  // Burgers
   {
-    id: "road8-classic",
+    id: "road8",
     category: "burgers",
-    name: { ar: "رود 8 كلاسيك", en: "Road 8 Classic" },
+    name: { ar: "رود8", en: "Road8" },
     desc: {
-      ar: "قطعة لحم طازجة، جبنة شيدر، خس، بندورة، مخلل وصوص رود 8 السري.",
-      en: "Fresh beef patty, cheddar, lettuce, tomato, pickles and the secret Road 8 sauce.",
+      ar: "قطع من الدجاج المقلي، خس، هالبينو، شرائح تشيدر، مايونيز.",
+      en: "Fried chicken pieces, lettuce, jalapeño, cheddar slices, mayonnaise.",
     },
-    price: 65000,
-    image: u("photo-1568901346375-23c9450c58cd"),
-    tags: ["bestseller"],
-    featured: true,
-  },
-  {
-    id: "double-highway",
-    category: "burgers",
-    name: { ar: "دبل هاي واي", en: "Double Highway" },
-    desc: {
-      ar: "قطعتين لحم، دبل شيدر، بصل مكرمل وصوص باربيكيو مدخّن.",
-      en: "Two beef patties, double cheddar, caramelized onions and smoky BBQ sauce.",
-    },
-    price: 95000,
-    image: u("photo-1553979459-d2229ba7433b"),
-    tags: ["bestseller"],
-    featured: true,
-  },
-  {
-    id: "smash-exit",
-    category: "burgers",
-    name: { ar: "سماش إكزت", en: "Smash Exit" },
-    desc: {
-      ar: "لحم مسحوق على الصاج بأطراف مقرمشة، جبنة أمريكية ومخلل.",
-      en: "Griddle-smashed beef with crispy edges, American cheese and pickles.",
-    },
-    price: 70000,
-    image: u("photo-1586190848861-99aa4a171e90"),
-    tags: ["new"],
-    featured: true,
-  },
-  {
-    id: "fire-lane",
-    category: "burgers",
-    name: { ar: "فاير لاين", en: "Fire Lane" },
-    desc: {
-      ar: "لحم، جبنة بيبر جاك، هالابينو، وصوص حار بيولّع الطريق.",
-      en: "Beef, pepper jack, jalapeños and a hot sauce that lights up the road.",
-    },
-    price: 75000,
-    image: u("photo-1571091718767-18b5b1457add"),
-    tags: ["spicy"],
-    featured: true,
-  },
-  {
-    id: "mushroom-swiss",
-    category: "burgers",
-    name: { ar: "مشروم سويس", en: "Mushroom Swiss" },
-    desc: {
-      ar: "لحم، فطر سوتيه، جبنة سويسرية وصوص ثوم كريمي.",
-      en: "Beef, sautéed mushrooms, Swiss cheese and creamy garlic sauce.",
-    },
-    price: 80000,
-    image: u("photo-1550547660-d9450f859349"),
-  },
-  {
-    id: "crispy-chicken",
-    category: "chicken",
-    name: { ar: "كرسبي تشيكن", en: "Crispy Chicken" },
-    desc: {
-      ar: "صدر دجاج مقرمش، كولسلو، مخلل ومايونيز بالعسل والخردل.",
-      en: "Crispy chicken breast, coleslaw, pickles and honey-mustard mayo.",
-    },
-    price: 60000,
     image: u("photo-1606755962773-d324e0a13086"),
-    tags: ["bestseller"],
-  },
-  {
-    id: "spicy-chicken",
-    category: "chicken",
-    name: { ar: "سبايسي تشيكن", en: "Spicy Chicken" },
-    desc: {
-      ar: "دجاج مقرمش متبّل حار، خس وصوص شيبوتلي.",
-      en: "Spicy-marinated crispy chicken, lettuce and chipotle sauce.",
-    },
-    price: 62000,
-    image: u("photo-1615297928064-24977384d0da"),
     tags: ["spicy"],
   },
   {
-    id: "classic-meal",
-    category: "meals",
-    name: { ar: "وجبة كلاسيك", en: "Classic Meal" },
+    id: "auto-bahn",
+    category: "burgers",
+    name: { ar: "اوتو بان", en: "Auto Bahn" },
     desc: {
-      ar: "رود 8 كلاسيك + بطاطا وسط + مشروب غازي.",
-      en: "Road 8 Classic + medium fries + soft drink.",
+      ar: "قطع من الدجاج، صوص باربكيو، خس، تشيدر، صوص رود8.",
+      en: "Chicken pieces, BBQ sauce, lettuce, cheddar, Road8 sauce.",
     },
-    price: 85000,
-    image: u("photo-1561758033-d89a9ad46330"),
-    tags: ["bestseller"],
+    image: "/menu/auto-bahn.jpg",
+    featured: true,
   },
   {
-    id: "double-meal",
-    category: "meals",
-    name: { ar: "وجبة دبل", en: "Double Meal" },
+    id: "stop",
+    category: "burgers",
+    name: { ar: "ستوب", en: "Stop" },
     desc: {
-      ar: "دبل هاي واي + بطاطا كبيرة + مشروب غازي.",
-      en: "Double Highway + large fries + soft drink.",
+      ar: "قطعة من اللحم الطازج، خس، طماطم، بصل، صوص رود8، تشيدر.",
+      en: "Fresh beef patty, lettuce, tomato, onion, Road8 sauce, cheddar.",
     },
-    price: 120000,
-    image: u("photo-1594212699903-ec8a3eca50f5"),
+    image: u("photo-1568901346375-23c9450c58cd"),
+    featured: true,
   },
   {
-    id: "family-box",
-    category: "meals",
-    name: { ar: "بوكس العيلة", en: "Family Box" },
+    id: "red-light",
+    category: "burgers",
+    name: { ar: "ريد لايت", en: "Red light" },
     desc: {
-      ar: "4 برغر من اختيارك + 2 بطاطا كبيرة + 4 مشروبات.",
-      en: "4 burgers of your choice + 2 large fries + 4 drinks.",
+      ar: "قطع من الدجاج، صوص رود8، خس، تشيدر، صوص هاني ماسترد.",
+      en: "Chicken pieces, Road8 sauce, lettuce, cheddar, honey mustard.",
     },
-    price: 340000,
-    image: u("photo-1610440042657-612c34d95e9f"),
-    tags: ["new"],
+    image: u("photo-1615297928064-24977384d0da"),
   },
   {
-    id: "fries",
-    category: "sides",
-    name: { ar: "بطاطا مقرمشة", en: "Crispy Fries" },
-    desc: { ar: "بطاطا ذهبية مقرمشة مع ملح البحر.", en: "Golden crispy fries with sea salt." },
-    price: 20000,
-    image: u("photo-1573080496219-bb080dd4f877"),
+    id: "corner",
+    category: "burgers",
+    name: { ar: "كورنر", en: "Corner" },
+    desc: { ar: "قطعة من الدجاج، خس، طماطم.", en: "Chicken fillet, lettuce, tomato." },
+  },
+  {
+    id: "bumb",
+    category: "burgers",
+    name: { ar: "بامب", en: "Bumb" },
+    desc: {
+      ar: "قطعة من اللحم الطازج، خس، صوص رود8، صوص باربكيو، تشيدر.",
+      en: "Fresh beef patty, lettuce, Road8 sauce, BBQ sauce, cheddar.",
+    },
+    image: "/menu/bumb.jpg",
+    featured: true,
+  },
+  {
+    id: "over-take",
+    category: "burgers",
+    name: { ar: "اوفر تيك", en: "Over take" },
+    desc: {
+      ar: "قطعة من الدجاج، أناناس، خس، تشيدر، صوص رود8.",
+      en: "Chicken fillet, pineapple, lettuce, cheddar, Road8 sauce.",
+    },
+  },
+  {
+    id: "traffic",
+    category: "burgers",
+    name: { ar: "ترافيك", en: "Traffic" },
+    desc: {
+      ar: "قطعة من الدجاج، صوص رود8، تشيدر، خس، طماطم، بصل.",
+      en: "Chicken fillet, Road8 sauce, cheddar, lettuce, tomato, onion.",
+    },
+  },
+
+  // Tortilla
+  {
+    id: "curve",
+    category: "tortilla",
+    name: { ar: "كيرف", en: "Curve" },
+    desc: { ar: "قطع من الدجاج، خس، تشيدر، صوص الباربكيو.", en: "Chicken pieces, lettuce, cheddar, BBQ sauce." },
+    image: u("photo-1626700051175-6818013e1d4f"),
+  },
+  {
+    id: "brake",
+    category: "tortilla",
+    name: { ar: "بريك", en: "Brake" },
+    desc: { ar: "قطع من الدجاج، خس، صوص رود8، هاني ماسترد.", en: "Chicken pieces, lettuce, Road8 sauce, honey mustard." },
+  },
+  {
+    id: "flashing",
+    category: "tortilla",
+    name: { ar: "فلاشينج", en: "Flashing" },
+    desc: {
+      ar: "قطع من الدجاج، خس، طماطم، تشيدر، صوص رود8.",
+      en: "Chicken pieces, lettuce, tomato, cheddar, Road8 sauce.",
+    },
+  },
+  {
+    id: "horn",
+    category: "tortilla",
+    name: { ar: "هورن", en: "Horn" },
+    desc: { ar: "قطع من الدجاج، أناناس، صوص رود8.", en: "Chicken pieces, pineapple, Road8 sauce." },
+  },
+  {
+    id: "zone",
+    category: "tortilla",
+    name: { ar: "زون", en: "Zone" },
+    desc: { ar: "قطع من الدجاج، خس، طماطم، صوص رود8.", en: "Chicken pieces, lettuce, tomato, Road8 sauce." },
+    image: "/menu/zone.jpg",
+    featured: true,
+  },
+  {
+    id: "one-way",
+    category: "tortilla",
+    name: { ar: "ون واي", en: "One way" },
+    desc: { ar: "قطع من الدجاج، خس، مايونيز، طماطم.", en: "Chicken pieces, lettuce, mayonnaise, tomato." },
+  },
+  {
+    id: "no-entry",
+    category: "tortilla",
+    name: { ar: "نو انتري", en: "No Entry" },
+    desc: {
+      ar: "قطع من الدجاج الحار، صوص هاني ماسترد، خس، تشيدر، صوص رود8.",
+      en: "Spicy chicken pieces, honey mustard, lettuce, cheddar, Road8 sauce.",
+    },
+    tags: ["spicy"],
+  },
+
+  // Sandwiches
+  {
+    id: "francisco",
+    category: "sandwiches",
+    name: { ar: "فرانشيسكو", en: "Francisco" },
+    desc: {
+      ar: "دجاج مشوي، بصل، فطر، ذرة، مايونيز، فلفل روماني، موزريلا.",
+      en: "Grilled chicken, onion, mushroom, corn, mayonnaise, red pepper, mozzarella.",
+    },
+    image: u("photo-1509722747041-616f39b57569"),
+  },
+  {
+    id: "mexican",
+    category: "sandwiches",
+    name: { ar: "مكسيكي", en: "Mexican" },
+    desc: {
+      ar: "دجاج مشوي حار، بصل، فطر، ذرة، مايونيز.",
+      en: "Spicy grilled chicken, onion, mushroom, corn, mayonnaise.",
+    },
+    image: u("photo-1529006557810-274b9b2fc783"),
+    tags: ["spicy"],
+  },
+  {
+    id: "fajita",
+    category: "sandwiches",
+    name: { ar: "فاهيتا", en: "Fajita" },
+    desc: {
+      ar: "دجاج مشوي، بصل، فطر، ذرة، موزريلا، صوص أفوكادو، فلفل روماني.",
+      en: "Grilled chicken, onion, mushroom, corn, mozzarella, avocado sauce, red pepper.",
+    },
+    image: u("photo-1528735602780-2552fd46c7af"),
+  },
+
+  // Meals
+  {
+    id: "crispy-3",
+    category: "meals",
+    name: { ar: "3 قطع كريسبي", en: "3 Crispy pieces" },
+    desc: { ar: "صوص اختياري، بطاطا.", en: "Sauce of your choice, fries." },
+    image: u("photo-1562967914-608f82629710"),
+  },
+  {
+    id: "crispy-5",
+    category: "meals",
+    name: { ar: "5 قطع كريسبي", en: "5 Crispy pieces" },
+    desc: { ar: "صوص اختياري، بطاطا، كول سلو، خبز.", en: "Sauce of your choice, fries, coleslaw, bread." },
+    image: u("photo-1626082927389-6cd097cdc6ec"),
+  },
+
+  // Fries
+  {
+    id: "cheese-fries",
+    category: "fries",
+    name: { ar: "تشيز فرايز", en: "Cheese fries" },
+    desc: { ar: "بطاطا مقلية، جبنة تشيدر.", en: "Fries, cheddar cheese." },
+    image: u("photo-1598679253544-2c97992403ea"),
   },
   {
     id: "loaded-fries",
-    category: "sides",
-    name: { ar: "بطاطا محمّلة", en: "Loaded Fries" },
+    category: "fries",
+    name: { ar: "لودد فرايز", en: "Loaded fries" },
     desc: {
-      ar: "بطاطا مع صوص الجبنة، لحم مفروم وهالابينو.",
-      en: "Fries topped with cheese sauce, minced beef and jalapeños.",
+      ar: "بطاطا مقلية، جبنة تشيدر، هالبينو، صوص رود8، صوص هاني ماسترد، صوص باربكيو.",
+      en: "Fries, cheddar, jalapeño, Road8 sauce, honey mustard, BBQ sauce.",
     },
-    price: 35000,
-    image: u("photo-1585109649139-366815a0d713"),
-    tags: ["spicy"],
+    image: u("photo-1573080496219-bb080dd4f877"),
+  },
+  {
+    id: "chicken-loaded-fries",
+    category: "fries",
+    name: { ar: "تشكن لودد فرايز", en: "Chicken loaded fries" },
+    desc: {
+      ar: "بطاطا مقلية، دجاج مقرمش، جبنة تشيدر، هالبينو، صوص رود8، صوص هاني ماسترد، صوص باربكيو.",
+      en: "Fries, crispy chicken, cheddar, jalapeño, Road8 sauce, honey mustard, BBQ sauce.",
+    },
+    image: u("photo-1576107232684-1279f390859f"),
+  },
+
+  // Appetizers
+  {
+    id: "mozzarella-sticks",
+    category: "appetizers",
+    name: { ar: "أصابع الموزريلا", en: "Mozzarella sticks" },
+    desc: { ar: "أصابع موزريلا مقرمشة.", en: "Crispy mozzarella sticks." },
+    image: u("photo-1531749668029-2db88e4276c7"),
   },
   {
     id: "onion-rings",
-    category: "sides",
-    name: { ar: "حلقات بصل", en: "Onion Rings" },
-    desc: { ar: "حلقات بصل مقرمشة مع صوص الرانش.", en: "Crispy onion rings with ranch dip." },
-    price: 22000,
+    category: "appetizers",
+    name: { ar: "حلقات البصل", en: "Onion rings" },
+    desc: { ar: "حلقات بصل مقرمشة.", en: "Crispy onion rings." },
     image: u("photo-1639024471283-03518883512d"),
   },
   {
-    id: "soft-drink",
-    category: "drinks",
-    name: { ar: "مشروب غازي", en: "Soft drink" },
-    desc: { ar: "كولا، سفن أب أو برتقال.", en: "Cola, lemon-lime or orange." },
-    price: 8000,
-    image: u("photo-1622483767028-3f66f32aef97"),
+    id: "french-fries",
+    category: "appetizers",
+    name: { ar: "بطاطا مقلية", en: "French fries" },
+    desc: { ar: "بطاطا مقلية ذهبية.", en: "Golden french fries." },
+    image: u("photo-1518013431117-eb1465fa5752"),
+  },
+
+  // Salads
+  {
+    id: "road8-caesar",
+    category: "salads",
+    name: { ar: "سيزر رود8", en: "Road8 Caesar" },
+    desc: { ar: "سلطة السيزر على طريقة رود8.", en: "Caesar salad, Road 8 style." },
+    image: u("photo-1546793665-c74683f339c1"),
   },
   {
-    id: "lemon-mint",
-    category: "drinks",
-    name: { ar: "ليمون ونعنع", en: "Lemon & Mint" },
-    desc: { ar: "ليموناضة طازجة بالنعنع.", en: "Fresh lemonade blended with mint." },
-    price: 15000,
-    image: u("photo-1437418747212-8d9709afab22"),
+    id: "caesar-salad",
+    category: "salads",
+    name: { ar: "سلطة السيزر", en: "Caesar salad" },
+    desc: { ar: "سلطة السيزر الكلاسيكية.", en: "Classic Caesar salad." },
+    image: u("photo-1550304943-4f24f54ddde9"),
   },
   {
-    id: "milkshake",
-    category: "drinks",
-    name: { ar: "ميلك شيك", en: "Milkshake" },
-    desc: { ar: "فانيلا، شوكولا أو فريز.", en: "Vanilla, chocolate or strawberry." },
-    price: 25000,
-    image: u("photo-1572490122747-3968b75cc699"),
+    id: "coleslaw",
+    category: "salads",
+    name: { ar: "كول سلو", en: "Coleslaw" },
+    desc: { ar: "سلطة الملفوف الكريمية.", en: "Creamy cabbage coleslaw." },
   },
-  {
-    id: "brownie",
-    category: "desserts",
-    name: { ar: "براوني", en: "Brownie" },
-    desc: { ar: "براوني شوكولا دافئ.", en: "Warm chocolate brownie." },
-    price: 20000,
-    image: u("photo-1606313564200-e75d5e30476c"),
-  },
+];
+
+export const sauces: Localized[] = [
+  { ar: "هاني ماسترد", en: "Honey mustard" },
+  { ar: "كوكتيل", en: "Cocktail" },
+  { ar: "باربكيو", en: "BBQ" },
+  { ar: "رانش", en: "Ranch" },
+  { ar: "مايونيز", en: "Mayonnaise" },
+  { ar: "هالبينو", en: "Jalapeño" },
+  { ar: "تشيدر", en: "Cheddar" },
+  { ar: "كاتشب", en: "Ketchup" },
 ];
 
 export const menuById = Object.fromEntries(menu.map((item) => [item.id, item]));
 
-// Extra photos for the home page gallery (5 fill the grid: one large + four small).
+// Photos for the home page gallery (one large + four small).
 export const galleryImages = [
-  u("photo-1572802419224-296b0aeee0d9"),
-  u("photo-1565299507177-b0ac66763828"),
-  u("photo-1551782450-17144efb9c50"),
-  u("photo-1603064752734-4c48eff53d05"),
-  u("photo-1596662951482-0c4ba74a6df6"),
+  "/menu/bumb.jpg",
+  "/menu/zone.jpg",
+  "/menu/auto-bahn.jpg",
+  u("photo-1606755962773-d324e0a13086"),
+  u("photo-1573080496219-bb080dd4f877"),
 ];
 
-export const heroImage = u("photo-1568901346375-23c9450c58cd");
+export const heroImage = "/menu/bumb.jpg";

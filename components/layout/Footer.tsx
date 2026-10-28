@@ -22,9 +22,12 @@ export default function Footer({ lang }: { lang: Locale }) {
           <p className="font-display text-xl text-brand">{t.footer.follow}</p>
           <div className="flex gap-3 font-semibold">
             <a href={site.instagram} target="_blank" rel="noopener noreferrer" className="rounded-full bg-white/10 px-4 py-2 hover:bg-brand">Instagram</a>
-            <a href={site.facebook} target="_blank" rel="noopener noreferrer" className="rounded-full bg-white/10 px-4 py-2 hover:bg-brand">Facebook</a>
           </div>
-          <p className="pt-2 text-cream/70" dir="ltr">{site.phone}</p>
+          {site.phones.map((p) => (
+            <a key={p.tel} href={`tel:${p.tel}`} className="block text-cream/70 hover:text-brand">
+              <bdi dir="ltr">{p.display}</bdi>
+            </a>
+          ))}
         </div>
       </div>
       <p className="border-t border-white/10 py-5 text-center text-sm text-cream/50">

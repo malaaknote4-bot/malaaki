@@ -57,7 +57,7 @@ const comboColors = ["bg-white", "bg-brand", "bg-white"];
 
 export function Combos({ lang }: { lang: Locale }) {
   const t = dictionaries[lang].combos;
-  const items = menu.filter((i) => i.category === "meals");
+  const items = menu.filter((i) => i.category === "meals" || i.id === "chicken-loaded-fries");
   return (
     <section className="asphalt py-20 text-cream">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
@@ -78,7 +78,9 @@ export function Combos({ lang }: { lang: Locale }) {
                 <div className={cn(i % 3 === 1 && "text-white")}>
                   <h3 className="font-display text-3xl">{item.name[lang]}</h3>
                   <p className="text-sm opacity-80">{item.desc[lang]}</p>
-                  <p className="mt-2 text-xl font-black">{formatPrice(item.price, lang, site.currency)}</p>
+                  {item.price !== undefined && (
+                    <p className="mt-2 text-xl font-black">{formatPrice(item.price, lang, site.currency)}</p>
+                  )}
                 </div>
                 <AddToCartButton id={item.id} className={cn(i % 3 === 1 && "bg-asphalt shadow-none")} />
               </div>
@@ -159,8 +161,7 @@ export function Visit({ lang }: { lang: Locale }) {
   const t = dictionaries[lang].visit;
   const rows = [
     { icon: MapPin, label: t.address, value: site.address[lang] },
-    { icon: Clock, label: t.hours, value: site.hours[lang] },
-    { icon: Phone, label: t.phone, value: site.phone, ltr: true },
+    ...(site.hours ? [{ icon: Clock, label: t.hours, value: site.hours[lang] }] : []),
   ];
   return (
     <section id="visit" className="py-20">
@@ -169,17 +170,30 @@ export function Visit({ lang }: { lang: Locale }) {
           <span className="mb-3 inline-block w-fit rotate-[-2deg] rounded-lg bg-brand px-3 py-1 text-sm font-black text-white">{t.kicker}</span>
           <h2 className="font-display text-5xl leading-tight">{t.title}</h2>
           <ul className="mt-8 space-y-5">
-            {rows.map(({ icon: Icon, label, value, ltr }) => (
+            {rows.map(({ icon: Icon, label, value }) => (
               <li key={label} className="flex items-start gap-4">
                 <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-brand">
                   <Icon className="size-6" />
                 </span>
                 <span>
                   <span className="block text-sm text-white/70">{label}</span>
-                  <span className="block text-lg font-bold" dir={ltr ? "ltr" : undefined}>{value}</span>
+                  <span className="block text-lg font-bold">{value}</span>
                 </span>
               </li>
             ))}
+            <li className="flex items-start gap-4">
+              <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-brand">
+                <Phone className="size-6" />
+              </span>
+              <span>
+                <span className="block text-sm text-white/70">{t.phone}</span>
+                {site.phones.map((p) => (
+                  <a key={p.tel} href={`tel:${p.tel}`} className="block text-lg font-bold hover:text-brand">
+                    <bdi dir="ltr">{p.display}</bdi>
+                  </a>
+                ))}
+              </span>
+            </li>
           </ul>
           <div className="mt-8 flex flex-wrap gap-3">
             <a
