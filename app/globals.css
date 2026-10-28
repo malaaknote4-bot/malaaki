@@ -1,34 +1,93 @@
 @import "tailwindcss";
 
+/*
+  Road 8 brand tokens, taken from the logo (public/logo.png):
+  signal red, asphalt black and white road markings.
+*/
 :root {
-  --background: #09090b;
-  --foreground: #f4f4f5;
+  --brand: #e5130c;       /* logo red — the "8", burger and road edges */
+  --brand-dark: #a80e09;
+  --line: #ffffff;        /* white lane markings */
+  --asphalt: #111010;     /* logo background */
+  --asphalt-2: #1d1b1b;
+  --cream: #f6f4f1;       /* light page background */
+  --cream-2: #e9e5e0;
+  --ink: #111010;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-brand: var(--brand);
+  --color-brand-dark: var(--brand-dark);
+  --color-line: var(--line);
+  --color-asphalt: var(--asphalt);
+  --color-asphalt-2: var(--asphalt-2);
+  --color-cream: var(--cream);
+  --color-cream-2: var(--cream-2);
+  --color-ink: var(--ink);
+  --font-display: var(--font-anton), var(--font-lalezar), var(--font-cairo), system-ui, sans-serif;
+  --font-sans: var(--font-cairo), system-ui, sans-serif;
+}
 
-  /* Design system tokens */
-  --color-surface:      #12122a;
-  --color-surface2:     #1a1a3e;
-  --color-surface3:     #0f0f23;
-  --color-border:       rgba(255,255,255,0.07);
-  --color-accent:       #4361ee;
-  --color-accent-lt:    #6c8bff;
-  --color-accent-dim:   rgba(67,97,238,0.18);
-  --color-positive:     #22c55e;
-  --color-positive-dim: rgba(34,197,94,0.15);
-  --color-negative:     #ef4444;
-  --color-negative-dim: rgba(239,68,68,0.15);
-  --color-muted:        #71717a;
-  --color-soft:         #a1a1aa;
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 8rem;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
 }
+
+/* Dashed white lane line */
+.road-line {
+  background-image: repeating-linear-gradient(
+    90deg,
+    var(--line) 0 36px,
+    transparent 36px 64px
+  );
+}
+
+/* Asphalt texture for dark sections, like the logo background */
+.asphalt {
+  background-color: var(--asphalt);
+  background-image:
+    radial-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1.5px),
+    radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1.5px),
+    radial-gradient(rgba(0, 0, 0, 0.5) 1px, transparent 1.5px);
+  background-size: 9px 9px, 17px 17px, 13px 13px;
+  background-position: 0 0, 5px 8px, 3px 2px;
+}
+
+.dots {
+  background-image: radial-gradient(rgba(17, 16, 16, 0.07) 2px, transparent 2px);
+  background-size: 22px 22px;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(var(--r, 0deg)); }
+  50% { transform: translateY(-10px) rotate(var(--r, 0deg)); }
+}
+.animate-float { animation: float 4s ease-in-out infinite; }
+
+@keyframes drive {
+  from { background-position: 0 0; }
+  to { background-position: 128px 0; }
+}
+.animate-drive { animation: drive 2.5s linear infinite; }
+
+@keyframes pop {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.35); }
+  100% { transform: scale(1); }
+}
+.animate-pop { animation: pop 0.35s ease-out; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .animate-float, .animate-drive, .animate-pop { animation: none; }
+}
+
+.no-scrollbar { scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }

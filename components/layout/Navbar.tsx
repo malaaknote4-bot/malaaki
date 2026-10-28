@@ -1,80 +1,102 @@
 "use client";
 
 import Link from "next/link";
-import { useSession, signOut } from "next-auth/react";
-import { TrendingUp, BarChart2, BookmarkCheck, LogIn, LogOut, User } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import SearchBar from "@/components/home/SearchBar";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+import Logo from "@/components/brand/Logo";
+import CartButton from "@/components/cart/CartButton";
+import { useCart } from "@/components/cart/CartProvider";
+import { dictionaries } from "@/lib/i18n";
+import { cn } from "@/lib/utils";
 
 export default function Navbar() {
-  const { data: session } = useSession();
+  const { lang, open } = useCart();
+  const t = dictionaries[lang].nav;
+  const pathname = usePathname();
+  const otherLang = lang === "ar" ? "en" : "ar";
+  const switchHref = pathname.replace(/^\/(ar|en)(?=\/|$)/, `/${otherLang}`);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const links = [
+    { href: `/${lang}`, label: t.home },
+    { href: `/${lang}/menu`, label: t.menu },
+    { href: `/${lang}#visit`, label: t.visit },
+  ];
 
   return (
-    <nav className="sticky top-0 z-50 border-b border-border bg-background/90 backdrop-blur-sm">
-      <div className="mx-auto flex h-14 max-w-7xl items-center gap-3 px-4">
-        {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 text-white font-bold text-lg shrink-0">
-          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-accent">
-            <TrendingUp className="h-4 w-4 text-white" />
-          </div>
-          <span className="hidden sm:block tracking-tight">Stock Docs</span>
+    <header
+      className={cn(
+        "sticky top-0 z-40 transition-[background-color,box-shadow]",
+        scrolled ? "bg-cream/90 shadow-[0_6px_24px_-12px_rgba(0,0,0,0.25)] backdrop-blur" : "bg-cream",
+      )}
+    >
+      <nav className="mx-auto flex h-18 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6">
+        <Link href={`/${lang}`} aria-label="Road 8" className="shrink-0">
+          <Logo size={52} priority />
         </Link>
 
-        {/* Search - grows to fill space */}
-        <div className="flex-1 max-w-lg">
-          <SearchBar />
-        </div>
+        <ul className="hidden items-center gap-1 md:flex">
+          {links.map((l) => {
+            const active = l.href === pathname;
+            return (
+              <li key={l.href}>
+                <Link
+                  href={l.href}
+                  className={cn(
+                    "rounded-full px-4 py-2 font-bold transition hover:bg-cream-2",
+                    active && "bg-brand text-white hover:bg-brand",
+                  )}
+                >
+                  {l.label}
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
 
-        {/* Nav links */}
-        <div className="hidden md:flex items-center gap-1">
-          <Button variant="ghost" size="sm" asChild>
-            <Link href="/" className="gap-1.5">
-              <BarChart2 className="h-4 w-4" />
-              Markets
-            </Link>
-          </Button>
-          <Button variant="ghost" size="sm" asChild>
-            <Link href="/portfolio" className="gap-1.5">
-              <BookmarkCheck className="h-4 w-4" />
-              Watchlist
-            </Link>
-          </Button>
+        <div className="flex items-center gap-2">
+          <Link
+            href={switchHref}
+            hrefLang={otherLang}
+            className="flex h-11 min-w-11 items-center justify-center rounded-full border-2 border-asphalt px-3 font-bold transition hover:bg-asphalt hover:text-white"
+          >
+            {t.switchLang}
+          </Link>
+          <CartButton />
+          <button
+            type="button"
+            onClick={open}
+            className="hidden h-11 rounded-full bg-brand px-5 font-bold text-white shadow-[0_4px_0_var(--brand-dark)] transition hover:-translate-y-0.5 lg:block"
+          >
+            {t.order}
+          </button>
         </div>
+      </nav>
 
-        {/* Auth */}
-        {session ? (
-          <div className="flex items-center gap-2">
-            {session.user?.image ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={session.user.image}
-                alt={session.user.name ?? "User"}
-                className="h-8 w-8 rounded-full ring-1 ring-border"
-              />
-            ) : (
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-surface2">
-                <User className="h-4 w-4 text-soft" />
-              </div>
-            )}
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => signOut({ callbackUrl: "/" })}
-              className="gap-1.5"
+      {/* Mobile links */}
+      <ul className="no-scrollbar flex gap-2 overflow-x-auto px-4 pb-3 md:hidden">
+        {links.map((l) => (
+          <li key={l.href}>
+            <Link
+              href={l.href}
+              className={cn(
+                "block whitespace-nowrap rounded-full bg-cream-2 px-4 py-1.5 text-sm font-bold",
+                l.href === pathname && "bg-brand text-white",
+              )}
             >
-              <LogOut className="h-4 w-4" />
-              <span className="hidden sm:block">Sign out</span>
-            </Button>
-          </div>
-        ) : (
-          <Button variant="default" size="sm" asChild>
-            <Link href="/login" className="gap-1.5">
-              <LogIn className="h-4 w-4" />
-              Sign in
+              {l.label}
             </Link>
-          </Button>
-        )}
-      </div>
-    </nav>
+          </li>
+        ))}
+      </ul>
+      <div className="road-line h-1 bg-asphalt" aria-hidden="true" />
+    </header>
   );
 }
