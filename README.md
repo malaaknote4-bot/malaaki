@@ -17,6 +17,7 @@ npm run build
 | All site text (Arabic + English) | `lib/i18n.ts` |
 | Brand colors | `app/globals.css` (`:root` tokens) |
 | Logo | `public/logo.png` (also `app/icon.png`, `app/apple-icon.png` for the browser tab) |
+| Home page scroll hero (3D red flower) | text in `lib/i18n.ts` (`hero`), layout in `components/home/Road8Hero.tsx`, component in `components/ui/lycoris-specimen.tsx` |
 
 ### Brand
 Colors come from the logo: signal red, asphalt black and white lane markings (tokens in `app/globals.css`). Dark sections use an asphalt texture and the logo's curving red road (`components/brand/RoadCurves.tsx`). For a sharper logo, replace `public/logo.png` with the original high-resolution file (square, ideally 800px+).

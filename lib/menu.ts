@@ -520,4 +520,3 @@ export const galleryImages = [
   "/menu/gallery-cheese.jpg",
 ];
 
-export const heroImage = "/menu/bumb.jpg";
