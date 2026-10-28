@@ -25,7 +25,7 @@ export function cartSubtotal(lines: CartLine[]) {
 
 export function buildOrderMessage(lines: CartLine[], customer: Customer, lang: Locale) {
   const t = dictionaries[lang];
-  const price = (n: number) => formatPrice(n, lang, site.currency);
+  const price = (n: number) => formatPrice(n, lang);
   const items = lines
     .filter((l) => menuById[l.id])
     .map((l) => {

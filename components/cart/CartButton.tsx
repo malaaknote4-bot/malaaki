@@ -1,8 +1,7 @@
 "use client";
 
 import { ShoppingBag } from "lucide-react";
-import { dictionaries, formatPrice } from "@/lib/i18n";
-import { site } from "@/lib/site";
+import { dictionaries, formatNewPrice } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { useCart } from "./CartProvider";
 
@@ -46,7 +45,7 @@ export function MobileCartBar() {
         <span className="flex size-7 items-center justify-center rounded-full bg-white text-sm text-brand">{count}</span>
         {t.title}
       </span>
-      {subtotal !== null && <span>{formatPrice(subtotal, lang, site.currency)}</span>}
+      {subtotal !== null && <span>{formatNewPrice(subtotal, lang)}</span>}
     </button>
   );
 }

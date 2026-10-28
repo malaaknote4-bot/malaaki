@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import RoadCurves from "@/components/brand/RoadCurves";
+import AddToCartButton from "@/components/cart/AddToCartButton";
 import CategoryTabs from "@/components/menu/CategoryTabs";
+import Price from "@/components/ui/Price";
 import MenuItemCard from "@/components/menu/MenuItemCard";
 import { dictionaries, hasLocale } from "@/lib/i18n";
-import { categories, menu, sauces } from "@/lib/menu";
+import { categories, menu } from "@/lib/menu";
 
 export async function generateMetadata({ params }: PageProps<"/[lang]/menu">): Promise<Metadata> {
   const { lang } = await params;
@@ -44,26 +46,31 @@ export default async function MenuPage({ params }: PageProps<"/[lang]/menu">) {
                 </span>
                 {cat.name[lang]}
               </h2>
-              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {items.map((item, i) => (
-                  <MenuItemCard key={item.id} item={item} lang={lang} priority={ci === 0 && i < 3} />
-                ))}
-              </div>
+              {cat.compact ? (
+                <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                  {items.map((item) => (
+                    <li key={item.id} className="flex items-center justify-between gap-3 rounded-3xl bg-white p-4 shadow-sm ring-1 ring-asphalt/5">
+                      <div className="min-w-0">
+                        <p className="font-bold">{item.name[lang]}</p>
+                        {item.desc[lang] && <p className="text-sm text-asphalt/60">{item.desc[lang]}</p>}
+                        {item.price !== undefined && (
+                          <Price value={item.price} lang={lang} className="mt-1 text-brand" />
+                        )}
+                      </div>
+                      <AddToCartButton id={item.id} />
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                  {items.map((item, i) => (
+                    <MenuItemCard key={item.id} item={item} lang={lang} priority={ci === 0 && i < 3} />
+                  ))}
+                </div>
+              )}
             </section>
           );
         })}
-
-        <section id="sauces" className="scroll-mt-40 rounded-[2rem] bg-white p-6 shadow-sm ring-1 ring-asphalt/5 sm:p-8">
-          <h2 className="mb-2 font-display text-4xl">{t.sauces}</h2>
-          <p className="mb-5 text-asphalt/65">{t.saucesNote}</p>
-          <ul className="flex flex-wrap gap-2">
-            {sauces.map((s) => (
-              <li key={s.en} className="rounded-full border-2 border-brand/20 bg-cream px-4 py-2 font-bold">
-                {s[lang]}
-              </li>
-            ))}
-          </ul>
-        </section>
       </div>
     </>
   );
