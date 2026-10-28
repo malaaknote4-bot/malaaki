@@ -4,7 +4,8 @@ import AddToCartButton from "@/components/cart/AddToCartButton";
 import WhatsAppIcon from "@/components/ui/WhatsAppIcon";
 import MenuItemCard from "@/components/menu/MenuItemCard";
 import FoodImage from "@/components/ui/FoodImage";
-import { dictionaries, formatPrice, type Locale } from "@/lib/i18n";
+import Price from "@/components/ui/Price";
+import { dictionaries, type Locale } from "@/lib/i18n";
 import { galleryImages, menu } from "@/lib/menu";
 import { site } from "@/lib/site";
 import { cn } from "@/lib/utils";
@@ -57,7 +58,7 @@ const comboColors = ["bg-white", "bg-brand", "bg-white"];
 
 export function Combos({ lang }: { lang: Locale }) {
   const t = dictionaries[lang].combos;
-  const items = menu.filter((i) => i.category === "meals" || i.id === "chicken-loaded-fries");
+  const items = menu.filter((i) => i.category === "meals");
   return (
     <section className="asphalt py-20 text-cream">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
@@ -70,6 +71,7 @@ export function Combos({ lang }: { lang: Locale }) {
                   src={item.image}
                   alt={item.name[lang]}
                   fill
+                  style={{ objectPosition: item.imagePosition }}
                   sizes="(min-width: 1024px) 33vw, 100vw"
                   className="object-cover transition duration-500 group-hover:scale-110"
                 />
@@ -78,9 +80,7 @@ export function Combos({ lang }: { lang: Locale }) {
                 <div className={cn(i % 3 === 1 && "text-white")}>
                   <h3 className="font-display text-3xl">{item.name[lang]}</h3>
                   <p className="text-sm opacity-80">{item.desc[lang]}</p>
-                  {item.price !== undefined && (
-                    <p className="mt-2 text-xl font-black">{formatPrice(item.price, lang, site.currency)}</p>
-                  )}
+                  {item.price !== undefined && <Price value={item.price} lang={lang} className="mt-2 text-xl" />}
                 </div>
                 <AddToCartButton id={item.id} className={cn(i % 3 === 1 && "bg-asphalt shadow-none")} />
               </div>

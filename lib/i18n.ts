@@ -29,9 +29,9 @@ const ar = {
     seeAll: "كل المنيو",
   },
   combos: {
-    kicker: "كريسبي وفرايز",
+    kicker: "الوجبات",
     title: "جوعان كتير؟",
-    subtitle: "وجبات الكريسبي مع البطاطا، والفرايز المحمّلة بالصوصات.",
+    subtitle: "وجبات الكريسبي مع البطاطا والصوص اللي بتحبه.",
   },
   why: {
     title: "ليش رود 8؟",
@@ -56,8 +56,6 @@ const ar = {
     subtitle: "اختار، زيد عالسلة، وابعت طلبك على واتساب بكبسة زر.",
     add: "أضف",
     added: "تمت الإضافة",
-    sauces: "الصوصات",
-    saucesNote: "اختار صوصك مع الطلب واكتبه بالملاحظات.",
   },
   tags: { bestseller: "الأكثر مبيعاً", new: "جديد", spicy: "حار" },
   cart: {
@@ -125,9 +123,9 @@ const en: Dictionary = {
     seeAll: "Full menu",
   },
   combos: {
-    kicker: "Crispy & fries",
+    kicker: "Meals",
     title: "Really hungry?",
-    subtitle: "Crispy chicken meals with fries, and fries loaded with sauces.",
+    subtitle: "Crispy chicken meals with fries and the sauce you love.",
   },
   why: {
     title: "Why Road 8?",
@@ -152,8 +150,6 @@ const en: Dictionary = {
     subtitle: "Pick, add to cart, and send your order on WhatsApp in one tap.",
     add: "Add",
     added: "Added",
-    sauces: "Sauces",
-    saucesNote: "Pick your sauce when you order and write it in the notes.",
   },
   tags: { bestseller: "Bestseller", new: "New", spicy: "Spicy" },
   cart: {
@@ -199,7 +195,16 @@ const en: Dictionary = {
 
 export const dictionaries: Record<Locale, Dictionary> = { ar, en };
 
-export function formatPrice(value: number, lang: Locale, currency: Localized) {
-  const n = new Intl.NumberFormat(lang === "ar" ? "ar-SY" : "en-US").format(value);
-  return `${n} ${currency[lang]}`;
-}
+// Menu prices are stored in old Syrian pounds (ل.ق); the new pound (ل.ج) drops two zeros.
+const currencyLabel = {
+  new: { ar: "ل.ج", en: "SYP" },
+  old: { ar: "ل.ق", en: "old SYP" },
+} as const;
+
+const number = (n: number) => new Intl.NumberFormat("en-US").format(n);
+
+export const formatNewPrice = (old: number, lang: Locale) => `${number(old / 100)} ${currencyLabel.new[lang]}`;
+export const formatOldPrice = (old: number, lang: Locale) => `${number(old)} ${currencyLabel.old[lang]}`;
+
+// Both currencies, for the WhatsApp order message.
+export const formatPrice = (old: number, lang: Locale) => `${formatNewPrice(old, lang)} (${formatOldPrice(old, lang)})`;

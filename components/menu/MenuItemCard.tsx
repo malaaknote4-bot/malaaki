@@ -1,8 +1,8 @@
 import AddToCartButton from "@/components/cart/AddToCartButton";
 import FoodImage from "@/components/ui/FoodImage";
-import { dictionaries, formatPrice, type Locale } from "@/lib/i18n";
+import Price from "@/components/ui/Price";
+import { dictionaries, type Locale } from "@/lib/i18n";
 import type { MenuItem, Tag } from "@/lib/menu";
-import { site } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
 const tagStyles: Record<Tag, string> = {
@@ -38,6 +38,7 @@ export default function MenuItemCard({
           src={item.image}
           alt={item.name[lang]}
           fill
+          style={{ objectPosition: item.imagePosition }}
           priority={priority}
           sizes={size === "lg" ? "(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw" : "(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"}
           className="object-cover transition duration-500 group-hover:rotate-1 group-hover:scale-110"
@@ -53,7 +54,7 @@ export default function MenuItemCard({
         <p className="flex-1 text-sm leading-relaxed text-asphalt/65">{item.desc[lang]}</p>
         <div className="mt-2 flex items-center justify-between gap-3">
           {item.price !== undefined ? (
-            <span className="text-lg font-black text-brand">{formatPrice(item.price, lang, site.currency)}</span>
+            <Price value={item.price} lang={lang} className="text-lg text-brand" />
           ) : (
             <span />
           )}

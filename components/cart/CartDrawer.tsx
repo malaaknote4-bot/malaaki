@@ -4,10 +4,9 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { Minus, Plus, Trash2, X } from "lucide-react";
 import FoodImage from "@/components/ui/FoodImage";
-import { dictionaries, formatPrice } from "@/lib/i18n";
+import { dictionaries, formatNewPrice, formatOldPrice } from "@/lib/i18n";
 import { menuById } from "@/lib/menu";
 import { buildOrderMessage, whatsappUrl, type Customer } from "@/lib/order";
-import { site } from "@/lib/site";
 import { cn } from "@/lib/utils";
 import { useCart } from "./CartProvider";
 import WhatsAppIcon from "@/components/ui/WhatsAppIcon";
@@ -20,7 +19,6 @@ const inputClass =
 export default function CartDrawer() {
   const { lang, lines, subtotal, isOpen, close, setQty, clear } = useCart();
   const t = dictionaries[lang].cart;
-  const price = (n: number) => formatPrice(n, lang, site.currency);
   const [customer, setCustomer] = useState<Customer>(EMPTY_CUSTOMER);
   const [error, setError] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
@@ -110,7 +108,7 @@ export default function CartDrawer() {
                       <div className="min-w-0 flex-1">
                         <p className="truncate font-bold">{item.name[lang]}</p>
                         {item.price !== undefined && (
-                          <p className="text-sm font-semibold text-brand">{price(item.price * line.qty)}</p>
+                          <p className="text-sm font-semibold text-brand">{formatNewPrice(item.price * line.qty, lang)}</p>
                         )}
                       </div>
                       <div className="flex items-center gap-1">
@@ -200,9 +198,12 @@ export default function CartDrawer() {
 
             <footer className="space-y-3 border-t-2 border-dashed border-asphalt/15 bg-white p-5">
               {subtotal !== null ? (
-                <dl className="flex justify-between text-lg">
+                <dl className="flex items-start justify-between text-lg">
                   <dt className="font-bold">{t.total}</dt>
-                  <dd className="font-black text-brand">{price(subtotal)}</dd>
+                  <dd className="text-end">
+                    <span className="block font-black text-brand">{formatNewPrice(subtotal, lang)}</span>
+                    <span className="block text-xs text-asphalt/50">{formatOldPrice(subtotal, lang)}</span>
+                  </dd>
                 </dl>
               ) : (
                 <p className="text-center text-sm text-asphalt/60">{t.priceNote}</p>

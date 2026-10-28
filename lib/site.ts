@@ -16,5 +16,4 @@ export const site = {
   instagram: "https://www.instagram.com/road8_",
   mapsUrl: "https://maps.google.com/?q=Al-Nabek,+Syria",
   mapsEmbed: "https://www.google.com/maps?q=Al-Nabek,+Syria&output=embed",
-  currency: { ar: "ل.س", en: "SYP" },
 } as const;
