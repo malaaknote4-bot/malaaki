@@ -13,6 +13,11 @@
   --cream: #f6f4f1;       /* light page background */
   --cream-2: #e9e5e0;
   --ink: #111010;
+  /* Header height; the navbar updates it to its real size. Taller on phones (extra link row). */
+  --nav-h: 7.5rem;
+}
+@media (min-width: 48rem) {
+  :root { --nav-h: 4.75rem; }
 }
 
 @theme inline {
@@ -30,7 +35,7 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 8rem;
+  scroll-padding-top: calc(var(--nav-h) + 1rem);
 }
 
 body {

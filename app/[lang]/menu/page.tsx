@@ -39,7 +39,7 @@ export default async function MenuPage({ params }: PageProps<"/[lang]/menu">) {
           const items = menu.filter((i) => i.category === cat.id);
           if (!items.length) return null;
           return (
-            <section key={cat.id} id={cat.id} className="scroll-mt-40">
+            <section key={cat.id} id={cat.id} className="scroll-mt-[4.75rem]">
               <h2 className="mb-6 flex items-center gap-3 font-display text-4xl sm:text-5xl">
                 <span className="flex size-14 rotate-[-6deg] items-center justify-center rounded-2xl bg-brand text-3xl shadow-md" aria-hidden="true">
                   {cat.emoji}

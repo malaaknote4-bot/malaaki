@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Logo from "@/components/brand/Logo";
 import CartButton from "@/components/cart/CartButton";
 import { useCart } from "@/components/cart/CartProvider";
@@ -16,12 +16,24 @@ export default function Navbar() {
   const otherLang = lang === "ar" ? "en" : "ar";
   const switchHref = pathname.replace(/^\/(ar|en)(?=\/|$)/, `/${otherLang}`);
   const [scrolled, setScrolled] = useState(false);
+  const headerRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // Publish the header's real height (taller on phones, with the extra link row) so sticky bars sit just below it.
+  useEffect(() => {
+    const header = headerRef.current;
+    if (!header) return;
+    const update = () => document.documentElement.style.setProperty("--nav-h", `${header.offsetHeight}px`);
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(header);
+    return () => observer.disconnect();
   }, []);
 
   const links = [
@@ -32,6 +44,7 @@ export default function Navbar() {
 
   return (
     <header
+      ref={headerRef}
       className={cn(
         "sticky top-0 z-40 transition-[background-color,box-shadow]",
         scrolled ? "bg-cream/90 shadow-[0_6px_24px_-12px_rgba(0,0,0,0.25)] backdrop-blur" : "bg-cream",
