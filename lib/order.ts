@@ -12,8 +12,15 @@ export type Customer = {
   notes: string;
 };
 
+// Total of the cart, or null while any item in it has no price yet.
 export function cartSubtotal(lines: CartLine[]) {
-  return lines.reduce((sum, l) => sum + (menuById[l.id]?.price ?? 0) * l.qty, 0);
+  let sum = 0;
+  for (const l of lines) {
+    const price = menuById[l.id]?.price;
+    if (price === undefined) return null;
+    sum += price * l.qty;
+  }
+  return sum;
 }
 
 export function buildOrderMessage(lines: CartLine[], customer: Customer, lang: Locale) {
@@ -23,12 +30,13 @@ export function buildOrderMessage(lines: CartLine[], customer: Customer, lang: L
     .filter((l) => menuById[l.id])
     .map((l) => {
       const item = menuById[l.id];
-      return `• ${l.qty} × ${item.name[lang]} — ${price(item.price * l.qty)}`;
+      const cost = item.price === undefined ? "" : ` — ${price(item.price * l.qty)}`;
+      return `• ${l.qty} × ${item.name[lang]}${cost}`;
     });
   const subtotal = cartSubtotal(lines);
-  const delivery = customer.type === "delivery" ? site.deliveryFee : 0;
 
-  const out = [t.order.greeting, "", ...items, "", `*${t.order.total}: ${price(subtotal + delivery)}*`, ""];
+  const out = [t.order.greeting, "", ...items, ""];
+  if (subtotal !== null) out.push(`*${t.order.total}: ${price(subtotal)}*`, "");
   out.push(`${t.order.name}: ${customer.name}`);
   out.push(`${t.order.phone}: ${customer.phone}`);
   out.push(`${t.order.type}: ${customer.type === "delivery" ? t.cart.deliveryOpt : t.cart.pickupOpt}`);

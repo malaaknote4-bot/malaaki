@@ -52,7 +52,11 @@ export default function MenuItemCard({
         <h3 className="font-display text-2xl leading-tight">{item.name[lang]}</h3>
         <p className="flex-1 text-sm leading-relaxed text-asphalt/65">{item.desc[lang]}</p>
         <div className="mt-2 flex items-center justify-between gap-3">
-          <span className="text-lg font-black text-brand">{formatPrice(item.price, lang, site.currency)}</span>
+          {item.price !== undefined ? (
+            <span className="text-lg font-black text-brand">{formatPrice(item.price, lang, site.currency)}</span>
+          ) : (
+            <span />
+          )}
           <AddToCartButton id={item.id} />
         </div>
       </div>

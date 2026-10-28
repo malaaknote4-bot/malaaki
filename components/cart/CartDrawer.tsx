@@ -37,7 +37,6 @@ export default function CartDrawer() {
     };
   }, [isOpen, close]);
 
-  const delivery = customer.type === "delivery" ? site.deliveryFee : 0;
   const update = <K extends keyof Customer>(key: K, value: Customer[K]) =>
     setCustomer((c) => ({ ...c, [key]: value }));
 
@@ -110,7 +109,9 @@ export default function CartDrawer() {
                       </div>
                       <div className="min-w-0 flex-1">
                         <p className="truncate font-bold">{item.name[lang]}</p>
-                        <p className="text-sm font-semibold text-brand">{price(item.price * line.qty)}</p>
+                        {item.price !== undefined && (
+                          <p className="text-sm font-semibold text-brand">{price(item.price * line.qty)}</p>
+                        )}
                       </div>
                       <div className="flex items-center gap-1">
                         <button
@@ -198,22 +199,14 @@ export default function CartDrawer() {
             </div>
 
             <footer className="space-y-3 border-t-2 border-dashed border-asphalt/15 bg-white p-5">
-              <dl className="space-y-1 text-sm">
-                <div className="flex justify-between">
-                  <dt>{t.subtotal}</dt>
-                  <dd className="font-semibold">{price(subtotal)}</dd>
-                </div>
-                {customer.type === "delivery" && (
-                  <div className="flex justify-between">
-                    <dt>{t.delivery}</dt>
-                    <dd className="font-semibold">{delivery === 0 ? t.free : price(delivery)}</dd>
-                  </div>
-                )}
-                <div className="flex justify-between pt-1 text-lg">
+              {subtotal !== null ? (
+                <dl className="flex justify-between text-lg">
                   <dt className="font-bold">{t.total}</dt>
-                  <dd className="font-black text-brand">{price(subtotal + delivery)}</dd>
-                </div>
-              </dl>
+                  <dd className="font-black text-brand">{price(subtotal)}</dd>
+                </dl>
+              ) : (
+                <p className="text-center text-sm text-asphalt/60">{t.priceNote}</p>
+              )}
               {error && <p className="text-sm font-semibold text-brand" role="alert">{t.required}</p>}
               <button
                 type="submit"

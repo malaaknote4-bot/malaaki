@@ -46,7 +46,7 @@ export function MobileCartBar() {
         <span className="flex size-7 items-center justify-center rounded-full bg-white text-sm text-brand">{count}</span>
         {t.title}
       </span>
-      <span>{formatPrice(subtotal, lang, site.currency)}</span>
+      {subtotal !== null && <span>{formatPrice(subtotal, lang, site.currency)}</span>}
     </button>
   );
 }

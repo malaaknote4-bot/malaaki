@@ -11,7 +11,7 @@ type CartContextValue = {
   lang: Locale;
   lines: CartLine[];
   count: number;
-  subtotal: number;
+  subtotal: number | null;
   isOpen: boolean;
   open: () => void;
   close: () => void;
