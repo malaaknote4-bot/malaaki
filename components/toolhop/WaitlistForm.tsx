@@ -38,7 +38,7 @@ export default function WaitlistForm() {
 
   if (status === "done") {
     return (
-      <p className="flex items-center justify-center gap-3 rounded-2xl border border-accent/40 bg-accent/10 px-6 py-5 text-lg">
+      <p className="flex items-center justify-center gap-3 rounded-2xl border border-accent/30 bg-white/80 px-6 py-5 text-lg">
         <Check className="size-6 shrink-0 text-accent" />
         You&apos;re on the list. We&apos;ll email you when your spot opens.
       </p>
@@ -54,7 +54,7 @@ export default function WaitlistForm() {
             key={r.value}
             className={cn(
               "cursor-pointer rounded-full border px-4 py-2 text-sm font-medium transition has-focus-visible:outline-2 has-focus-visible:outline-accent",
-              role === r.value ? "border-accent bg-accent/10 text-text" : "border-edge text-muted hover:text-text",
+              role === r.value ? "border-accent bg-white text-ink" : "border-line bg-white/50 text-muted hover:text-ink",
             )}
           >
             <input
@@ -81,12 +81,12 @@ export default function WaitlistForm() {
           required
           autoComplete="email"
           placeholder="you@company.com"
-          className="h-14 min-w-0 flex-1 rounded-full border border-edge bg-night px-6 text-base text-text placeholder:text-muted/70 focus:border-accent focus:outline-none"
+          className="h-14 min-w-0 flex-1 rounded-full border border-line bg-white px-6 text-base text-ink placeholder:text-muted/70 focus:border-accent focus:outline-none"
         />
         <button
           type="submit"
           disabled={status === "sending"}
-          className="inline-flex h-14 items-center justify-center gap-2 rounded-full bg-accent px-8 text-base font-semibold text-accent-ink transition hover:brightness-110 disabled:opacity-60"
+          className="inline-flex h-14 items-center justify-center gap-2 rounded-full bg-accent px-8 text-base font-semibold text-on-accent transition hover:brightness-110 disabled:opacity-60"
         >
           {status === "sending" ? "Joining…" : "Join the waitlist"}
           <ArrowRight className="size-5" />

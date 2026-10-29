@@ -1,29 +1,33 @@
 @import "tailwindcss";
 
 /*
-  Toolhop tokens: "reliable infrastructure", closer to a payments company than an AI startup.
-  Near-black navy background, one bright green accent for activity and buttons, soft grey cards.
+  Toolhop tokens: light and warm, taken from the "ok" gradient (components/ui/ok.tsx):
+  cream paper, peach and soft butter yellow. A deepened peach is the one accent for buttons and prices.
 */
 :root {
-  --night: #070b14;
-  --night-2: #0d1322;
-  --card: #131a2b;
-  --edge: #222b40;
-  --text: #e8ecf4;
-  --muted: #8d97ab;
-  --accent: #3cf0a2;
-  --accent-ink: #04140c;
+  --paper: #faf9ef;
+  --paper-2: #f3eedf;
+  --surface: rgba(255, 255, 255, 0.7);
+  --line: #e6dfcb;
+  --ink: #24211a;
+  --muted: #6e685a;
+  --accent: #b5562e;
+  --on-accent: #ffffff;
+  --peach: #e6b093;
+  --butter: #fffaa3;
 }
 
 @theme inline {
-  --color-night: var(--night);
-  --color-night-2: var(--night-2);
-  --color-card: var(--card);
-  --color-edge: var(--edge);
-  --color-text: var(--text);
+  --color-paper: var(--paper);
+  --color-paper-2: var(--paper-2);
+  --color-surface: var(--surface);
+  --color-line: var(--line);
+  --color-ink: var(--ink);
   --color-muted: var(--muted);
   --color-accent: var(--accent);
-  --color-accent-ink: var(--accent-ink);
+  --color-on-accent: var(--on-accent);
+  --color-peach: var(--peach);
+  --color-butter: var(--butter);
   --font-sans: var(--font-geist), system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 }
@@ -31,23 +35,14 @@
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 5rem;
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 body {
-  background: var(--night);
-  color: var(--text);
+  background: var(--paper);
+  color: var(--ink);
   font-family: var(--font-sans);
   overflow-x: hidden;
-}
-
-/* Faint grid behind the hero */
-.grid-lines {
-  background-image:
-    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
-  background-size: 48px 48px;
-  mask-image: radial-gradient(ellipse at top, black 30%, transparent 75%);
 }
 
 @keyframes ticker {

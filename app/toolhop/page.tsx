@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import AgentDemo from "@/components/toolhop/AgentDemo";
 import WaitlistForm from "@/components/toolhop/WaitlistForm";
+import { GradientBackground } from "@/components/ui/ok";
 import { toolhop } from "@/lib/toolhop";
 
 const steps: { icon: LucideIcon; title: string; text: string }[] = [
@@ -69,22 +70,22 @@ const sampleCalls = [
 export default function ToolhopHome() {
   return (
     <>
-      <header className="sticky top-0 z-20 border-b border-edge/60 bg-night/80 backdrop-blur">
+      <header className="sticky top-0 z-20 border-b border-line/70 bg-paper/80 backdrop-blur">
         <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
           <a href="#top" className="flex items-center gap-2 font-mono text-lg font-semibold tracking-tight">
-            <span className="grid size-7 place-items-center rounded-md bg-accent font-bold text-accent-ink">T</span>
+            <span className="grid size-7 place-items-center rounded-md bg-accent font-bold text-on-accent">T</span>
             {toolhop.name.toLowerCase()}
           </a>
           <div className="flex items-center gap-1 text-sm sm:gap-6">
-            <a href="#how" className="hidden text-muted transition hover:text-text sm:inline">
+            <a href="#how" className="hidden text-muted transition hover:text-ink sm:inline">
               How it works
             </a>
-            <a href="#makers" className="hidden text-muted transition hover:text-text sm:inline">
+            <a href="#makers" className="hidden text-muted transition hover:text-ink sm:inline">
               For tool makers
             </a>
             <a
               href="#waitlist"
-              className="rounded-full bg-accent px-4 py-2 font-semibold text-accent-ink transition hover:brightness-110"
+              className="rounded-full bg-accent px-4 py-2 font-semibold text-on-accent transition hover:brightness-110"
             >
               Join the waitlist
             </a>
@@ -95,10 +96,13 @@ export default function ToolhopHome() {
       <main id="top">
         {/* Hero */}
         <section className="relative overflow-hidden">
-          <div aria-hidden className="grid-lines absolute inset-0" />
+          {/* The gradient sets its own position: relative, so a wrapper pins it behind the section. */}
+          <div className="absolute inset-0">
+            <GradientBackground />
+          </div>
           <div className="relative mx-auto grid max-w-6xl items-center gap-12 px-4 pb-20 pt-14 sm:px-6 lg:grid-cols-[1.1fr_1fr] lg:pb-28 lg:pt-24">
             <div className="space-y-7">
-              <span className="inline-flex items-center gap-2 rounded-full border border-edge bg-card/60 px-3 py-1 font-mono text-xs text-muted">
+              <span className="inline-flex items-center gap-2 rounded-full border border-line bg-white/70 px-3 py-1 font-mono text-xs text-muted">
                 <span className="size-1.5 rounded-full bg-accent" />
                 Early access · document tools first
               </span>
@@ -113,12 +117,12 @@ export default function ToolhopHome() {
               <div className="flex flex-wrap items-center gap-x-6 gap-y-4">
                 <a
                   href="#waitlist"
-                  className="inline-flex h-14 items-center gap-2 rounded-full bg-accent px-8 text-lg font-semibold text-accent-ink transition hover:brightness-110"
+                  className="inline-flex h-14 items-center gap-2 rounded-full bg-accent px-8 text-lg font-semibold text-on-accent transition hover:brightness-110"
                 >
                   Join the waitlist
                   <ArrowRight className="size-5" />
                 </a>
-                <a href="#makers" className="inline-flex items-center gap-1.5 font-medium text-text/90 hover:text-accent">
+                <a href="#makers" className="inline-flex items-center gap-1.5 font-medium text-ink/90 hover:text-accent">
                   I make tools
                   <ArrowRight className="size-4" />
                 </a>
@@ -129,12 +133,12 @@ export default function ToolhopHome() {
         </section>
 
         {/* Ticker of sample calls */}
-        <div className="border-y border-edge bg-night-2" aria-label="Sample calls">
+        <div className="border-y border-line bg-paper-2" aria-label="Sample calls">
           <div className="flex overflow-hidden py-3">
             <div className="animate-ticker flex shrink-0 gap-10 pe-10 font-mono text-sm text-muted">
               {[...sampleCalls, ...sampleCalls].map(([tool, price], i) => (
                 <span key={i} aria-hidden={i >= sampleCalls.length} className="whitespace-nowrap">
-                  agent paid <span className="text-accent">${price}</span> for <span className="text-text">{tool}</span>
+                  agent paid <span className="text-accent">${price}</span> for <span className="text-ink">{tool}</span>
                 </span>
               ))}
             </div>
@@ -144,14 +148,14 @@ export default function ToolhopHome() {
         {/* Problem / fix */}
         <section className="mx-auto max-w-6xl px-4 py-20 sm:px-6 lg:py-28">
           <div className="grid gap-6 md:grid-cols-2">
-            <div className="rounded-2xl border border-edge bg-card/50 p-7">
+            <div className="rounded-2xl border border-line bg-surface p-7">
               <p className="font-mono text-xs uppercase tracking-widest text-muted">Today</p>
               <p className="mt-4 text-xl leading-relaxed">
                 When an AI needs a new tool, a person must sign up, pay and set it up.{" "}
                 <span className="text-muted">That is slow, and the AI stops working while it waits.</span>
               </p>
             </div>
-            <div className="rounded-2xl border border-accent/40 bg-accent/5 p-7">
+            <div className="rounded-2xl border border-peach bg-peach/25 p-7">
               <p className="font-mono text-xs uppercase tracking-widest text-accent">With {toolhop.name}</p>
               <p className="mt-4 text-xl leading-relaxed">
                 Connect your AI to the shop one time.{" "}
@@ -162,13 +166,13 @@ export default function ToolhopHome() {
         </section>
 
         {/* How it works */}
-        <section id="how" className="border-t border-edge bg-night-2">
+        <section id="how" className="border-t border-line bg-paper-2">
           <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 lg:py-28">
             <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">How it works</h2>
             <p className="mt-3 max-w-xl text-lg text-muted">Four steps, all done by your AI, in about a second.</p>
             <ol className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {steps.map((s, i) => (
-                <li key={s.title} className="rounded-2xl border border-edge bg-card p-6">
+                <li key={s.title} className="rounded-2xl border border-line bg-surface p-6">
                   <div className="flex items-center justify-between">
                     <s.icon className="size-6 text-accent" strokeWidth={1.75} />
                     <span className="font-mono text-sm text-muted">0{i + 1}</span>
@@ -192,8 +196,8 @@ export default function ToolhopHome() {
             </div>
             <ul className="grid gap-3">
               {firstTools.map((t) => (
-                <li key={t.name} className="flex items-center gap-4 rounded-2xl border border-edge bg-card p-5">
-                  <span className="grid size-11 shrink-0 place-items-center rounded-xl border border-edge bg-night">
+                <li key={t.name} className="flex items-center gap-4 rounded-2xl border border-line bg-surface p-5">
+                  <span className="grid size-11 shrink-0 place-items-center rounded-xl border border-line bg-white">
                     <t.icon className="size-5 text-accent" strokeWidth={1.75} />
                   </span>
                   <div className="min-w-0 flex-1">
@@ -208,17 +212,17 @@ export default function ToolhopHome() {
         </section>
 
         {/* Audiences */}
-        <section id="makers" className="border-t border-edge bg-night-2">
+        <section id="makers" className="border-t border-line bg-paper-2">
           <div className="mx-auto grid max-w-6xl gap-6 px-4 py-20 sm:px-6 md:grid-cols-2 lg:py-28">
             {audiences.map((a) => (
-              <div key={a.eyebrow} className="rounded-2xl border border-edge bg-card p-8">
+              <div key={a.eyebrow} className="rounded-2xl border border-line bg-surface p-8">
                 <p className="font-mono text-xs uppercase tracking-widest text-accent">{a.eyebrow}</p>
                 <h2 className="mt-4 text-2xl font-semibold tracking-tight sm:text-3xl">{a.title}</h2>
                 <ul className="mt-8 space-y-5">
                   {a.points.map((p) => (
                     <li key={p.text} className="flex gap-4">
                       <p.icon className="mt-0.5 size-5 shrink-0 text-accent" strokeWidth={1.75} />
-                      <span className="text-text/90">{p.text}</span>
+                      <span className="text-ink/90">{p.text}</span>
                     </li>
                   ))}
                 </ul>
@@ -250,9 +254,11 @@ export default function ToolhopHome() {
         </section>
 
         {/* Waitlist */}
-        <section id="waitlist" className="border-t border-edge">
+        <section id="waitlist" className="border-t border-line">
           <div className="relative overflow-hidden">
-            <div aria-hidden className="grid-lines absolute inset-0" />
+            <div className="absolute inset-0">
+              <GradientBackground />
+            </div>
             <div className="relative mx-auto max-w-2xl px-4 py-20 text-center sm:px-6 lg:py-28">
               <h2 className="text-3xl font-semibold tracking-tight sm:text-5xl">Get early access.</h2>
               <p className="mx-auto mt-4 max-w-lg text-lg text-muted">
@@ -266,7 +272,7 @@ export default function ToolhopHome() {
         </section>
       </main>
 
-      <footer className="border-t border-edge">
+      <footer className="border-t border-line">
         <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-8 text-sm text-muted sm:flex-row sm:items-center sm:justify-between sm:px-6">
           <p className="font-mono">{toolhop.name.toLowerCase()}</p>
           <p>Tools your AI can buy on its own.</p>

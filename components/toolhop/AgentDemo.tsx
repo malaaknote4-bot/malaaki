@@ -32,11 +32,11 @@ export default function AgentDemo() {
   }, [shown]);
 
   return (
-    <figure className="overflow-hidden rounded-2xl border border-edge bg-night-2 shadow-[0_30px_80px_-30px_rgba(60,240,162,0.25)]">
-      <div className="flex items-center gap-2 border-b border-edge px-4 py-3">
-        <span className="size-2.5 rounded-full bg-edge" />
-        <span className="size-2.5 rounded-full bg-edge" />
-        <span className="size-2.5 rounded-full bg-edge" />
+    <figure className="overflow-hidden rounded-2xl border border-line bg-white/85 shadow-[0_30px_70px_-30px_rgba(181,86,46,0.35)] backdrop-blur">
+      <div className="flex items-center gap-2 border-b border-line px-4 py-3">
+        <span className="size-2.5 rounded-full bg-peach" />
+        <span className="size-2.5 rounded-full bg-butter" />
+        <span className="size-2.5 rounded-full bg-line" />
         <figcaption className="ms-2 font-mono text-xs text-muted">your-agent · example run</figcaption>
       </div>
       <ol className="min-h-[17rem] space-y-2.5 p-5 font-mono text-[13px] leading-relaxed sm:text-sm" aria-live="off">
@@ -57,8 +57,8 @@ export default function AgentDemo() {
 }
 
 const lineStyles: Record<Line["kind"], string> = {
-  call: "text-text",
+  call: "text-ink",
   out: "ps-4 text-muted",
-  paid: "ps-4 text-accent",
-  ok: "ps-4 text-text",
+  paid: "ps-4 font-medium text-accent",
+  ok: "ps-4 text-ink",
 };
