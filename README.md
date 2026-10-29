@@ -26,3 +26,6 @@ Put photos in `public/menu/` and set `image: "/menu/your-photo.jpg"` on the item
 
 ## How ordering works
 Customers add items to the cart (saved in their browser), fill in name, phone and delivery/pickup details, and tap **Send order on WhatsApp**. This opens WhatsApp with the full order pre-written to the number in `lib/site.ts`. No backend or payment gateway is needed.
+
+## Toolhop (AI agent tool marketplace concept)
+A separate home page at `/toolhop` (`app/toolhop/`, its own layout and styles in `app/toolhop/toolhop.css`; components in `components/toolhop/`). It does not affect the Road 8 site. The name and the waitlist form's endpoint are set in `lib/toolhop.ts`: until `waitlistEndpoint` points to a form service (e.g. Formspree or Tally), the form says the waitlist isn't connected yet.
