@@ -18,7 +18,6 @@ import {
 } from "lucide-react";
 import AgentDemo from "@/components/toolhop/AgentDemo";
 import WaitlistForm from "@/components/toolhop/WaitlistForm";
-import { DitherDissolve } from "@/components/ui/dither-dissolve";
 import { GradientBackground } from "@/components/ui/ok";
 import { toolhop } from "@/lib/toolhop";
 
@@ -98,12 +97,9 @@ export default function ToolhopHome() {
         {/* Hero */}
         <section className="relative overflow-hidden">
           {/* The gradient sets its own position: relative, so a wrapper pins it behind the section. */}
-          <div className="absolute inset-0 overflow-hidden">
-            <div className="animate-drift absolute -inset-[8%]">
-              <GradientBackground />
-            </div>
+          <div className="absolute inset-0">
+            <GradientBackground />
           </div>
-          <DitherDissolve trigger="load" color="paper" className="absolute inset-0 z-0" />
           <div className="relative mx-auto grid max-w-6xl items-center gap-12 px-4 pb-20 pt-14 sm:px-6 lg:grid-cols-[1.1fr_1fr] lg:pb-28 lg:pt-24">
             <div className="space-y-7">
               <span className="inline-flex items-center gap-2 rounded-full border border-line bg-white/70 px-3 py-1 font-mono text-xs text-muted">
@@ -150,7 +146,7 @@ export default function ToolhopHome() {
         </div>
 
         {/* Problem / fix */}
-        <section className="relative mx-auto max-w-6xl px-4 py-20 sm:px-6 lg:py-28">
+        <section className="mx-auto max-w-6xl px-4 py-20 sm:px-6 lg:py-28">
           <div className="grid gap-6 md:grid-cols-2">
             <div className="rounded-2xl border border-line bg-surface p-7">
               <p className="font-mono text-xs uppercase tracking-widest text-muted">Today</p>
@@ -167,11 +163,10 @@ export default function ToolhopHome() {
               </p>
             </div>
           </div>
-          <DitherDissolve color="paper" className="absolute inset-0 z-10" />
         </section>
 
         {/* How it works */}
-        <section id="how" className="relative border-t border-line bg-paper-2">
+        <section id="how" className="border-t border-line bg-paper-2">
           <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 lg:py-28">
             <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">How it works</h2>
             <p className="mt-3 max-w-xl text-lg text-muted">Four steps, all done by your AI, in about a second.</p>
@@ -188,11 +183,10 @@ export default function ToolhopHome() {
               ))}
             </ol>
           </div>
-          <DitherDissolve color="paper-2" className="absolute inset-0 z-10" />
         </section>
 
         {/* Document tools first */}
-        <section className="relative mx-auto max-w-6xl px-4 py-20 sm:px-6 lg:py-28">
+        <section className="mx-auto max-w-6xl px-4 py-20 sm:px-6 lg:py-28">
           <div className="grid gap-12 lg:grid-cols-[1fr_1.4fr] lg:items-center">
             <div>
               <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">We start with documents.</h2>
@@ -215,11 +209,10 @@ export default function ToolhopHome() {
               ))}
             </ul>
           </div>
-          <DitherDissolve color="paper" className="absolute inset-0 z-10" />
         </section>
 
         {/* Audiences */}
-        <section id="makers" className="relative border-t border-line bg-paper-2">
+        <section id="makers" className="border-t border-line bg-paper-2">
           <div className="mx-auto grid max-w-6xl gap-6 px-4 py-20 sm:px-6 md:grid-cols-2 lg:py-28">
             {audiences.map((a) => (
               <div key={a.eyebrow} className="rounded-2xl border border-line bg-surface p-8">
@@ -236,11 +229,10 @@ export default function ToolhopHome() {
               </div>
             ))}
           </div>
-          <DitherDissolve color="paper-2" className="absolute inset-0 z-10" />
         </section>
 
         {/* Safety */}
-        <section className="relative mx-auto max-w-6xl px-4 py-20 sm:px-6 lg:py-28">
+        <section className="mx-auto max-w-6xl px-4 py-20 sm:px-6 lg:py-28">
           <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">Safe by design.</h2>
           <div className="mt-10 grid gap-8 md:grid-cols-3">
             <div>
@@ -259,18 +251,14 @@ export default function ToolhopHome() {
               <p className="mt-2 text-muted">If a tool errors or times out, the charge is reversed automatically.</p>
             </div>
           </div>
-          <DitherDissolve color="paper" className="absolute inset-0 z-10" />
         </section>
 
         {/* Waitlist */}
         <section id="waitlist" className="border-t border-line">
           <div className="relative overflow-hidden">
-            <div className="absolute inset-0 overflow-hidden">
-              <div className="animate-drift absolute -inset-[8%]">
-                <GradientBackground />
-              </div>
+            <div className="absolute inset-0">
+              <GradientBackground />
             </div>
-            <DitherDissolve trigger="view" color="paper" className="absolute inset-0 z-0" />
             <div className="relative mx-auto max-w-2xl px-4 py-20 text-center sm:px-6 lg:py-28">
               <h2 className="text-3xl font-semibold tracking-tight sm:text-5xl">Get early access.</h2>
               <p className="mx-auto mt-4 max-w-lg text-lg text-muted">
