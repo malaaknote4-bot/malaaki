@@ -1,6 +1,8 @@
 import { Composition } from "remotion";
 import { HelloWorld } from "./HelloWorld";
 import { IceCream } from "./IceCream";
+import { LanguageFun } from "./lingo/LanguageFun";
+import { TOTAL as LINGO_TOTAL } from "./lingo/theme";
 import { BELLA_DURATION, BellaIntro } from "./bella/BellaIntro";
 
 export const RemotionRoot: React.FC = () => {
@@ -27,6 +29,14 @@ export const RemotionRoot: React.FC = () => {
         id="BellaIntro"
         component={BellaIntro}
         durationInFrames={BELLA_DURATION}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="LanguageFun"
+        component={LanguageFun}
+        durationInFrames={LINGO_TOTAL}
         fps={30}
         width={1920}
         height={1080}
