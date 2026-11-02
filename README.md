@@ -26,3 +26,13 @@ Put photos in `public/menu/` and set `image: "/menu/your-photo.jpg"` on the item
 
 ## How ordering works
 Customers add items to the cart (saved in their browser), fill in name, phone and delivery/pickup details, and tap **Send order on WhatsApp**. This opens WhatsApp with the full order pre-written to the number in `lib/site.ts`. No backend or payment gateway is needed.
+
+## Videos (Remotion)
+Promo videos can be written as React components with [Remotion](https://www.remotion.dev). Compositions live in `remotion/` (start with `remotion/HelloWorld.tsx`, registered in `remotion/Root.tsx`).
+
+```bash
+npm run remotion:studio   # preview and edit videos in the browser
+npm run remotion:render   # render HelloWorld to out/hello-world.mp4
+```
+
+To show a video on the site, use `<Player>` from `@remotion/player` in a client component.
