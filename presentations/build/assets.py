@@ -145,7 +145,7 @@ def icon(name, kind, color=WINE):
 
 if __name__ == '__main__':
     # user photos
-    photo('s1_cover', 'mosque_group.jpg', 6.1, 7.5, fx=0.5, fy=0.62, radius=0, amount=0.05)
+    photo('s1_cover', 'cover_dinner.jpg', 6.1, 7.5, fx=0.5, fy=0.55, radius=0, amount=0.05)
     photo('s3_tea', 'tea_gathering.jpg', 4.7, 6.1, fx=0.5, fy=0.5, radius=0.22, amount=0.04)
     photo('s8_books', 'tea_gathering.jpg', 2.9, 2.35, fx=0.5, fy=1.0, radius=0.16, amount=0.04)
     photo('s10_arms', 'mosque_group.jpg', 5.9, 5.0, fx=0.5, fy=0.74, radius=0.22, amount=0.05)
